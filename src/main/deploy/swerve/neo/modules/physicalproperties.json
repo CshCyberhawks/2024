@@ -1,9 +1,6 @@
 {
-<<<<<<< HEAD:src/main/deploy/swerve/modules/physicalproperties.json
-=======
   "optimalVoltage": 12,
   "wheelGripCoefficientOfFriction": 1.19,
->>>>>>> swerve:src/main/deploy/swerve/neo/modules/physicalproperties.json
   "currentLimit": {
     "drive": 40,
     "angle": 20
@@ -15,13 +12,5 @@
   "rampRate": {
     "drive": 0.25,
     "angle": 0.25
-<<<<<<< HEAD:src/main/deploy/swerve/modules/physicalproperties.json
-  },
-  "wheelGripCoefficientOfFriction": 1.19,
-  "conversionFactor": {
-    "drive": 0,
-    "angle": 0
-=======
->>>>>>> swerve:src/main/deploy/swerve/neo/modules/physicalproperties.json
   }
 }

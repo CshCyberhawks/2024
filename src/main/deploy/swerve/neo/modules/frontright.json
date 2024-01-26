@@ -1,8 +1,4 @@
 {
-  "drive": {
-    "type": "sparkmax",
-    "id": 5,
-    "canbus": null
   "location": {
     "front": 12.375,
     "left": -12.375
