@@ -3,6 +3,9 @@ import edu.wpi.first.math.Nat
 import edu.wpi.first.math.estimator.KalmanFilter
 import edu.wpi.first.math.numbers.N2
 import edu.wpi.first.math.system.LinearSystem
+import edu.wpi.first.math.geometry.Pose2d
+import frc.robot.RobotContainer
+import limelightlib.LimelightHelpers
 
 object KalmanVisionEstimator {
 
@@ -27,9 +30,47 @@ object KalmanVisionEstimator {
     private val kalmanFilter: KalmanFilter<N2, N2, N2> =
             KalmanFilter(Nat.N2(), Nat.N2(), linearSystem, stateStdDevs, measureStdDevs, .02)
 
+    fun setInitialMeasure() {
+        val odometry_pos =
+                RobotContainer.swerveSystem.swerveDrive.swerveDrivePoseEstimator
+                        .getEstimatedPosition()
 
-    fun updateOdometry(ll1: String, ll2: String) {
-        val pos1 = Limelight
+
+        val measure = MatBuilder(Nat.N2(), Nat.N1()).fill(odometry_pos.x, odometry_pos.y)
+        kalmanFilter.setXhat(measure)
     }
 
+
+    fun updateOdometry(ll1: String, ll2: String, joyx: Double, joyy: Double) {
+        val pos1 = LimelightHelpers.getBotPose(ll1)
+        val pos2 = LimelightHelpers.getBotPose(ll2)
+
+
+        val odometry_pos =
+                RobotContainer.swerveSystem.swerveDrive.swerveDrivePoseEstimator
+                        .getEstimatedPosition()
+
+        val wheel_vel = RobotContainer.swerveSystem.swerveDrive.robotVelocity
+
+        //predict step
+        val u = MatBuilder(Nat.N2(), Nat.N1()).fill(joyx, joyy)
+        //TODO: put actual correct dt in
+        kalmanFilter.predict(u, .02)
+
+        //update/correct step
+        val y = MatBuilder(Nat.N2(), Nat.N1()).fill(odometry_pos.x, odometry_pos.y)
+        kalmanFilter.correct(u, y)
+
+
+        //get the new state and reset the odometry
+        val xhat = kalmanFilter.getXhat()
+        val new_pos = Pose2d(xhat[0, 0], xhat[1, 0], odometry_pos.rotation)
+
+        RobotContainer.swerveSystem.swerveDrive.swerveDrivePoseEstimator.resetPosition(
+                odometry_pos.rotation,
+                RobotContainer.swerveSystem.swerveDrive.getModulePositions(),
+                new_pos
+        )
+        
+    }
 }
