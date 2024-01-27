@@ -1,7 +1,7 @@
 package frc.robot.subsystems
 
-import edu.wpi.first.math.geometry.Translation2d
 import com.pathplanner.lib.auto.AutoBuilder
+import edu.wpi.first.math.geometry.Translation2d
 import edu.wpi.first.math.kinematics.ChassisSpeeds
 import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj2.command.SubsystemBase
@@ -48,8 +48,8 @@ class SwerveSystem(directory: File) : SubsystemBase() {
     }
 
     fun getAlliance(): Boolean {
-        val alliance = DriverStation.getAlliance()
-        if (alliance.isPresent)
+        var alliance = DriverStation.getAlliance()
+        if (alliance.isPresent())
             return alliance.get() == DriverStation.Alliance.Red
         return false
     }

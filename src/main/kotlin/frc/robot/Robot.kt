@@ -1,11 +1,11 @@
 package frc.robot
 
+import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.math.geometry.Translation2d
+import edu.wpi.first.math.kinematics.SwerveModuleState
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.CommandScheduler
-import edu.wpi.first.math.geometry.Rotation2d
-import edu.wpi.first.math.kinematics.SwerveModuleState
 import frc.robot.constants.DriveConstants
 import org.littletonrobotics.junction.LoggedRobot
 import org.littletonrobotics.junction.Logger
@@ -172,13 +172,10 @@ class Robot : LoggedRobot() {
 //        RobotContainer.swerveSystem.drive(Translation2d(0.25, 0.0), 0.0, true)
     }
 
-    //  val encoder = CANcoder(MotorConstants.backLeftEncoder)
-
     /**
      * This function is called periodically during test mode.
      */
     override fun testPeriodic() {
-//        SmartDashboard.putNumber("Back Left Angle", encoder.position.value)
         RobotContainer.swerveSystem.swerveDrive.modules[0].driveMotor.set(.2)
         RobotContainer.swerveSystem.swerveDrive.modules[1].driveMotor.set(.2)
         RobotContainer.swerveSystem.swerveDrive.modules[2].driveMotor.set(.2)
