@@ -55,7 +55,7 @@ object KalmanVisionEstimator {
         //predict step
         val u = MatBuilder(Nat.N2(), Nat.N1()).fill(joyx, joyy)
         //TODO: put actual correct dt in
-        kalmanFilter.predict(u, .02)
+        
 
         //update/correct step
         val y = MatBuilder(Nat.N2(), Nat.N1()).fill(odometry_pos.x, odometry_pos.y)
@@ -71,6 +71,5 @@ object KalmanVisionEstimator {
                 RobotContainer.swerveSystem.swerveDrive.getModulePositions(),
                 new_pos
         )
-        
     }
 }
