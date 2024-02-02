@@ -3,10 +3,8 @@ package frc.robot
 import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.math.geometry.Translation2d
 import edu.wpi.first.math.kinematics.SwerveModuleState
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.CommandScheduler
-import frc.robot.constants.DriveConstants
 import org.littletonrobotics.junction.LoggedRobot
 import org.littletonrobotics.junction.Logger
 import org.littletonrobotics.junction.networktables.NT4Publisher
@@ -65,14 +63,9 @@ class Robot : LoggedRobot() {
         }
 
         Logger.start()
-
-//        RobotContainer.speedUp += 1
-
-//        val toApply = CANcoderConfiguration()
-
-
         /* User can change the configs if they want, or leave it empty for factory-default */
 //        canCoder.getConfigurator().apply(toApply)
+        RobotContainer
     }
 
 
@@ -109,6 +102,7 @@ class Robot : LoggedRobot() {
     override fun autonomousInit() {
         // Schedule the autonomous command (example)
         // Note the Kotlin safe-call(?.), this ensures autonomousCommand is not null before scheduling it
+        autonomousCommand?.schedule()
     }
 
     /**
@@ -126,6 +120,7 @@ class Robot : LoggedRobot() {
         // this line or comment it out.
         // Note the Kotlin safe-call(?.), this ensures autonomousCommand is not null before cancelling it
         autonomousCommand?.cancel()
+        RobotContainer.teleopSwerveCommand.schedule()
 
     }
 
@@ -133,30 +128,6 @@ class Robot : LoggedRobot() {
      * This function is called periodically during operator control.
      */
     override fun teleopPeriodic() {
-        SmartDashboard.putNumber("JoyX", RobotContainer.rightJoystick.x)
-        SmartDashboard.putNumber("JoyY", RobotContainer.rightJoystick.y)
-        SmartDashboard.putNumber("JoyTwist", RobotContainer.rightJoystick.twist)
-
-        RobotContainer.swerveSystem.drive(
-            Translation2d(
-                (if (abs(RobotContainer.rightJoystick.x) > 0.15) {
-                    val inSpeed =
-                        if (RobotContainer.rightJoystick.x < 0.0) RobotContainer.rightJoystick.x + .15 else RobotContainer.rightJoystick.x - .15
-                    (inSpeed) * DriveConstants.MAX_SPEED
-                } else 0.0),
-                (if (abs(RobotContainer.rightJoystick.y) > 0.15) {
-                    val inSpeed =
-                        if (RobotContainer.rightJoystick.y < 0.0) RobotContainer.rightJoystick.y + .15 else RobotContainer.rightJoystick.y - .15
-                    (-inSpeed) * DriveConstants.MAX_SPEED
-                } else 0.0)
-            ),
-            (if (abs(RobotContainer.rightJoystick.twist) > 0.15) -RobotContainer.rightJoystick.twist * -1.0 else 0.0),
-            true
-        )
-
-
-        val desiredState =
-            SwerveModuleState(0.0, Rotation2d(0.0, 0.0))
 
 //        RobotContainer.swerveSystem.swerveDrive.setModuleStates(arrayOf(desiredState, desiredState, desiredState, desiredState), true)
 
@@ -176,5 +147,16 @@ class Robot : LoggedRobot() {
      * This function is called periodically during test mode.
      */
     override fun testPeriodic() {
+        RobotContainer.swerveSystem.swerveDrive.modules[0].driveMotor.set(.2)
+        RobotContainer.swerveSystem.swerveDrive.modules[1].driveMotor.set(.2)
+        RobotContainer.swerveSystem.swerveDrive.modules[2].driveMotor.set(.2)
+        RobotContainer.swerveSystem.swerveDrive.modules[3].driveMotor.set(.2)
+
+        RobotContainer.swerveSystem.swerveDrive.modules[0].angleMotor.set(.2)
+        RobotContainer.swerveSystem.swerveDrive.modules[1].angleMotor.set(.2)
+        RobotContainer.swerveSystem.swerveDrive.modules[2].angleMotor.set(.2)
+        RobotContainer.swerveSystem.swerveDrive.modules[3].angleMotor.set(.2)
+
+//        SmartDashboard.putNumber("Back Left Angle", encoder.position.value)
     }
 }

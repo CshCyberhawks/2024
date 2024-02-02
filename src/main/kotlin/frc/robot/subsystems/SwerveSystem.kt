@@ -9,35 +9,54 @@ import edu.wpi.first.math.util.Units
 import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.SubsystemBase
-import frc.robot.constants.DriveConstants
 import frc.robot.constants.PathPlannerLibConstants
+import frc.robot.constants.yagsl_configs.YAGSLConfig
 import swervelib.SwerveDrive
 import swervelib.parser.SwerveParser
 import swervelib.telemetry.SwerveDriveTelemetry
 import java.io.File
 
-
-class SwerveSystem(directory: File) : SubsystemBase() {
-    val swerveDrive: SwerveDrive
+class SwerveSystem(val swerveDrive: SwerveDrive) : SubsystemBase() {
     private val autoConstraints: PathConstraints
+
+    constructor(config: YAGSLConfig) : this(
+        swerveDrive = SwerveDrive(
+            config.driveConfig,
+            config.controllerConfig,
+            config.maxSpeedMPS,
+        )
+    )
+
+    constructor(config: File, maxSpeedMPS: Double) : this(
+        swerveDrive = try {
+            SwerveParser(config).createSwerveDrive(maxSpeedMPS)
+        } catch (e: Exception) {
+            throw RuntimeException(e)
+        }
+    )
 
     init {
         SwerveDriveTelemetry.verbosity = SwerveDriveTelemetry.TelemetryVerbosity.HIGH
 
-        try {
-            swerveDrive = SwerveParser(directory).createSwerveDrive(DriveConstants.MAX_SPEED)
-        } catch (e: Exception) {
-            throw RuntimeException(e)
-        }
-
         swerveDrive.setHeadingCorrection(false)
         swerveDrive.setMotorIdleMode(false)
         swerveDrive.pushOffsetsToControllers()
-
-        setupAuto()
+        setupPathPlanner()
         autoConstraints = PathConstraints(
             swerveDrive.maximumVelocity, 4.0,
             swerveDrive.maximumAngularVelocity, Units.degreesToRadians(720.0)
+        )
+    }
+
+    fun setupPathPlanner() {
+        AutoBuilder.configureHolonomic(
+            swerveDrive::getPose,
+            swerveDrive::resetOdometry,
+            swerveDrive::getRobotVelocity,
+            this::autoDrive,
+            PathPlannerLibConstants.pathPlannerConfig,
+            this::isRed,
+            this,
         )
     }
 
@@ -67,6 +86,7 @@ class SwerveSystem(directory: File) : SubsystemBase() {
             this,
         )
     }
+
     fun driveToPose(pose: Pose2d): Command {
         return AutoBuilder.pathfindToPose(
             pose,
