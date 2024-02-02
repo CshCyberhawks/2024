@@ -19,7 +19,7 @@ import java.io.File
  */
 object RobotContainer {
     // The robot's subsystems and commands are defined here...
-    val swerveSystem: SwerveSystem = SwerveSystem(File(Filesystem.getDeployDirectory(), "swerve/neo"))
+    val swerveSystem: SwerveSystem = SwerveSystem(File(Filesystem.getDeployDirectory(), "yagsl_configs/neo"))
 
     val leftJoystick: CommandJoystick = CommandJoystick(0)
     val rightJoystick: CommandJoystick = CommandJoystick(1)

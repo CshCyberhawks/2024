@@ -176,14 +176,5 @@ class Robot : LoggedRobot() {
      * This function is called periodically during test mode.
      */
     override fun testPeriodic() {
-        RobotContainer.swerveSystem.swerveDrive.modules[0].driveMotor.set(.2)
-        RobotContainer.swerveSystem.swerveDrive.modules[1].driveMotor.set(.2)
-        RobotContainer.swerveSystem.swerveDrive.modules[2].driveMotor.set(.2)
-        RobotContainer.swerveSystem.swerveDrive.modules[3].driveMotor.set(.2)
-
-        RobotContainer.swerveSystem.swerveDrive.modules[0].angleMotor.set(.2)
-        RobotContainer.swerveSystem.swerveDrive.modules[1].angleMotor.set(.2)
-        RobotContainer.swerveSystem.swerveDrive.modules[2].angleMotor.set(.2)
-        RobotContainer.swerveSystem.swerveDrive.modules[3].angleMotor.set(.2)
     }
 }
