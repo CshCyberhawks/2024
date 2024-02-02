@@ -4,6 +4,7 @@ import edu.wpi.first.math.estimator.KalmanFilter
 import edu.wpi.first.math.numbers.N2
 import edu.wpi.first.math.system.LinearSystem
 import edu.wpi.first.math.geometry.Pose2d
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import frc.robot.RobotContainer
 import limelightlib.LimelightHelpers
 
@@ -44,6 +45,9 @@ object KalmanVisionEstimator {
     fun updateOdometry(ll1: String, ll2: String, joyx: Double, joyy: Double) {
         val pos1 = LimelightHelpers.getBotPose(ll1)
         val pos2 = LimelightHelpers.getBotPose(ll2)
+
+        SmartDashboard.putNumber("ll right x:", pos1[0]);
+        SmartDashboard.putNumber("ll left x:", pos2[0]);
 
 
         val odometry_pos =

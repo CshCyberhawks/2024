@@ -1,8 +1,10 @@
 package frc.robot
 
+import KalmanVisionEstimator
 import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.math.geometry.Translation2d
 import edu.wpi.first.math.kinematics.SwerveModuleState
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.CommandScheduler
 import org.littletonrobotics.junction.LoggedRobot
@@ -84,6 +86,13 @@ class Robot : LoggedRobot() {
         // and running subsystem periodic() methods.  This must be called from the robot's periodic
         // block in order for anything in the Command-based framework to work.
         CommandScheduler.getInstance().run()
+
+
+        SmartDashboard.putNumber("Odometry X", RobotContainer.swerveSystem.swerveDrive.pose.x);
+        SmartDashboard.putNumber("Odometry Y", RobotContainer.swerveSystem.swerveDrive.pose.y);
+
+
+
     }
 
     /**
@@ -122,6 +131,7 @@ class Robot : LoggedRobot() {
         autonomousCommand?.cancel()
         RobotContainer.teleopSwerveCommand.schedule()
 
+        KalmanVisionEstimator.setInitialMeasure()
     }
 
     /**

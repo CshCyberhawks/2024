@@ -1,5 +1,6 @@
 package frc.robot.subsystems
 
+import KalmanVisionEstimator
 import com.pathplanner.lib.auto.AutoBuilder
 import com.pathplanner.lib.path.PathConstraints
 import edu.wpi.first.math.geometry.Pose2d
@@ -36,7 +37,7 @@ class SwerveSystem(val swerveDrive: SwerveDrive) : SubsystemBase() {
     )
 
     init {
-        SwerveDriveTelemetry.verbosity = SwerveDriveTelemetry.TelemetryVerbosity.HIGH
+        SwerveDriveTelemetry.verbosity = SwerveDriveTelemetry.TelemetryVerbosity.LOW
 
         swerveDrive.setHeadingCorrection(false)
         swerveDrive.setMotorIdleMode(false)
@@ -61,6 +62,7 @@ class SwerveSystem(val swerveDrive: SwerveDrive) : SubsystemBase() {
     }
 
     fun drive(translation: Translation2d, rotation: Double, fieldRelative: Boolean) {
+        KalmanVisionEstimator.updateOdometry("limelight-right", "limelight-left", translation.x, translation.y)
         swerveDrive.drive(translation, rotation, fieldRelative, false)
     }
 
