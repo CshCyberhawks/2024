@@ -4,6 +4,7 @@ import edu.wpi.first.math.estimator.KalmanFilter
 import edu.wpi.first.math.numbers.N2
 import edu.wpi.first.math.system.LinearSystem
 import edu.wpi.first.math.geometry.Pose2d
+import edu.wpi.first.math.geometry.Translation2d
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import frc.robot.RobotContainer
 import limelightlib.LimelightHelpers
@@ -49,6 +50,19 @@ object KalmanVisionEstimator {
         SmartDashboard.putNumber("ll right x:", pos1[0]);
         SmartDashboard.putNumber("ll left x:", pos2[0]);
 
+        //get TV == has target
+        if (!LimelightHelpers.getTV(ll1) && !LimelightHelpers.getTV(ll2)) {
+
+        }
+        //ll1 doesn't have; ll2 does
+        else if (!LimelightHelpers.getTV(ll1)) {
+
+        }
+        //ll2 doesn't have; ll1 does
+        else if (!LimelightHelpers.getTV(ll2)) {
+
+        }
+
 
         val odometry_pos =
                 RobotContainer.swerveSystem.swerveDrive.swerveDrivePoseEstimator
@@ -68,12 +82,8 @@ object KalmanVisionEstimator {
 
         //get the new state and reset the odometry
         val xhat = kalmanFilter.getXhat()
-        val new_pos = Pose2d(xhat[0, 0], xhat[1, 0], odometry_pos.rotation)
+        val new_pos = Translation2d(xhat[0, 0], xhat[1, 0])
 
-        RobotContainer.swerveSystem.swerveDrive.swerveDrivePoseEstimator.resetPosition(
-                odometry_pos.rotation,
-                RobotContainer.swerveSystem.swerveDrive.getModulePositions(),
-                new_pos
-        )
+        RobotContainer.swerveSystem.setPos(new_pos)
     }
 }

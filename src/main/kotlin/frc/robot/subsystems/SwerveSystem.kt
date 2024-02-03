@@ -10,6 +10,7 @@ import edu.wpi.first.math.util.Units
 import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.SubsystemBase
+import frc.robot.RobotContainer
 import frc.robot.constants.PathPlannerLibConstants
 import frc.robot.constants.yagsl_configs.YAGSLConfig
 import swervelib.SwerveDrive
@@ -48,6 +49,21 @@ class SwerveSystem(val swerveDrive: SwerveDrive) : SubsystemBase() {
             swerveDrive.maximumAngularVelocity, Units.degreesToRadians(720.0)
         )
     }
+
+    fun setPos(pos: Pose2d) {
+           val odometry_pos =
+                swerveDrive.swerveDrivePoseEstimator
+                        .getEstimatedPosition()
+        swerveDrive.swerveDrivePoseEstimator.resetPosition(odometry_pos.rotation, RobotContainer.swerveSystem.swerveDrive.getModulePositions(), pos)
+    }
+
+    fun setPos(pos: Translation2d) {
+           val odometry_pos =
+                swerveDrive.swerveDrivePoseEstimator
+                        .getEstimatedPosition()
+        swerveDrive.swerveDrivePoseEstimator.resetPosition(odometry_pos.rotation, RobotContainer.swerveSystem.swerveDrive.getModulePositions(), Pose2d(pos, odometry_pos.rotation))
+    }
+
 
     fun setupPathPlanner() {
         AutoBuilder.configureHolonomic(

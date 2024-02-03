@@ -1,12 +1,15 @@
 package frc.robot
 
 import KalmanVisionEstimator
+import edu.wpi.first.math.geometry.Pose2d
 import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.math.geometry.Translation2d
 import edu.wpi.first.math.kinematics.SwerveModuleState
+import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.CommandScheduler
+import limelightlib.LimelightHelpers
 import org.littletonrobotics.junction.LoggedRobot
 import org.littletonrobotics.junction.Logger
 import org.littletonrobotics.junction.networktables.NT4Publisher
@@ -84,14 +87,25 @@ class Robot : LoggedRobot() {
         // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
         // commands, running already-scheduled commands, removing finished or interrupted commands,
         // and running subsystem periodic() methods.  This must be called from the robot's periodic
-        // block in order for anything in the Command-based framework to work.
+        // block in order for anything in the Command-based framework to work
         CommandScheduler.getInstance().run()
 
 
         SmartDashboard.putNumber("Odometry X", RobotContainer.swerveSystem.swerveDrive.pose.x);
         SmartDashboard.putNumber("Odometry Y", RobotContainer.swerveSystem.swerveDrive.pose.y);
 
+        //Reset the odometry using the limelight selected from shuffleboard to get an initial position into the odometry
+        if (!DriverStation.isTeleopEnabled() && !DriverStation.isAutonomousEnabled() && !DriverStation.isTestEnabled()) {
+            val primaryLL = RobotContainer.llStartChooser.selected
 
+            val startPos = LimelightHelpers.getBotPose(primaryLL)
+
+            SmartDashboard.putNumber("Starting Pos X", startPos[0])
+            SmartDashboard.putNumber("Starting Pos Y", startPos[1])
+
+            RobotContainer.swerveSystem.setPos(Translation2d(startPos[0], startPos[1]))
+
+        }
 
     }
 

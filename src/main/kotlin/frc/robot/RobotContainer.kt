@@ -31,6 +31,8 @@ object RobotContainer {
     lateinit var teleopSwerveCommand: Command;
     val autoChooser: SendableChooser<Command> = AutoBuilder.buildAutoChooser()
 
+    val llStartChooser: SendableChooser<String> = SendableChooser()
+
     /**
      * The container for the robot.  Contains subsystems, IO devices, and commands.
      */
@@ -53,6 +55,10 @@ object RobotContainer {
         configureButtonBindings()
 
         SmartDashboard.putData("Auto Chooser", autoChooser);
+
+        llStartChooser.addOption("Right", "limelight-right")
+        llStartChooser.addOption("Left", "limelight-left")
+
     }
 
     /**
