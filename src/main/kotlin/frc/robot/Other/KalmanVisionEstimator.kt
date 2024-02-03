@@ -44,23 +44,25 @@ object KalmanVisionEstimator {
 
 
     fun updateOdometry(ll1: String, ll2: String, joyx: Double, joyy: Double) {
-        val pos1 = LimelightHelpers.getBotPose(ll1)
-        val pos2 = LimelightHelpers.getBotPose(ll2)
+        var pos1 = LimelightHelpers.getBotPose(ll1)
+        var pos2 = LimelightHelpers.getBotPose(ll2)
 
         SmartDashboard.putNumber("ll right x:", pos1[0]);
         SmartDashboard.putNumber("ll left x:", pos2[0]);
 
         //get TV == has target
         if (!LimelightHelpers.getTV(ll1) && !LimelightHelpers.getTV(ll2)) {
-
+            return
         }
         //ll1 doesn't have; ll2 does
         else if (!LimelightHelpers.getTV(ll1)) {
-
+            //TODO: sample normally around the other
+            pos1 = arrayOf(999999.9, 99999.9).toDoubleArray()
         }
         //ll2 doesn't have; ll1 does
         else if (!LimelightHelpers.getTV(ll2)) {
-
+            //TODO: sample normally around the other
+            pos2 = arrayOf(999999.9, 99999.9).toDoubleArray()
         }
 
 
@@ -73,6 +75,7 @@ object KalmanVisionEstimator {
         //predict step
         val u = MatBuilder(Nat.N2(), Nat.N1()).fill(joyx, joyy)
         //TODO: put actual correct dt in
+        kalmanFilter.predict(u, .02)
         
 
         //update/correct step

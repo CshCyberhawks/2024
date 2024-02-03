@@ -3,6 +3,7 @@ package frc.robot
 import com.pathplanner.lib.auto.AutoBuilder
 import edu.wpi.first.math.geometry.Translation2d
 import edu.wpi.first.wpilibj.Filesystem
+import edu.wpi.first.wpilibj.smartdashboard.Field2d
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.Command
@@ -24,14 +25,16 @@ object RobotContainer {
     val swerveSystem: SwerveSystem = SwerveSystem(File(Filesystem.getDeployDirectory(), "yagsl_configs/good_news_goose"), 4.5)
 //    val swerveSystem: SwerveSystem = SwerveSystem(YAGSLConfig)
 
-    private val leftJoystick: CommandJoystick = CommandJoystick(0)
-    private val rightJoystick: CommandJoystick = CommandJoystick(1)
+    public val leftJoystick: CommandJoystick = CommandJoystick(0)
+    public val rightJoystick: CommandJoystick = CommandJoystick(1)
     private val xboxController: CommandXboxController = CommandXboxController(2)
 
-    lateinit var teleopSwerveCommand: Command;
+//    lateinit var teleopSwerveCommand: Command;
     val autoChooser: SendableChooser<Command> = AutoBuilder.buildAutoChooser()
 
     val llStartChooser: SendableChooser<String> = SendableChooser()
+
+    val field2d: Field2d = Field2d()
 
     /**
      * The container for the robot.  Contains subsystems, IO devices, and commands.
@@ -58,6 +61,10 @@ object RobotContainer {
 
         llStartChooser.addOption("Right", "limelight-right")
         llStartChooser.addOption("Left", "limelight-left")
+        llStartChooser.setDefaultOption("Right", "limelight-right")
+
+        SmartDashboard.putData("LL Start Chooser", llStartChooser)
+        SmartDashboard.putData("Field", field2d)
 
     }
 
@@ -68,13 +75,7 @@ object RobotContainer {
      */
     private fun configureButtonBindings() {
         rightJoystick.button(2).onTrue(ResetSwerveFieldForward())
-        teleopSwerveCommand = Commands.run({
-            swerveSystem.drive(
-                Translation2d(rightJoystick.x, rightJoystick.y),
-                rightJoystick.twist,
-                true
-            )
-        })
+
     }
 
     /**

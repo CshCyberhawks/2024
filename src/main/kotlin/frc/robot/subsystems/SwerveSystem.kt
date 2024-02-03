@@ -38,7 +38,7 @@ class SwerveSystem(val swerveDrive: SwerveDrive) : SubsystemBase() {
     )
 
     init {
-        SwerveDriveTelemetry.verbosity = SwerveDriveTelemetry.TelemetryVerbosity.LOW
+        SwerveDriveTelemetry.verbosity = SwerveDriveTelemetry.TelemetryVerbosity.NONE
 
         swerveDrive.setHeadingCorrection(false)
         swerveDrive.setMotorIdleMode(false)

@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.CommandScheduler
+import edu.wpi.first.wpilibj2.command.Commands
 import limelightlib.LimelightHelpers
 import org.littletonrobotics.junction.LoggedRobot
 import org.littletonrobotics.junction.Logger
@@ -107,6 +108,8 @@ class Robot : LoggedRobot() {
 
         }
 
+        RobotContainer.field2d.setRobotPose(RobotContainer.swerveSystem.swerveDrive.pose)
+
     }
 
     /**
@@ -143,7 +146,7 @@ class Robot : LoggedRobot() {
         // this line or comment it out.
         // Note the Kotlin safe-call(?.), this ensures autonomousCommand is not null before cancelling it
         autonomousCommand?.cancel()
-        RobotContainer.teleopSwerveCommand.schedule()
+//        RobotContainer.teleopSwerveCommand.schedule()
 
         KalmanVisionEstimator.setInitialMeasure()
     }
@@ -156,6 +159,24 @@ class Robot : LoggedRobot() {
 //        RobotContainer.swerveSystem.swerveDrive.setModuleStates(arrayOf(desiredState, desiredState, desiredState, desiredState), true)
 
 //        SmartDashboard.putNumber("CANNNN", canCoder.position.value);
+
+
+        RobotContainer.swerveSystem.drive(
+            Translation2d(
+                (if (abs(RobotContainer.rightJoystick.y) > 0.15) {
+                    val inSpeed =
+                        if (RobotContainer.rightJoystick.y < 0.0) RobotContainer.rightJoystick.y + .15 else RobotContainer.rightJoystick.y - .15
+                    (-inSpeed)
+                } else 0.0),
+                (if (abs(RobotContainer.rightJoystick.x) > 0.15) {
+                    val inSpeed =
+                        if (RobotContainer.rightJoystick.x < 0.0) RobotContainer.rightJoystick.x + .15 else RobotContainer.rightJoystick.x - .15
+                    (-inSpeed)
+                } else 0.0)
+            ),
+            (if (abs(RobotContainer.rightJoystick.twist) > 0.15) -RobotContainer.rightJoystick.twist else 0.0),
+            true
+        )
     }
 
     /**
