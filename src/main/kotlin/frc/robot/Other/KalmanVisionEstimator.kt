@@ -1,10 +1,9 @@
 import edu.wpi.first.math.MatBuilder
 import edu.wpi.first.math.Nat
 import edu.wpi.first.math.estimator.KalmanFilter
+import edu.wpi.first.math.geometry.Translation2d
 import edu.wpi.first.math.numbers.N2
 import edu.wpi.first.math.system.LinearSystem
-import edu.wpi.first.math.geometry.Pose2d
-import edu.wpi.first.math.geometry.Translation2d
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import frc.robot.RobotContainer
 import limelightlib.LimelightHelpers
@@ -37,34 +36,16 @@ object KalmanVisionEstimator {
                 RobotContainer.swerveSystem.swerveDrive.swerveDrivePoseEstimator
                         .getEstimatedPosition()
 
-
         val measure = MatBuilder(Nat.N2(), Nat.N1()).fill(odometry_pos.x, odometry_pos.y)
         kalmanFilter.setXhat(measure)
     }
-
 
     fun updateOdometry(ll1: String, ll2: String, joyx: Double, joyy: Double) {
         var pos1 = LimelightHelpers.getBotPose(ll1)
         var pos2 = LimelightHelpers.getBotPose(ll2)
 
-        SmartDashboard.putNumber("ll right x:", pos1[0]);
-        SmartDashboard.putNumber("ll left x:", pos2[0]);
-
-        //get TV == has target
-        if (!LimelightHelpers.getTV(ll1) && !LimelightHelpers.getTV(ll2)) {
-            return
-        }
-        //ll1 doesn't have; ll2 does
-        else if (!LimelightHelpers.getTV(ll1)) {
-            //TODO: sample normally around the other
-            pos1 = arrayOf(999999.9, 99999.9).toDoubleArray()
-        }
-        //ll2 doesn't have; ll1 does
-        else if (!LimelightHelpers.getTV(ll2)) {
-            //TODO: sample normally around the other
-            pos2 = arrayOf(999999.9, 99999.9).toDoubleArray()
-        }
-
+        SmartDashboard.putNumber("ll right x:", pos1[0])
+        SmartDashboard.putNumber("ll left x:", pos2[0])
 
         val odometry_pos =
                 RobotContainer.swerveSystem.swerveDrive.swerveDrivePoseEstimator
@@ -72,18 +53,38 @@ object KalmanVisionEstimator {
 
         val wheel_vel = RobotContainer.swerveSystem.swerveDrive.robotVelocity
 
-        //predict step
+        // predict step
         val u = MatBuilder(Nat.N2(), Nat.N1()).fill(joyx, joyy)
-        //TODO: put actual correct dt in
+        // TODO: put actual correct dt in
         kalmanFilter.predict(u, .02)
-        
 
-        //update/correct step
+        // update/correct step
+
+        // update with the wheel velocities
         val y = MatBuilder(Nat.N2(), Nat.N1()).fill(odometry_pos.x, odometry_pos.y)
         kalmanFilter.correct(u, y)
 
+        //Update with the limelights
+        // get TV == has target
+        if (LimelightHelpers.getTV(ll1) && LimelightHelpers.getTV(ll2)) {
+            val y_ll1 = MatBuilder(Nat.N2(), Nat.N1()).fill(pos1[0], pos1[1])
+            kalmanFilter.correct(u, y_ll1)
 
-        //get the new state and reset the odometry
+            val y_ll2 = MatBuilder(Nat.N2(), Nat.N1()).fill(pos2[0], pos2[1])
+            kalmanFilter.correct(u, y_ll2)
+        }
+        // ll2 doesn't have; ll1 does
+        else if (LimelightHelpers.getTV(ll1)) {
+            val y_ll1 = MatBuilder(Nat.N2(), Nat.N1()).fill(pos1[0], pos1[1])
+            kalmanFilter.correct(u, y_ll1)
+        }
+        // ll1 doesn't have; ll2 does
+        else if (!LimelightHelpers.getTV(ll2)) {
+            val y_ll2 = MatBuilder(Nat.N2(), Nat.N1()).fill(pos2[0], pos2[1])
+            kalmanFilter.correct(u, y_ll2)
+        }
+
+        // get the new state and reset the odometry
         val xhat = kalmanFilter.getXhat()
         val new_pos = Translation2d(xhat[0, 0], xhat[1, 0])
 
