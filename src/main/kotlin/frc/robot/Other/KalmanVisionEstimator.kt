@@ -25,7 +25,7 @@ object KalmanVisionEstimator {
                             .1,
                     )
 
-    private val measureStdDevs = MatBuilder(Nat.N2(), Nat.N1()).fill(.75, .75)
+    private val measureStdDevs = MatBuilder(Nat.N2(), Nat.N1()).fill(.25, .25)
 
     private val linearSystem: LinearSystem<N2, N2, N2> = LinearSystem(mat_A, mat_B, mat_C, mat_D)
     private val kalmanFilter: KalmanFilter<N2, N2, N2> =
@@ -74,12 +74,12 @@ object KalmanVisionEstimator {
             kalmanFilter.correct(u, y_ll2)
         }
         // ll2 doesn't have; ll1 does
-        else if (LimelightHelpers.getTV(ll1)) {
+        else if (LimelightHelpers.getTV(ll1) && !LimelightHelpers.getTV(ll2)) {
             val y_ll1 = MatBuilder(Nat.N2(), Nat.N1()).fill(pos1[0], pos1[1])
             kalmanFilter.correct(u, y_ll1)
         }
         // ll1 doesn't have; ll2 does
-        else if (!LimelightHelpers.getTV(ll2)) {
+        else if (LimelightHelpers.getTV(ll2) && !LimelightHelpers.getTV(ll1)) {
             val y_ll2 = MatBuilder(Nat.N2(), Nat.N1()).fill(pos2[0], pos2[1])
             kalmanFilter.correct(u, y_ll2)
         }
