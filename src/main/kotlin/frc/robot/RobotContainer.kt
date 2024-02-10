@@ -42,21 +42,21 @@ object RobotContainer {
             Constants.Mode.REAL -> {
                 swerveSystem = SwerveSystem(
                     SwerveSystemIOReal(),
-                    File(Filesystem.getDeployDirectory(), "yagsl_configs/slippy")
+                    File(Filesystem.getDeployDirectory(), "yagsl_configs/good_news_goose")
                 )
             }
             Constants.Mode.SIM -> {
                 // change these later
                 swerveSystem = SwerveSystem(
                     SwerveSystemIOReal(),
-                    File(Filesystem.getDeployDirectory(), "yagsl_configs/slippy")
+                    File(Filesystem.getDeployDirectory(), "yagsl_configs/good_news_goose")
                 )
             }
             Constants.Mode.REPLAY -> {
                 // change these later
                 swerveSystem = SwerveSystem(
                     SwerveSystemIOReal(),
-                    File(Filesystem.getDeployDirectory(), "yagsl_configs/slippy")
+                    File(Filesystem.getDeployDirectory(), "yagsl_configs/good_news_goose")
                 )
             }
         }
