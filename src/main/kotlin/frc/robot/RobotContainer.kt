@@ -9,9 +9,10 @@ import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.Commands
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
+import frc.robot.commands.TeleopArmCommand
+import frc.robot.commands.TeleopClawCommand
 import frc.robot.constants.DriveConstants
-import frc.robot.subsystems.SwerveSystem
-import frc.robot.subsystems.SwerveSystemIOReal
+import frc.robot.subsystems.*
 import java.io.File
 import kotlin.math.abs
 
@@ -28,9 +29,13 @@ object RobotContainer {
     private val xboxController: CommandXboxController = CommandXboxController(2)
 
     val swerveSystem: SwerveSystem
+    val armSystem: ArmSystem = ArmSystem()
+    val clawSystem: ClawSystem = ClawSystem()
 
     lateinit var teleopSwerveCommand: Command
     val autonomousCommand: Command = Commands.run({})
+    val teleopArmCommand: TeleopArmCommand = TeleopArmCommand(armSystem, clawSystem)
+    val teleopClawCommand: TeleopClawCommand = TeleopClawCommand(clawSystem)
 
     val autoChooser: SendableChooser<Command>
 
