@@ -34,10 +34,12 @@ class Robot : LoggedRobot() {
                 Logger.addDataReceiver(NT4Publisher())
                 PowerDistribution(1, PowerDistribution.ModuleType.kRev)
             }
+
             Constants.Mode.SIM -> {
                 // Running a physics simulator, log to NT
                 Logger.addDataReceiver(NT4Publisher())
             }
+
             Constants.Mode.REPLAY -> {
                 // Replaying a log, set up replay source
                 setUseTiming(false) // Run as fast as possible
@@ -93,9 +95,10 @@ class Robot : LoggedRobot() {
     override fun autonomousPeriodic() {}
 
     override fun teleopInit() {
-        RobotContainer.autonomousCommand.cancel()
-        RobotContainer.teleopSwerveCommand.schedule()
-        RobotContainer.teleopElevateCommand.schedule()
+//        RobotContainer.autonomousCommand.cancel()
+//        RobotContainer.teleopSwerveCommand.schedule()
+//        RobotContainer.teleopElevateCommand.schedule()
+        RobotContainer.teleopShootCommand.schedule()
     }
 
     override fun teleopPeriodic() {
@@ -108,7 +111,7 @@ class Robot : LoggedRobot() {
     override fun testInit() {
         CommandScheduler.getInstance().cancelAll()
     }
-    
+
     override fun testPeriodic() {
 //        RobotContainer.swerveSystem.drive(Translation2d(0.25, 0.0), 0.0, true)
 //        val calibrator = ShooterCalibrator("/u/shooter_calibrator/test1.csv");

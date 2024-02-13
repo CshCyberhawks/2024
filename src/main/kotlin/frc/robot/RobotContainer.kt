@@ -19,17 +19,17 @@ object RobotContainer {
     val rightJoystick: CommandJoystick = CommandJoystick(1)
     private val xboxController: CommandXboxController = CommandXboxController(2)
 
-//    val swerveSystem: SwerveSystem
+    //    val swerveSystem: SwerveSystem
     val gunSystem = GUNSystem()
 
     val autonomousCommand: Command = Commands.run({})
-  
+
     lateinit var teleopSwerveCommand: Command
     lateinit var teleopElevateCommand: Command
     lateinit var teleopRotateCommand: Command
     lateinit var teleopShootCommand: Command
 
-    val autoChooser: SendableChooser<Command> = AutoBuilder.buildAutoChooser()
+//    val autoChooser: SendableChooser<Command> = AutoBuilder.buildAutoChooser()
 
     init {
 //        when (Constants.currentMode) {
@@ -54,19 +54,19 @@ object RobotContainer {
 //                )
 //            }
 //        }
-        SmartDashboard.putData("Auto Chooser", autoChooser)
+//        SmartDashboard.putData("Auto Chooser", autoChooser)
 
 //        teleopSwerveCommand = TeleopSwerveDriveCommand()
 //        teleopSwerveCommand.schedule()
 
         configureButtonBindings()
 
-        SmartDashboard.putData("Auto Chooser", autoChooser)
+//        SmartDashboard.putData("Auto Chooser", autoChooser)
     }
 
     private fun configureButtonBindings() {
         teleopShootCommand = Commands.run({
-            gunSystem.shoot(0.0, xboxController.leftY, xboxController.rightY)
+            gunSystem.shoot(0.0, xboxController.leftY * .6, xboxController.rightY * .6)
         })
 //        teleopElevateCommand = Commands.run({
 //            gunSystem.elevate(xboxController.leftY)

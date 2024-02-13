@@ -5,6 +5,7 @@ import com.revrobotics.CANSparkLowLevel
 import com.revrobotics.CANSparkMax
 import com.revrobotics.SparkAbsoluteEncoder
 import com.revrobotics.SparkLimitSwitch.Type.kNormallyOpen
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import frc.robot.constants.GUNConstants
 
@@ -39,7 +40,7 @@ class GUNSystem : SubsystemBase() {
 //    var shootingAngle = GUNConstants.TARGET_SAFE_ANGLE
     var isDefinitelyAboveCrossbar = false
 
-//    init {
+    init {
 //        leftRotationMotor.restoreFactoryDefaults()
 //        rightRotationMotor.restoreFactoryDefaults()
 //
@@ -78,7 +79,15 @@ class GUNSystem : SubsystemBase() {
 //        rotationPID.setSmartMotionMinOutputVelocity(GUNConstants.rotationMinRPM, GUNConstants.SMART_MOTION_SLOT)
 //        rotationPID.setSmartMotionMaxAccel(GUNConstants.rotationMaxAcceleration, GUNConstants.SMART_MOTION_SLOT)
 //        rotationPID.setSmartMotionAllowedClosedLoopError(GUNConstants.rotationMaxError, GUNConstants.SMART_MOTION_SLOT)
-//    }
+
+        rightShooter.inverted = true
+        leftShooter.inverted = false
+
+        rightShooter.setSmartCurrentLimit(80)
+        leftShooter.setSmartCurrentLimit(80)
+//        rightShooter.closedLoopRampRate = 2.5
+//        rightShooter.closedLoopRampRate = 2.5
+    }
 
     fun setZeroPosition() {
 
@@ -108,6 +117,10 @@ class GUNSystem : SubsystemBase() {
 //    }
 
     fun setSpeed(left: Double, right: Double) {
+        SmartDashboard.putNumber("Left Speed", left)
+        SmartDashboard.putNumber("Right Speed", right)
+        SmartDashboard.putNumber("Left Current", leftShooter.outputCurrent)
+        SmartDashboard.putNumber("Right Current", rightShooter.outputCurrent)
         leftShooter.set(left)
         rightShooter.set(right)
     }
