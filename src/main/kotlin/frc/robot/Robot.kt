@@ -15,17 +15,17 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter
 
 class Robot : LoggedRobot() {
     override fun robotInit() {
-        Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME)
-        Logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE)
-        Logger.recordMetadata("GitSHA", BuildConstants.GIT_SHA)
-        Logger.recordMetadata("GitDate", BuildConstants.GIT_DATE)
-        Logger.recordMetadata("GitBranch", BuildConstants.GIT_BRANCH)
-
-        when (BuildConstants.DIRTY) {
-            0 -> Logger.recordMetadata("GitDirty", "All changes committed")
-            1 -> Logger.recordMetadata("GitDirty", "Uncommitted changes")
-            else -> Logger.recordMetadata("GitDirty", "Unknown")
-        }
+//        Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME)
+//        Logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE)
+//        Logger.recordMetadata("GitSHA", BuildConstants.GIT_SHA)
+//        Logger.recordMetadata("GitDate", BuildConstants.GIT_DATE)
+//        Logger.recordMetadata("GitBranch", BuildConstants.GIT_BRANCH)
+//
+//        when (BuildConstants.DIRTY) {
+//            0 -> Logger.recordMetadata("GitDirty", "All changes committed")
+//            1 -> Logger.recordMetadata("GitDirty", "Uncommitted changes")
+//            else -> Logger.recordMetadata("GitDirty", "Unknown")
+//        }
 
         when (Constants.currentMode) {
             Constants.Mode.REAL -> {
@@ -81,7 +81,7 @@ class Robot : LoggedRobot() {
 
     override fun disabledInit() {
         CommandScheduler.getInstance().cancelAll()
-        RobotContainer.swerveSystem.swerveDrive.lockPose()
+//        RobotContainer.swerveSystem.swerveDrive.lockPose()
     }
 
     override fun disabledPeriodic() {}
@@ -110,10 +110,6 @@ class Robot : LoggedRobot() {
     }
     
     override fun testPeriodic() {
-        RobotContainer.swerveSystem.swerveDrive.modules[0].setAngle(0.0)
-        RobotContainer.swerveSystem.swerveDrive.modules[1].setAngle(0.0)
-        RobotContainer.swerveSystem.swerveDrive.modules[2].setAngle(0.0)
-        RobotContainer.swerveSystem.swerveDrive.modules[3].setAngle(0.0)
 //        RobotContainer.swerveSystem.drive(Translation2d(0.25, 0.0), 0.0, true)
 //        val calibrator = ShooterCalibrator("/u/shooter_calibrator/test1.csv");
 //        calibrator.writeOut(shots)

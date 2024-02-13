@@ -6,7 +6,7 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.OutputStream
-
+/*
 class ShooterCalibrator(val directory: String, val gun: GUNSystem) {
     var lastShot: Shot? = null
     fun readCsv(): List<Shot> {
@@ -69,3 +69,4 @@ class ShooterCalibrator(val directory: String, val gun: GUNSystem) {
 
     }
 }
+ */

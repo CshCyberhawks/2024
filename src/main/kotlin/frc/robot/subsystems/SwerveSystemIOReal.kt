@@ -2,7 +2,7 @@ package frc.robot.subsystems
 
 import frc.robot.RobotContainer
 import swervelib.SwerveController
-
+/*
 class SwerveSystemIOReal : SwerveSystemIO {
     override fun updateInputs(inputs: SwerveSystemIO.SwerveSystemIOInputs) {
         inputs.givenTranslation =
@@ -10,3 +10,5 @@ class SwerveSystemIOReal : SwerveSystemIO {
         inputs.givenRotation = RobotContainer.swerveSystem.inputRotation
     }
 }
+
+ */
