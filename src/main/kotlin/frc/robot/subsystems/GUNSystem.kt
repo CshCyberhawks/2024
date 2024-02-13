@@ -26,9 +26,8 @@ class GUNSystem : SubsystemBase() {
 //
 //    private val rotationEncoder = mainRotationMotor.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle)
 
-    private val leftShooter = CANSparkMax(TODO(), CANSparkLowLevel.MotorType.kBrushless)
-    private val rightShooter = CANSparkMax(TODO(), CANSparkLowLevel.MotorType.kBrushless)
-
+    private val leftShooter = CANSparkMax(17, CANSparkLowLevel.MotorType.kBrushless)
+    private val rightShooter = CANSparkMax(18, CANSparkLowLevel.MotorType.kBrushless)
 //    private val positionPID = elevatorMotor.pidController
 //    private val rotationPID = mainRotationMotor.pidController
 
