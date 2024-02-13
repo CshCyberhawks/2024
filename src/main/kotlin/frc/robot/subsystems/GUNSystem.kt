@@ -16,21 +16,21 @@ enum class GUNPosition {
 }
 
 class GUNSystem : SubsystemBase() {
-    private val elevatorMotor = CANSparkMax(11, CANSparkLowLevel.MotorType.kBrushless)
-    private val leftRotationMotor = CANSparkMax(13, CANSparkLowLevel.MotorType.kBrushless)
-    private val rightRotationMotor = CANSparkMax(14, CANSparkLowLevel.MotorType.kBrushless)
-    private val positionEncoder = elevatorMotor.getAlternateEncoder(GUNConstants.POSITION_GEAR_RATIO)
+//    private val elevatorMotor = CANSparkMax(11, CANSparkLowLevel.MotorType.kBrushless)
+//    private val leftRotationMotor = CANSparkMax(13, CANSparkLowLevel.MotorType.kBrushless)
+//    private val rightRotationMotor = CANSparkMax(14, CANSparkLowLevel.MotorType.kBrushless)
+//    private val positionEncoder = elevatorMotor.getAlternateEncoder(GUNConstants.POSITION_GEAR_RATIO)
+//
+//    private val mainRotationMotor = rightRotationMotor // remember to make other one follow this
+//    private val followerRotationMotor = leftRotationMotor
+//
+//    private val rotationEncoder = mainRotationMotor.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle)
 
-    private val mainRotationMotor = rightRotationMotor // remember to make other one follow this
-    private val followerRotationMotor = leftRotationMotor
+    private val leftShooter = CANSparkMax(TODO(), CANSparkLowLevel.MotorType.kBrushless)
+    private val rightShooter = CANSparkMax(TODO(), CANSparkLowLevel.MotorType.kBrushless)
 
-    private val rotationEncoder = mainRotationMotor.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle)
-
-//    private val leftShooter = CANSparkMax(TODO(), CANSparkLowLevel.MotorType.kBrushless)
-//    private val rightShooter = CANSparkMax(TODO(), CANSparkLowLevel.MotorType.kBrushless)
-
-    private val positionPID = elevatorMotor.pidController
-    private val rotationPID = mainRotationMotor.pidController
+//    private val positionPID = elevatorMotor.pidController
+//    private val rotationPID = mainRotationMotor.pidController
 
     var targetPosition = GUNPosition.SPEAKER
 
@@ -40,46 +40,46 @@ class GUNSystem : SubsystemBase() {
 //    var shootingAngle = GUNConstants.TARGET_SAFE_ANGLE
     var isDefinitelyAboveCrossbar = false
 
-    init {
-        leftRotationMotor.restoreFactoryDefaults()
-        rightRotationMotor.restoreFactoryDefaults()
-
-        elevatorMotor.inverted = false
-        mainRotationMotor.inverted = false
-
-        mainRotationMotor.getForwardLimitSwitch(kNormallyOpen).enableLimitSwitch(false)
-        mainRotationMotor.getReverseLimitSwitch(kNormallyOpen).enableLimitSwitch(false)
-        elevatorMotor.getForwardLimitSwitch(kNormallyOpen).enableLimitSwitch(false)
-        elevatorMotor.getReverseLimitSwitch(kNormallyOpen).enableLimitSwitch(false)
-
-        followerRotationMotor.follow(mainRotationMotor, true)
-
-        mainRotationMotor.setIdleMode(CANSparkBase.IdleMode.kBrake)
-        followerRotationMotor.setIdleMode(CANSparkBase.IdleMode.kBrake)
-        elevatorMotor.setIdleMode(CANSparkBase.IdleMode.kBrake)
-
-        positionPID.setP(GUNConstants.positionKP)
-        positionPID.setI(GUNConstants.positionKI)
-        positionPID.setD(GUNConstants.positionKD)
-        positionPID.setIZone(GUNConstants.positionIz)
-        positionPID.setFF(GUNConstants.positionFF)
-        positionPID.setOutputRange(GUNConstants.positionMin, GUNConstants.positionMax)
-        positionPID.setSmartMotionMaxVelocity(GUNConstants.positionMaxRPM, GUNConstants.SMART_MOTION_SLOT)
-        positionPID.setSmartMotionMinOutputVelocity(GUNConstants.positionMinRPM, GUNConstants.SMART_MOTION_SLOT)
-        positionPID.setSmartMotionMaxAccel(GUNConstants.positionMaxAcceleration, GUNConstants.SMART_MOTION_SLOT)
-        positionPID.setSmartMotionAllowedClosedLoopError(GUNConstants.positionMaxError, GUNConstants.SMART_MOTION_SLOT)
-
-        rotationPID.setP(GUNConstants.rotationKP)
-        rotationPID.setI(GUNConstants.rotationKI)
-        rotationPID.setD(GUNConstants.rotationKD)
-        rotationPID.setIZone(GUNConstants.rotationIz)
-        rotationPID.setFF(GUNConstants.rotationFF)
-        rotationPID.setOutputRange(GUNConstants.rotationMin, GUNConstants.rotationMax)
-        rotationPID.setSmartMotionMaxVelocity(GUNConstants.rotationMaxRPM, GUNConstants.SMART_MOTION_SLOT)
-        rotationPID.setSmartMotionMinOutputVelocity(GUNConstants.rotationMinRPM, GUNConstants.SMART_MOTION_SLOT)
-        rotationPID.setSmartMotionMaxAccel(GUNConstants.rotationMaxAcceleration, GUNConstants.SMART_MOTION_SLOT)
-        rotationPID.setSmartMotionAllowedClosedLoopError(GUNConstants.rotationMaxError, GUNConstants.SMART_MOTION_SLOT)
-    }
+//    init {
+//        leftRotationMotor.restoreFactoryDefaults()
+//        rightRotationMotor.restoreFactoryDefaults()
+//
+//        elevatorMotor.inverted = false
+//        mainRotationMotor.inverted = false
+//
+//        mainRotationMotor.getForwardLimitSwitch(kNormallyOpen).enableLimitSwitch(false)
+//        mainRotationMotor.getReverseLimitSwitch(kNormallyOpen).enableLimitSwitch(false)
+//        elevatorMotor.getForwardLimitSwitch(kNormallyOpen).enableLimitSwitch(false)
+//        elevatorMotor.getReverseLimitSwitch(kNormallyOpen).enableLimitSwitch(false)
+//
+//        followerRotationMotor.follow(mainRotationMotor, true)
+//
+//        mainRotationMotor.setIdleMode(CANSparkBase.IdleMode.kBrake)
+//        followerRotationMotor.setIdleMode(CANSparkBase.IdleMode.kBrake)
+//        elevatorMotor.setIdleMode(CANSparkBase.IdleMode.kBrake)
+//
+//        positionPID.setP(GUNConstants.positionKP)
+//        positionPID.setI(GUNConstants.positionKI)
+//        positionPID.setD(GUNConstants.positionKD)
+//        positionPID.setIZone(GUNConstants.positionIz)
+//        positionPID.setFF(GUNConstants.positionFF)
+//        positionPID.setOutputRange(GUNConstants.positionMin, GUNConstants.positionMax)
+//        positionPID.setSmartMotionMaxVelocity(GUNConstants.positionMaxRPM, GUNConstants.SMART_MOTION_SLOT)
+//        positionPID.setSmartMotionMinOutputVelocity(GUNConstants.positionMinRPM, GUNConstants.SMART_MOTION_SLOT)
+//        positionPID.setSmartMotionMaxAccel(GUNConstants.positionMaxAcceleration, GUNConstants.SMART_MOTION_SLOT)
+//        positionPID.setSmartMotionAllowedClosedLoopError(GUNConstants.positionMaxError, GUNConstants.SMART_MOTION_SLOT)
+//
+//        rotationPID.setP(GUNConstants.rotationKP)
+//        rotationPID.setI(GUNConstants.rotationKI)
+//        rotationPID.setD(GUNConstants.rotationKD)
+//        rotationPID.setIZone(GUNConstants.rotationIz)
+//        rotationPID.setFF(GUNConstants.rotationFF)
+//        rotationPID.setOutputRange(GUNConstants.rotationMin, GUNConstants.rotationMax)
+//        rotationPID.setSmartMotionMaxVelocity(GUNConstants.rotationMaxRPM, GUNConstants.SMART_MOTION_SLOT)
+//        rotationPID.setSmartMotionMinOutputVelocity(GUNConstants.rotationMinRPM, GUNConstants.SMART_MOTION_SLOT)
+//        rotationPID.setSmartMotionMaxAccel(GUNConstants.rotationMaxAcceleration, GUNConstants.SMART_MOTION_SLOT)
+//        rotationPID.setSmartMotionAllowedClosedLoopError(GUNConstants.rotationMaxError, GUNConstants.SMART_MOTION_SLOT)
+//    }
 
     fun setZeroPosition() {
 
@@ -108,32 +108,32 @@ class GUNSystem : SubsystemBase() {
 //        targetPosition = GUNPosition.SPEAKER
 //    }
 
-//    fun setSpeed(left: Double, right: Double) {
-//        leftShooter.set(left)
-//        rightShooter.set(right)
+    fun setSpeed(left: Double, right: Double) {
+        leftShooter.set(left)
+        rightShooter.set(right)
+    }
+
+//    fun getRotation(): Double {
+//        return rotationEncoder.position
+//    }
+//
+//    fun getPosition(): Double {
+//        return positionEncoder.position
 //    }
 
-    fun getRotation(): Double {
-        return rotationEncoder.position
-    }
-
-    fun getPosition(): Double {
-        return positionEncoder.position
-    }
-
-//    fun shoot(angle: Double, leftPower: Double, rightPower: Double) {
+    fun shoot(angle: Double, leftPower: Double, rightPower: Double) {
 //        goToShoot(angle)
-//        setSpeed(leftPower, rightPower)
+        setSpeed(leftPower, rightPower)
+    }
+
+
+//    fun elevate(speed: Double) {
+//        elevatorMotor.set(speed)
 //    }
-
-
-    fun elevate(speed: Double) {
-        elevatorMotor.set(speed)
-    }
-
-    fun rotate(speed: Double) {
-        mainRotationMotor.set(speed)
-    }
+//
+//    fun rotate(speed: Double) {
+//        mainRotationMotor.set(speed)
+//    }
 
     override fun periodic() {
         /*

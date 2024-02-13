@@ -13,8 +13,8 @@ import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import frc.robot.constants.DriveConstants
+import frc.robot.constants.FieldConstants
 import frc.robot.constants.PathPlannerLibConstants
-import frc.robot.constants.yagsl_configs.YAGSLConfig
 import org.littletonrobotics.junction.Logger
 import swervelib.SwerveDrive
 import swervelib.parser.SwerveParser
@@ -23,31 +23,20 @@ import java.io.File
 import kotlin.math.PI
 import kotlin.math.atan2
 
-class SwerveSystem(private val io: SwerveSystemIO, val swerveDrive: SwerveDrive) : SubsystemBase() {
+class SwerveSystem(private val io: SwerveSystemIO, config: File) : SubsystemBase() {
+    val swerveDrive: SwerveDrive = try {
+        SwerveParser(config).createSwerveDrive(DriveConstants.MAX_SPEED)
+    } catch (e: Exception) {
+        throw RuntimeException(e)
+    }
+
     private val inputs: SwerveSystemIO.SwerveSystemIOInputs = SwerveSystemIO.SwerveSystemIOInputs
 
     var inputRotation: Double = 0.0
     private val autoConstraints: PathConstraints
 
-    constructor(io: SwerveSystemIO, config: YAGSLConfig) : this(
-        io,
-        swerveDrive = SwerveDrive(
-            config.driveConfig,
-            config.controllerConfig,
-            config.maxSpeedMPS,
-        )
-    )
-
-    constructor(io: SwerveSystemIO, config: File) : this(
-        io,
-        swerveDrive = try {
-            SwerveParser(config).createSwerveDrive(DriveConstants.MAX_SPEED)
-        } catch (e: Exception) {
-            throw RuntimeException(e)
-        }
-    )
-
     init {
+
         SwerveDriveTelemetry.verbosity = SwerveDriveTelemetry.TelemetryVerbosity.HIGH
 
         swerveDrive.setHeadingCorrection(false)
