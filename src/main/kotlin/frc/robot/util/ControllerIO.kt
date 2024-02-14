@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj.XboxController
 import kotlin.math.abs
 
 object ControllerIO {
-    private val xbox = XboxController(2)
+    private val xbox = XboxController(1)
 
     val spinClaw: Boolean
         get() = abs(xbox.rightTriggerAxis) > 0.1

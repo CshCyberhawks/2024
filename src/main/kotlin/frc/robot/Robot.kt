@@ -38,14 +38,16 @@ class Robot : LoggedRobot() {
         when (Constants.currentMode) {
             Constants.Mode.REAL -> {
                 // Running on a real robot, log to a USB stick ("/U/logs")
-                Logger.addDataReceiver(WPILOGWriter())
+//                Logger.addDataReceiver(WPILOGWriter())
                 Logger.addDataReceiver(NT4Publisher())
                 PowerDistribution(1, PowerDistribution.ModuleType.kRev)
             }
+
             Constants.Mode.SIM -> {
                 // Running a physics simulator, log to NT
                 Logger.addDataReceiver(NT4Publisher())
             }
+
             Constants.Mode.REPLAY -> {
                 // Replaying a log, set up replay source
                 setUseTiming(false) // Run as fast as possible

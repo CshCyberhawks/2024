@@ -7,7 +7,7 @@
   "drive": {
     "type": "talonfx",
     "id": 3,
-    "canbus": "canivore"
+    "canbus": null
   },
   "angle": {
     "type": "sparkmax",

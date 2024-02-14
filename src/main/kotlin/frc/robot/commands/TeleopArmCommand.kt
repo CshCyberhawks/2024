@@ -35,16 +35,18 @@ class TeleopArmCommand(private val subsystem: ArmSystem, private val clawSystem:
 
         if (ControllerIO.toggleTilt) {
             subsystem.desiredTilt = !subsystem.desiredTilt
+            println("TILTING")
         }
 
         if (ControllerIO.extensionExtended) {
             subsystem.desiredExtensionPosition = ArmConstants.armExtensionOut
 //            subsystem.desiredExtensionPosition = ExtensionPosition.EXTENDED
-
+            println("EXTENDING")
         }
         if (ControllerIO.extensionRetracted) {
             if (!subsystem.extensionInBeamBreak.get()) {
                 subsystem.desiredExtensionPosition = 0.0
+                println("RETRACTING")
             }
 //            subsystem.desiredExtensionPosition = ExtensionPosition.RETRACTED
         }
@@ -56,11 +58,13 @@ class TeleopArmCommand(private val subsystem: ArmSystem, private val clawSystem:
             armQueue.add(ExtensionMovement(subsystem, ArmConstants.ARM_EXTENSION_IN))
             armQueue.add(TiltMovement(subsystem, false))
             armQueue.add(AngleMovement(subsystem, ArmConstants.ARM_IN_ANGLE))
+            println("ALIGN CLOSED")
         }
 
         if (ControllerIO.armAlignShelf) {
             armQueue.clear()
             subsystem.desiredArmAngle = ArmConstants.armShelfAngle
+            println("ALIGN SHELF")
         }
 
         if (ControllerIO.armAlignFloorCube) {
@@ -68,6 +72,7 @@ class TeleopArmCommand(private val subsystem: ArmSystem, private val clawSystem:
             subsystem.desiredArmAngle = ArmConstants.armFloorCubeAngle
             subsystem.desiredTilt = true
             subsystem.desiredExtensionPosition = ArmConstants.ARM_EXTENSION_IN
+            println("ALIGN FLOOR CUBE")
         }
 
         if (ControllerIO.armAlignFloorCone) {
@@ -75,6 +80,7 @@ class TeleopArmCommand(private val subsystem: ArmSystem, private val clawSystem:
             subsystem.desiredArmAngle = ArmConstants.armFloorConeAngle
             subsystem.desiredTilt = true
             subsystem.desiredExtensionPosition = ArmConstants.armExtensionCone
+            println("ALIGN FLOOR CONE")
         }
 
         if (ControllerIO.armAlignHigh) {
@@ -83,6 +89,7 @@ class TeleopArmCommand(private val subsystem: ArmSystem, private val clawSystem:
             armQueue.add(TiltMovement(subsystem, true))
             armQueue.add(AngleMovement(subsystem, ArmConstants.armHighAngle))
             armQueue.add(ExtensionMovement(subsystem, ArmConstants.armExtensionOut))
+            println("ALIGN HIGH")
         }
 
         if (ControllerIO.armPlaceHigh) {
@@ -94,12 +101,14 @@ class TeleopArmCommand(private val subsystem: ArmSystem, private val clawSystem:
             armQueue.add(TiltMovement(subsystem, false))
             armQueue.add(AngleMovement(subsystem, ArmConstants.ARM_IN_ANGLE))
             armQueue.add(ClawAction(clawSystem, ClawState.Idle))
+            println("PLACE HIGH")
         }
 
         if (ControllerIO.armAlignMid) {
             armQueue.clear()
             armQueue.add(AngleMovement(subsystem, ArmConstants.armMidAngle))
             armQueue.add(ExtensionMovement(subsystem, ArmConstants.armExtensionMid))
+            println("ALIGN MID")
         }
 
         if (ControllerIO.armPlaceMid) {
@@ -110,6 +119,7 @@ class TeleopArmCommand(private val subsystem: ArmSystem, private val clawSystem:
             armQueue.add(ExtensionMovement(subsystem, ArmConstants.ARM_EXTENSION_IN))
             armQueue.add(AngleMovement(subsystem, ArmConstants.ARM_IN_ANGLE))
             armQueue.add(ClawAction(clawSystem, ClawState.Idle))
+            println("PLACE MID")
         }
 //
 //        if (ControllerIO.armAlignMid) {

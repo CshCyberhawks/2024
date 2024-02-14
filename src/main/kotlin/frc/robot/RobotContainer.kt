@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.Commands
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController
 import frc.robot.commands.TeleopArmCommand
 import frc.robot.commands.TeleopClawCommand
 import frc.robot.constants.DriveConstants
@@ -24,9 +23,9 @@ import kotlin.math.abs
  */
 object RobotContainer {
     // The robot's subsystems and commands are defined here...
-    private val leftJoystick: CommandJoystick = CommandJoystick(0)
-    private val rightJoystick: CommandJoystick = CommandJoystick(1)
-    private val xboxController: CommandXboxController = CommandXboxController(2)
+//    private val leftJoystick: CommandJoystick = CommandJoystick(2)
+    val rightJoystick: CommandJoystick = CommandJoystick(0)
+//    val xboxController: CommandXboxController = CommandXboxController(1)
 
     val swerveSystem: SwerveSystem
     val armSystem: ArmSystem = ArmSystem()
@@ -50,6 +49,7 @@ object RobotContainer {
                     File(Filesystem.getDeployDirectory(), "yagsl_configs/good_news_goose")
                 )
             }
+
             Constants.Mode.SIM -> {
                 // change these later
                 swerveSystem = SwerveSystem(
@@ -57,6 +57,7 @@ object RobotContainer {
                     File(Filesystem.getDeployDirectory(), "yagsl_configs/good_news_goose")
                 )
             }
+
             Constants.Mode.REPLAY -> {
                 // change these later
                 swerveSystem = SwerveSystem(

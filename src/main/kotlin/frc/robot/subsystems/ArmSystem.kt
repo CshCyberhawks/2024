@@ -6,11 +6,7 @@ import edu.wpi.first.math.MathUtil
 import edu.wpi.first.math.controller.PIDController
 import edu.wpi.first.math.trajectory.TrapezoidProfile
 import edu.wpi.first.util.WPIUtilJNI
-import edu.wpi.first.wpilibj.DigitalInput
-import edu.wpi.first.wpilibj.DutyCycleEncoder
-import edu.wpi.first.wpilibj.Encoder
-import edu.wpi.first.wpilibj.PneumaticsModuleType
-import edu.wpi.first.wpilibj.Solenoid
+import edu.wpi.first.wpilibj.*
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
@@ -66,6 +62,7 @@ class ArmSystem : SubsystemBase() {
     private val armExtensionPID = PIDController(2.0, 0.0, 0.0)
     private var currentArmExtensionTrap = TrapezoidProfile.State(extensionPosition, 0.0)
     private var desiredArmExtensionTrap = TrapezoidProfile.State(extensionPosition, 0.0)
+
     //accel = 45
     private val armAngleTrapConstraints = TrapezoidProfile.Constraints(360.0, 45.0)
     private val armExtensionTrapConstraints = TrapezoidProfile.Constraints(3600.0, 3000.0)
@@ -204,15 +201,13 @@ class ArmSystem : SubsystemBase() {
         if (abs(ff) > 15) {
             armOutput += (ff / 60)
             SmartDashboard.putBoolean("ff engaged", true)
-        }
-        else {
+        } else {
             val armPIDOutput = armAnglePID.calculate(armAngleDegrees) / 360
             SmartDashboard.putNumber("arm pid", armPIDOutput)
             SmartDashboard.putBoolean("ff engaged", false)
             if (armAngleDegrees < 50 || desiredTilt) {
                 armOutput += armPIDOutput + gravityFF
-            }
-            else {
+            } else {
                 armOutput += armPIDOutput + gravityFF + (ff / 60)
             }
 
@@ -249,12 +244,14 @@ class ArmSystem : SubsystemBase() {
             if (extensionPosition <= 0.0 && !extensionInBeamBreak.get()) {
                 extensionMotor.set(0.1)
             } else if (armExtensionPIDOutput < -0.1 || armExtensionPIDOutput > 0.1) {
-                val extensionTrap = TrapezoidProfile(armExtensionTrapConstraints, desiredArmExtensionTrap, currentArmExtensionTrap)
+                val extensionTrap =
+                    TrapezoidProfile(armExtensionTrapConstraints, desiredArmExtensionTrap, currentArmExtensionTrap)
 
                 val extensionTrapOut = extensionTrap.calculate(extensionTime)
                 val extensionTrapOutput = extensionTrapOut.velocity / 3600
 
-                val extensionOutput = armExtensionPIDOutput * if (extensionTrapOutput != 0.0) abs(extensionTrapOutput) else 1.0
+                val extensionOutput =
+                    armExtensionPIDOutput * if (extensionTrapOutput != 0.0) abs(extensionTrapOutput) else 1.0
 
                 currentArmExtensionTrap = extensionTrapOut
 
