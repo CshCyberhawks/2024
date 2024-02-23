@@ -1,11 +1,5 @@
 package frc.robot.util
 
-import frc.robot.RobotContainer
-import frc.robot.subsystems.GUNSystem
-import java.io.File
-import java.io.FileInputStream
-import java.io.FileOutputStream
-import java.io.OutputStream
 /*
 class ShooterCalibrator(val directory: String, val gun: GUNSystem) {
     var lastShot: Shot? = null

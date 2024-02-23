@@ -4,20 +4,22 @@ import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
 
-object GUNConstants {
+object TrunkConstants {
     // someone rename these
     const val POSITION_GEAR_RATIO = 15
     const val ROTATION_GEAR_RATIO = 100
-    const val MAX_PIVOT_HEIGHT_M = 0.64446
-    const val MIN_PIVOT_HEIGHT_M = 0.348701
-    const val THING_LENGTH_M = 0.6133
-    const val MOVER_GEAR_RADIUS_M = 0.0127
-    val gearCircumfrence = 2 * PI * MOVER_GEAR_RADIUS_M
-    const val ELEVATOR_ANGLE = 28.8309683
-    val d2y = sin(ELEVATOR_ANGLE * PI / 180.0)
-    val d2x = cos(ELEVATOR_ANGLE * PI / 180.0)
+    const val MAX_PIVOT_HEIGHT_METERS = 0.64446
+    const val MIN_PIVOT_HEIGHT_METERS = 0.348701
+    const val ELEVATOR_LENGTH_METERS = 0.6133
 
-    //    var MIN_SAFE_ANGLE: Double = TODO()
+    const val MOVER_GEAR_RADIUS_METERS = 0.0127
+    const val MOVER_GEAR_CIRCUMFERENCE_METERS = 2 * PI * MOVER_GEAR_RADIUS_METERS
+    const val ELEVATOR_LENGTH_REVOLUTIONS = TrunkConstants.ELEVATOR_LENGTH_METERS / TrunkConstants.MOVER_GEAR_CIRCUMFERENCE_METERS
+    const val ELEVATOR_ANGLE_DEGREES = 28.8309683
+    val d2y = sin(Math.toRadians(ELEVATOR_ANGLE_DEGREES))
+    val d2x = cos(Math.toRadians(ELEVATOR_ANGLE_DEGREES))
+
+//    var MIN_SAFE_ANGLE: Double = TODO()
 //    var TARGET_SAFE_ANGLE: Double = TODO()
 //    var MIN_SAFE_DISTANCE: Double = TODO()
 //    var ABS_MIN_ANGLE: Double = TODO()
@@ -33,6 +35,25 @@ object GUNConstants {
 //    var CROSSBAR_TOP: Double = TODO()
 //    var STOW_POSITION: Double = TODO()
 //    var STOW_ANGLE: Double = TODO()
+
+    // TODO: All of these are bullshit values so I could test simulation
+    var MIN_SAFE_ANGLE: Double = 0.0
+    var TARGET_SAFE_ANGLE: Double = 0.0
+    var MIN_SAFE_DISTANCE: Double = 0.0
+    var ABS_MIN_ANGLE: Double = 0.0
+    var ABS_MAX_ANGLE: Double = 0.0
+    var TOP_M: Double = 0.0
+    var BOTTOM_M: Double = 0.0
+    var SPEAKER_POSITION: Double = 0.8
+    var AMP_POSITION: Double = 0.7
+    var AMP_ANGLE: Double = 215.0
+    var INTAKE_POSITION: Double = 0.3
+    var INTAKE_ANGLE: Double = 30.0
+    var CROSSBAR_BOTTOM: Double = 0.0
+    var CROSSBAR_TOP: Double = 0.0
+    var STOW_POSITION: Double = 0.0
+    var STOW_ANGLE: Double = 0.0
+
     var rotationOffset: Double = 0.0
 
     const val SMART_MOTION_SLOT = 0

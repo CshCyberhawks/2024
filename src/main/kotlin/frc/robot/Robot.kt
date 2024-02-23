@@ -99,6 +99,7 @@ class Robot : LoggedRobot() {
 //        RobotContainer.teleopSwerveCommand.schedule()
 //        RobotContainer.teleopElevateCommand.schedule()
         RobotContainer.teleopShootCommand.schedule()
+
     }
 
     override fun teleopPeriodic() {
