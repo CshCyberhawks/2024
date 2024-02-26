@@ -1,9 +1,9 @@
 plugins {
     id "java"
-    id "edu.wpi.first.GradleRIO" version "2024.1.1"
-    id "org.jetbrains.kotlin.jvm" version "1.6.10"
-    id "org.jetbrains.dokka" version "1.7.20"
-    id "com.peterabeles.gversion" version "1.10"
+    id "edu.wpi.first.GradleRIO" version "2024.2.1"
+    id "org.jetbrains.kotlin.jvm" version "2.0.0-Beta3"
+    id "org.jetbrains.dokka" version "1.9.10"
+    id "com.peterabeles.gversion" version "1.10.2"
 }
 
 java {
@@ -61,11 +61,12 @@ repositories {
     mavenLocal()
 }
 
-configurations.all {
+configurations.configureEach {
     exclude group: "edu.wpi.first.wpilibj"
 }
 
-task(checkAkitInstall, dependsOn: "classes", type: JavaExec) {
+tasks.register('checkAkitInstall', JavaExec) {
+    dependsOn "classes"
     mainClass = "org.littletonrobotics.junction.CheckInstall"
     classpath = sourceSets.main.runtimeClasspath
 }
@@ -91,9 +92,9 @@ dependencies {
     nativeRelease wpi.java.vendor.jniRelease(wpi.platforms.desktop)
     simulationRelease wpi.sim.enableRelease()
 
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
-    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.8.2'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.1'
+    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.10.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.1'
     implementation "org.jetbrains.kotlin:kotlin-stdlib"
     def akitJson = new groovy.json.JsonSlurper().parseText(new File(projectDir.getAbsolutePath() + "/vendordeps/AdvantageKit.json").text)
     annotationProcessor "org.littletonrobotics.akit.junction:junction-autolog:$akitJson.version"
@@ -124,7 +125,7 @@ wpi.java.configureExecutableTasks(jar)
 wpi.java.configureTestTasks(test)
 
 // Configure string concat to always inline compile
-tasks.withType(JavaCompile) {
+tasks.withType(JavaCompile).configureEach {
     options.compilerArgs.add '-XDstringConcat=inline'
 }
 

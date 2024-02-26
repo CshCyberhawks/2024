@@ -43,7 +43,7 @@ public class CANCoderSwerve extends SwerveAbsoluteEncoder {
      * @param id CAN ID.
      */
     public CANCoderSwerve(int id) {
-        encoder = new CANcoder(id);
+        this(id, "");
     }
 
     /**

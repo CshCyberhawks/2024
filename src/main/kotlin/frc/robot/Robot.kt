@@ -1,16 +1,18 @@
 package frc.robot
 
 import edu.wpi.first.math.geometry.Rotation2d
-import edu.wpi.first.math.geometry.Translation2d
 import edu.wpi.first.math.kinematics.SwerveModuleState
+import edu.wpi.first.wpilibj.PowerDistribution
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
-import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.CommandScheduler
-import frc.robot.constants.DriveConstants
+import org.littletonrobotics.junction.LogFileUtil
 import org.littletonrobotics.junction.LoggedRobot
 import org.littletonrobotics.junction.Logger
 import org.littletonrobotics.junction.networktables.NT4Publisher
 import kotlin.math.abs
+
+import org.littletonrobotics.junction.wpilog.WPILOGReader
+import org.littletonrobotics.junction.wpilog.WPILOGWriter
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -19,10 +21,6 @@ import kotlin.math.abs
  * project.
  */
 class Robot : LoggedRobot() {
-
-    //    private val canCoder: CANcoder = CANcoder(1)
-    private var autonomousCommand: Command? = null
-
     /**
      * This function is run when the robot is first started up and should be used for any
      * initialization code.
@@ -38,38 +36,33 @@ class Robot : LoggedRobot() {
 
         when (BuildConstants.DIRTY) {
             0 -> Logger.recordMetadata("GitDirty", "All changes committed")
-            1 -> Logger.recordMetadata("GitDirty", "Uncomitted changes")
+            1 -> Logger.recordMetadata("GitDirty", "Uncommitted changes")
             else -> Logger.recordMetadata("GitDirty", "Unknown")
         }
 
         when (Constants.currentMode) {
             Constants.Mode.REAL -> {
                 // Running on a real robot, log to a USB stick ("/U/logs")
-//                Logger.addDataReceiver(WPILOGWriter())
+                Logger.addDataReceiver(WPILOGWriter())
                 Logger.addDataReceiver(NT4Publisher())
+                PowerDistribution(1, PowerDistribution.ModuleType.kRev)
             }
-
             Constants.Mode.SIM -> {
                 // Running a physics simulator, log to NT
                 Logger.addDataReceiver(NT4Publisher())
             }
-
             Constants.Mode.REPLAY -> {
                 // Replaying a log, set up replay source
                 setUseTiming(false) // Run as fast as possible
-//                val logPath = LogFileUtil.findReplayLog()
-//                Logger.setReplaySource(WPILOGReader(logPath))
-//                Logger.addDataReceiver(WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim")))
+                val logPath = LogFileUtil.findReplayLog()
+                Logger.setReplaySource(WPILOGReader(logPath))
+                Logger.addDataReceiver(WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim")))
             }
         }
 
-        Logger.start()
+//        RobotContainer
 
-//        RobotContainer.speedUp += 1
-
-//        val toApply = CANcoderConfiguration()
-
-
+//        Logger.start()
         /* User can change the configs if they want, or leave it empty for factory-default */
 //        canCoder.getConfigurator().apply(toApply)
     }
@@ -90,12 +83,27 @@ class Robot : LoggedRobot() {
         // and running subsystem periodic() methods.  This must be called from the robot's periodic
         // block in order for anything in the Command-based framework to work.
         CommandScheduler.getInstance().run()
+//        val left = "limelight-left"
+//        val right = "limelight-right"
+//
+//        val leftPose = LimelightHelpers.getBotPose2d(left)
+//        val rightPose = LimelightHelpers.getBotPose2d(right)
+//        if (LimelightHelpers.getTV(left) && LimelightHelpers.getTV(right))
+//            RobotContainer.swerveSystem.swerveDrive.addVisionMeasurement(
+//                Pose2d(
+//                    leftPose.translation.plus(rightPose.translation).div(2.0),
+//                    leftPose.rotation.plus(rightPose.rotation).div(2.0)
+//                ), Timer.getFPGATimestamp()
+//            )
     }
 
     /**
      * This function is called once each time the robot enters Disabled mode.
      */
-    override fun disabledInit() {}
+    override fun disabledInit() {
+        CommandScheduler.getInstance().cancelAll()
+        RobotContainer.swerveSystem.swerveDrive.lockPose()
+    }
 
     /**
      * This function is called periodically when disabled.
@@ -108,6 +116,7 @@ class Robot : LoggedRobot() {
     override fun autonomousInit() {
         // Schedule the autonomous command (example)
         // Note the Kotlin safe-call(?.), this ensures autonomousCommand is not null before scheduling it
+        RobotContainer.autonomousCommand.schedule()
     }
 
     /**
@@ -124,8 +133,8 @@ class Robot : LoggedRobot() {
         // continue until interrupted by another command, remove
         // this line or comment it out.
         // Note the Kotlin safe-call(?.), this ensures autonomousCommand is not null before cancelling it
-        autonomousCommand?.cancel()
-
+        RobotContainer.autonomousCommand.cancel()
+        RobotContainer.teleopSwerveCommand.schedule()
     }
 
     /**
@@ -135,24 +144,6 @@ class Robot : LoggedRobot() {
         SmartDashboard.putNumber("JoyX", RobotContainer.rightJoystick.x)
         SmartDashboard.putNumber("JoyY", RobotContainer.rightJoystick.y)
         SmartDashboard.putNumber("JoyTwist", RobotContainer.rightJoystick.twist)
-
-        RobotContainer.swerveSystem.drive(
-            Translation2d(
-                (if (abs(RobotContainer.rightJoystick.x) > 0.15) {
-                    val inSpeed =
-                        if (RobotContainer.rightJoystick.x < 0.0) RobotContainer.rightJoystick.x + .15 else RobotContainer.rightJoystick.x - .15
-                    (inSpeed) * DriveConstants.MAX_SPEED
-                } else 0.0),
-                (if (abs(RobotContainer.rightJoystick.y) > 0.15) {
-                    val inSpeed =
-                        if (RobotContainer.rightJoystick.y < 0.0) RobotContainer.rightJoystick.y + .15 else RobotContainer.rightJoystick.y - .15
-                    (-inSpeed) * DriveConstants.MAX_SPEED
-                } else 0.0)
-            ),
-            (if (abs(RobotContainer.rightJoystick.twist) > 0.15) -RobotContainer.rightJoystick.twist * -1.0 else 0.0),
-            true
-        )
-
 
         val desiredState =
             SwerveModuleState(0.0, Rotation2d(0.0, 0.0))
@@ -168,12 +159,15 @@ class Robot : LoggedRobot() {
     override fun testInit() {
         // Cancels all running commands at the start of test mode.
         CommandScheduler.getInstance().cancelAll()
-//        RobotContainer.swerveSystem.drive(Translation2d(0.25, 0.0), 0.0, true)
     }
 
     /**
      * This function is called periodically during test mode.
      */
     override fun testPeriodic() {
+        RobotContainer.swerveSystem.swerveDrive.modules[0].setAngle(0.0)
+        RobotContainer.swerveSystem.swerveDrive.modules[1].setAngle(0.0)
+        RobotContainer.swerveSystem.swerveDrive.modules[2].setAngle(0.0)
+        RobotContainer.swerveSystem.swerveDrive.modules[3].setAngle(0.0)
     }
 }

@@ -147,6 +147,8 @@ public class SwerveDrive {
      */
     private double maxSpeedMPS;
 
+    private double discreteTimeStep = 0.0;
+
     /**
      * Creates a new swerve drivebase subsystem. Robot is controlled via the {@link SwerveDrive#drive} method, or via the
      * {@link SwerveDrive#setRawModuleStates} method. The {@link SwerveDrive#drive} method incorporates kinematics-- it
@@ -162,6 +164,9 @@ public class SwerveDrive {
      */
     public SwerveDrive(
             SwerveDriveConfiguration config, SwerveControllerConfiguration controllerConfig, double maxSpeedMPS) {
+
+        this.discreteTimeStep = Timer.getFPGATimestamp();
+
         this.maxSpeedMPS = maxSpeedMPS;
         swerveDriveConfiguration = config;
         swerveController = new SwerveController(controllerConfig);
@@ -303,6 +308,7 @@ public class SwerveDrive {
      */
     public void driveFieldOriented(ChassisSpeeds velocity) {
         ChassisSpeeds fieldOrientedVelocity = ChassisSpeeds.fromFieldRelativeSpeeds(velocity, getYaw());
+
         drive(fieldOrientedVelocity);
     }
 
@@ -410,8 +416,10 @@ public class SwerveDrive {
         // Thank you to Jared Russell FRC254 for Open Loop Compensation Code
         // https://www.chiefdelphi.com/t/whitepaper-swerve-drive-skew-and-second-order-kinematics/416964/5
         if (chassisVelocityCorrection) {
-            velocity = ChassisSpeeds.discretize(velocity, 0.02);
+            double dt = discreteTimeStep - Timer.getFPGATimestamp();
+            velocity = ChassisSpeeds.discretize(velocity, dt);
         }
+        this.discreteTimeStep = Timer.getFPGATimestamp();
 
         // Heading Angular Velocity Deadband, might make a configuration option later.
         // Originally made by Team 1466 Webb Robotics.
@@ -421,11 +429,11 @@ public class SwerveDrive {
                     && (Math.abs(velocity.vxMetersPerSecond) > HEADING_CORRECTION_DEADBAND
                     || Math.abs(velocity.vyMetersPerSecond) > HEADING_CORRECTION_DEADBAND)) {
                 if (!correctionEnabled) {
-                    lastHeadingRadians = getYaw().getRadians();
+                    lastHeadingRadians = -getYaw().getRadians();
                     correctionEnabled = true;
                 }
                 velocity.omegaRadiansPerSecond =
-                        swerveController.headingCalculate(lastHeadingRadians, getYaw().getRadians());
+                        swerveController.headingCalculate(lastHeadingRadians, -getYaw().getRadians());
             } else {
                 correctionEnabled = false;
             }
