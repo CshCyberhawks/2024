@@ -1,6 +1,5 @@
 package frc.robot
 
-import com.pathplanner.lib.pathfinding.Pathfinding
 import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.math.kinematics.SwerveModuleState
 import edu.wpi.first.wpilibj.PowerDistribution
@@ -49,11 +48,13 @@ class Robot : LoggedRobot() {
                 Logger.addDataReceiver(NT4Publisher())
                 PowerDistribution(1, PowerDistribution.ModuleType.kRev)
             }
+
             Constants.Mode.SIM -> {
                 // Running a physics simulator, log to NT
                 Logger.addDataReceiver(WPILOGWriter())
                 Logger.addDataReceiver(NT4Publisher())
             }
+
             Constants.Mode.REPLAY -> {
                 // Replaying a log, set up replay source
                 setUseTiming(false) // Run as fast as possible

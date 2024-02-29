@@ -3,7 +3,6 @@ package frc.robot.subsystems
 import com.pathplanner.lib.auto.AutoBuilder
 import com.pathplanner.lib.path.PathConstraints
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig
-import com.pathplanner.lib.util.PIDConstants
 import com.pathplanner.lib.util.ReplanningConfig
 import edu.wpi.first.math.controller.PIDController
 import edu.wpi.first.math.geometry.Pose2d
@@ -23,8 +22,6 @@ import swervelib.SwerveDrive
 import swervelib.parser.SwerveParser
 import swervelib.telemetry.SwerveDriveTelemetry
 import java.io.File
-import java.util.*
-import java.util.function.BooleanSupplier
 import kotlin.math.abs
 
 
@@ -87,7 +84,7 @@ class SwerveSystem(private val io: SwerveSystemIO, val swerveDrive: SwerveDrive)
                 swerveDrive.swerveDriveConfiguration.driveBaseRadiusMeters,  // Drive base radius in meters. Distance from robot center to furthest module.
                 ReplanningConfig() // Default path replanning config. See the API for the options here
             ),
-            BooleanSupplier {
+            {
                 // Boolean supplier that controls when the path will be mirrored for the red alliance
                 // This will flip the path being followed to the red side of the field.
                 // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
@@ -118,13 +115,8 @@ class SwerveSystem(private val io: SwerveSystemIO, val swerveDrive: SwerveDrive)
             }
         }
 
-//        swerveDrive.drive(translation, rotation, fieldRelative, false)
-        swerveDrive.drive(translation, rotation, true, false)
-
+        swerveDrive.drive(translation, rotation, fieldRelative, false)
     }
-
-    private fun isRed(): Boolean =
-        DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue) == DriverStation.Alliance.Red
 
     override fun periodic() {
         io.updateInputs(inputs)
@@ -134,7 +126,6 @@ class SwerveSystem(private val io: SwerveSystemIO, val swerveDrive: SwerveDrive)
         Logger.recordOutput("RobotRotation", swerveDrive.gyroRotation3d.angle)
         Logger.recordOutput("RobotPose", swerveDrive.pose)
     }
-
 
     fun driveToPose(pose: Pose2d): Command {
         // Create the constraints to use while pathfinding

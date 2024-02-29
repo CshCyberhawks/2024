@@ -43,6 +43,7 @@ object RobotContainer {
                     File(Filesystem.getDeployDirectory(), "yagsl_configs/slippy")
                 )
             }
+
             Constants.Mode.SIM -> {
                 // change these later
                 swerveSystem = SwerveSystem(
@@ -50,6 +51,7 @@ object RobotContainer {
                     File(Filesystem.getDeployDirectory(), "yagsl_configs/slippy")
                 )
             }
+
             Constants.Mode.REPLAY -> {
                 // change these later
                 swerveSystem = SwerveSystem(
@@ -80,7 +82,7 @@ object RobotContainer {
 //                        (if (abs(xboxController.leftY) > 0.15) -xboxController.leftY * DriveConstants.MAX_SPEED else 0.0),
 //                        (if (abs(xboxController.leftX) > 0.15) -xboxController.leftX * DriveConstants.MAX_SPEED else 0.0)
                     ),
-                    -xboxController.rightX,
+                    -xboxController.leftX,
 //                    (if (abs(xboxController.rightX) > 0.15) -xboxController.rightX * DriveConstants.MAX_ANGLE_SPEED else 0.0),
                     true
                 )

@@ -26,12 +26,10 @@ object MiscCalculations {
         if (abs(input) > deadzoneValue) {
             if (input > 0) {
                 return (input - deadzoneValue) * (1 / (1 - deadzoneValue))
-            }
-            else {
+            } else {
                 return (input + deadzoneValue) * (1 / (1 - deadzoneValue))
             }
-        }
-        else {
+        } else {
             return 0.0
         }
     }
