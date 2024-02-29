@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.0749349764732798,
-      "y": 7.0198259161363925
+      "x": 0.938021705103239,
+      "y": 6.981410202136645
     },
-    "rotation": 180.0
+    "rotation": -179.97370045806858
   },
   "command": {
     "type": "sequential",
@@ -15,18 +15,6 @@
           "type": "path",
           "data": {
             "pathName": "First Note"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Second Note"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Third Note"
           }
         }
       ]

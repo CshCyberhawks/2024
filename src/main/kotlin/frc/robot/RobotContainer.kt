@@ -92,6 +92,6 @@ object RobotContainer {
     }
 
     fun getAutonomousCommand(): Command {
-        return autoChooser.selected.alongWith(Commands.run({println("Running")}))
+        return autoChooser.selected
     }
 }
