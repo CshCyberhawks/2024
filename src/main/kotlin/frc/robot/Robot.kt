@@ -1,5 +1,6 @@
 package frc.robot
 
+import com.pathplanner.lib.pathfinding.Pathfinding
 import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.math.kinematics.SwerveModuleState
 import edu.wpi.first.wpilibj.PowerDistribution
@@ -9,10 +10,9 @@ import org.littletonrobotics.junction.LogFileUtil
 import org.littletonrobotics.junction.LoggedRobot
 import org.littletonrobotics.junction.Logger
 import org.littletonrobotics.junction.networktables.NT4Publisher
-import kotlin.math.abs
-
 import org.littletonrobotics.junction.wpilog.WPILOGReader
 import org.littletonrobotics.junction.wpilog.WPILOGWriter
+
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -40,6 +40,8 @@ class Robot : LoggedRobot() {
             else -> Logger.recordMetadata("GitDirty", "Unknown")
         }
 
+//        Pathfinding.setPathfinder(LocalADStarAK())
+
         when (Constants.currentMode) {
             Constants.Mode.REAL -> {
                 // Running on a real robot, log to a USB stick ("/U/logs")
@@ -49,6 +51,7 @@ class Robot : LoggedRobot() {
             }
             Constants.Mode.SIM -> {
                 // Running a physics simulator, log to NT
+                Logger.addDataReceiver(WPILOGWriter())
                 Logger.addDataReceiver(NT4Publisher())
             }
             Constants.Mode.REPLAY -> {
@@ -60,9 +63,9 @@ class Robot : LoggedRobot() {
             }
         }
 
-//        RobotContainer
+        RobotContainer
 
-//        Logger.start()
+        Logger.start()
         /* User can change the configs if they want, or leave it empty for factory-default */
 //        canCoder.getConfigurator().apply(toApply)
     }
@@ -116,7 +119,7 @@ class Robot : LoggedRobot() {
     override fun autonomousInit() {
         // Schedule the autonomous command (example)
         // Note the Kotlin safe-call(?.), this ensures autonomousCommand is not null before scheduling it
-        RobotContainer.autonomousCommand.schedule()
+        RobotContainer.getAutonomousCommand().schedule()
     }
 
     /**
@@ -133,7 +136,7 @@ class Robot : LoggedRobot() {
         // continue until interrupted by another command, remove
         // this line or comment it out.
         // Note the Kotlin safe-call(?.), this ensures autonomousCommand is not null before cancelling it
-        RobotContainer.autonomousCommand.cancel()
+        RobotContainer.getAutonomousCommand().cancel()
         RobotContainer.teleopSwerveCommand.schedule()
     }
 

@@ -7,44 +7,7 @@
       "/SmartDashboard/Pigeon 2 (v6) [30]": "Gyro"
     }
   },
-  "NetworkTables": {
-    "transitory": {
-      "AdvantageKit": {
-        "RealOutputs": {
-          "Logger": {
-            "open": true
-          },
-          "open": true
-        },
-        "SwerveSystem": {
-          "open": true
-        },
-        "open": true
-      },
-      "LiveWindow": {
-        "open": true
-      }
-    }
-  },
   "NetworkTables Info": {
-    "AdvantageScope@1": {
-      "open": true
-    },
-    "Clients": {
-      "open": true
-    },
-    "Connections": {
-      "open": true
-    },
-    "Server": {
-      "Publishers": {
-        "open": true
-      },
-      "Subscribers": {
-        "open": true
-      },
-      "open": true
-    },
     "visible": true
   }
 }

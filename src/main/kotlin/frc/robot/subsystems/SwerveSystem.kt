@@ -28,6 +28,7 @@ class SwerveSystem(private val io: SwerveSystemIO, val swerveDrive: SwerveDrive)
     private val inputs: SwerveSystemIO.SwerveSystemIOInputs = SwerveSystemIO.SwerveSystemIOInputs
 
     var inputRotation: Double = 0.0
+        private set
     private val autoConstraints: PathConstraints
 
     private val xPID: PIDController = PIDController(.1, 0.0, 0.01)
