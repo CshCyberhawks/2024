@@ -1,6 +1,5 @@
 package frc.robot
 
-import edu.wpi.first.math.geometry.Pose2d
 import edu.wpi.first.math.geometry.Translation2d
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import frc.robot.constants.CannonConstants
@@ -98,7 +97,6 @@ class RobotStateMachine {
 
     val trunkState: TrunkState
         get() = RobotContainer.trunkSystem.currentState
-
 
 
     var intakeState: IntakeState = IntakeState.Stopped;

@@ -3,16 +3,8 @@ package frc.robot.subsystems.trunk
 import com.revrobotics.CANSparkBase
 import com.revrobotics.CANSparkLowLevel
 import com.revrobotics.CANSparkMax
-import com.revrobotics.SparkAbsoluteEncoder
-import edu.wpi.first.math.controller.ArmFeedforward
-import edu.wpi.first.math.controller.ElevatorFeedforward
-import edu.wpi.first.math.controller.PIDController
-import edu.wpi.first.math.controller.ProfiledPIDController
-import edu.wpi.first.math.trajectory.TrapezoidProfile
 import edu.wpi.first.wpilibj.DigitalInput
 import edu.wpi.first.wpilibj.DutyCycleEncoder
-import edu.wpi.first.wpilibj.Timer
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import frc.robot.constants.TrunkConstants
 
 class TrunkIOReal : TrunkIO {
@@ -40,12 +32,10 @@ class TrunkIOReal : TrunkIO {
     //    private val rotationPID = ProfiledPIDController(TrunkConstants.rotationKP, TrunkConstants.rotationKI, TrunkConstants.rotationKD, TrapezoidProfile.Constraints(TrunkConstants.rotationMaxVelo, TrunkConstants.rotationMaxAcceleration))
 
 
-
     private var bottomPositionLimit = TrunkConstants.BOTTOM_BREAK_BEAM_POSITION
     private var topPositionLimit = TrunkConstants.TOP_BREAK_BEAM_POSITION
     private var bottomRotationLimit = TrunkConstants.MIN_SAFE_ANGLE
     private var topRotationLimit = TrunkConstants.MAX_ANGLE
-
 
 
     init {
@@ -118,11 +108,13 @@ class TrunkIOReal : TrunkIO {
     }
 
     override fun setZeroPosition(top: Boolean) {
-        positionEncoder.setPosition(if (top) {
-            TrunkConstants.TOP_BREAK_BEAM_POSITION * TrunkConstants.M2ELEVATOR
-        } else {
-            TrunkConstants.BOTTOM_BREAK_BEAM_POSITION * TrunkConstants.M2ELEVATOR
-        })
+        positionEncoder.setPosition(
+            if (top) {
+                TrunkConstants.TOP_BREAK_BEAM_POSITION * TrunkConstants.M2ELEVATOR
+            } else {
+                TrunkConstants.BOTTOM_BREAK_BEAM_POSITION * TrunkConstants.M2ELEVATOR
+            }
+        )
         if (!top)
             elevatorMotor.inverted = !elevatorMotor.inverted
         setTopPositionLimit(TrunkConstants.TOP_BREAK_BEAM_POSITION)
@@ -136,6 +128,7 @@ class TrunkIOReal : TrunkIO {
     override fun atBottomLimit(): Boolean {
         return bottomLimit.get()
     }
+
     override fun setPositionLimits(on: Boolean) {
 //        elevatorMotor.enableSoftLimit(CANSparkBase.SoftLimitDirection.kForward, on)
 //        elevatorMotor.enableSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, on)
@@ -150,12 +143,13 @@ class TrunkIOReal : TrunkIO {
     }
 
 
-
-
     override fun setTopPositionLimit(position: Double) {
         if (topPositionLimit != position) {
             topPositionLimit = position
-            elevatorMotor.setSoftLimit(CANSparkBase.SoftLimitDirection.kForward, (position * TrunkConstants.M2ELEVATOR).toFloat())
+            elevatorMotor.setSoftLimit(
+                CANSparkBase.SoftLimitDirection.kForward,
+                (position * TrunkConstants.M2ELEVATOR).toFloat()
+            )
             elevatorMotor.enableSoftLimit(CANSparkBase.SoftLimitDirection.kForward, true)
         }
     }
@@ -163,7 +157,10 @@ class TrunkIOReal : TrunkIO {
     override fun setBottomPositionLimit(position: Double) {
         if (bottomPositionLimit != position) {
             bottomPositionLimit = position
-            elevatorMotor.setSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, (position * TrunkConstants.M2ELEVATOR).toFloat())
+            elevatorMotor.setSoftLimit(
+                CANSparkBase.SoftLimitDirection.kReverse,
+                (position * TrunkConstants.M2ELEVATOR).toFloat()
+            )
             elevatorMotor.enableSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, true)
         }
     }

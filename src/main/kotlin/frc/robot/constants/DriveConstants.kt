@@ -19,8 +19,6 @@ object DriveConstants {
     //Physical (hardware & physics0 constants
 
 
-
-
     // TODO: make these ids not bad (1-4 clockwise)
     const val FRONT_LEFT_DRIVE_ID: Int = 6
     const val FRONT_RIGHT_DRIVE_ID: Int = 8
@@ -31,7 +29,6 @@ object DriveConstants {
     const val FRONT_RIGHT_TWIST_ID: Int = 12
     const val BACK_RIGHT_TWIST_ID: Int = 11
     const val BACK_LEFT_TWIST_ID: Int = 9
-
 
 
     const val FRONT_LEFT_ENCODER_ID: Int = 2

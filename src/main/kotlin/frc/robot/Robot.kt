@@ -1,7 +1,6 @@
 package frc.robot
 
 import edu.wpi.first.math.VecBuilder
-import edu.wpi.first.math.kinematics.SwerveModulePosition
 import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.Command
@@ -10,18 +9,16 @@ import org.littletonrobotics.junction.LoggedRobot
 
 
 class Robot : LoggedRobot() {
-    private lateinit var m_autonomousCommand: Command
-
     private var lastRobotAction: RobotAction = RobotContainer.stateMachine.robotAction
-    override fun robotInit() {
-    }
+    override fun robotInit() {}
 
     override fun robotPeriodic() {
-        if (RobotContainer.robotActionSendable.selected != lastRobotAction) {
+        if (RobotContainer.robotActionSendable.selected != lastRobotAction && RobotContainer.robotActionSendable
+                .selected != null
+        ) {
             RobotContainer.stateMachine.robotAction = RobotContainer.robotActionSendable.selected
             lastRobotAction = RobotContainer.robotActionSendable.selected
         }
-
 
         CommandScheduler.getInstance().run()
         RobotContainer.stateMachine.logStates()
@@ -29,8 +26,7 @@ class Robot : LoggedRobot() {
         if (RobotContainer.stateMachine.trunkState == TrunkState.MANUAL) {
             RobotContainer.trunkSystem.elevate(-RobotContainer.xboxController.leftY)
             RobotContainer.trunkSystem.rotate(-RobotContainer.xboxController.rightY * .1)
-        }
-        else {
+        } else {
 //            if (!RobotContainer.trunkSystem.isMoving) {
 //                RobotContainer.trunkSystem.io.setDesiredRotation(RobotContainer.trunkSystem.io.getRotation() + (-RobotContainer.xboxController.rightY * .1))
 //            }
@@ -38,6 +34,10 @@ class Robot : LoggedRobot() {
 
         SmartDashboard.putString("Trunk Position", RobotContainer.stateMachine.targetTrunkPose.name)
         SmartDashboard.putString("Trunk State", RobotContainer.trunkSystem.currentState.name)
+//        SmartDashboard.putNumber("x", RobotContainer.swerveSystem.getSwervePose().x)
+//        SmartDashboard.putNumber("y", RobotContainer.swerveSystem.getSwervePose().y)
+//        SmartDashboard.putNumber("rotation",RobotContainer.swerveSystem.getSwervePose().rotation.degrees)
+
     }
 
     fun updateOdometry() {
@@ -49,8 +49,7 @@ class Robot : LoggedRobot() {
                 LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-left")
             rightLLMeasure =
                 LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-left")
-        }
-        else {
+        } else {
             leftLLMeasure =
                 LimelightHelpers.getBotPoseEstimate_wpiRed("limelight-left")
             rightLLMeasure =
@@ -82,7 +81,7 @@ class Robot : LoggedRobot() {
     override fun disabledExit() {}
 
     override fun autonomousInit() {
-        RobotContainer.autonomousCommand.schedule()
+        RobotContainer.getAutonomousCommand()?.schedule()
     }
 
     override fun autonomousPeriodic() {}
@@ -90,7 +89,7 @@ class Robot : LoggedRobot() {
     override fun autonomousExit() {}
 
     override fun teleopInit() {
-        RobotContainer.autonomousCommand.cancel()
+        RobotContainer.getAutonomousCommand()?.cancel()
         RobotContainer.teleopSwerveCommand.schedule()
         RobotContainer.trunkSystem.calibrate()
 

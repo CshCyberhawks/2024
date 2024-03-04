@@ -1,9 +1,7 @@
 //package cshcyberhawks.swolib.math
 
-import edu.wpi.first.math.geometry.Pose2d
 import edu.wpi.first.math.geometry.Translation2d
 import edu.wpi.first.util.WPIUtilJNI
-import org.opencv.core.Mat.Tuple2
 import kotlin.math.abs
 
 /** Miscellaneous calculations. */
@@ -29,19 +27,17 @@ object MiscCalculations {
         if (abs(input) > deadzoneValue) {
             if (input > 0) {
                 return (input - deadzoneValue) * (1 / (1 - deadzoneValue))
-            }
-            else {
+            } else {
                 return (input + deadzoneValue) * (1 / (1 - deadzoneValue))
             }
-        }
-        else {
+        } else {
             return 0.0
         }
     }
 
     /**
      * Determines whether n_1 & n_2 are approximately equal (within a certain range). This range is inclusive
-      */
+     */
     fun appxEqual(n1: Double, n2: Double, range: Double): Boolean {
         if (abs(n1 - n2) <= range) {
             return true;
@@ -57,7 +53,6 @@ object MiscCalculations {
     fun getCurrentTime(): Double = WPIUtilJNI.now() * 1.0e-6
 
 
-
     fun translation2dWithinRange(current: Translation2d, range: Pair<Translation2d, Translation2d>): Boolean {
         val range_start = range.first
         val range_end = range.second
@@ -67,7 +62,14 @@ object MiscCalculations {
         return false
     }
 
-    fun findMatchingTranslation2dRange(current: Translation2d, ranges: Array<Pair<Translation2d, Translation2d>>, default: Pair<Translation2d, Translation2d> = Pair(Translation2d(-1.0, -1.0), Translation2d(-1.0, -1.0))): Pair<Translation2d, Translation2d> {
+    fun findMatchingTranslation2dRange(
+        current: Translation2d,
+        ranges: Array<Pair<Translation2d, Translation2d>>,
+        default: Pair<Translation2d, Translation2d> = Pair(
+            Translation2d(-1.0, -1.0),
+            Translation2d(-1.0, -1.0)
+        )
+    ): Pair<Translation2d, Translation2d> {
         for (range: Pair<Translation2d, Translation2d> in ranges) {
             if (translation2dWithinRange(current, range)) {
                 return range

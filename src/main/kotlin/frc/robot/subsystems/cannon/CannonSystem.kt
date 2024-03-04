@@ -5,7 +5,10 @@ import edu.wpi.first.math.controller.PIDController
 import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.SubsystemBase
-import frc.robot.*
+import frc.robot.IntakeState
+import frc.robot.NoteState
+import frc.robot.RobotContainer
+import frc.robot.ShooterState
 import frc.robot.constants.CannonConstants
 
 class CannonSystem(private val io: CannonIO) : SubsystemBase() {
@@ -18,8 +21,10 @@ class CannonSystem(private val io: CannonIO) : SubsystemBase() {
     private var desiredOuterPercent = 0.0
     private var desiredInnerPercent = 0.0
 
-    val leftShooterPID = PIDController(CannonConstants.leftShooterKP, CannonConstants.leftShooterKI, CannonConstants.leftShooterKD)
-    val rightShooterPID = PIDController(CannonConstants.leftShooterKP, CannonConstants.leftShooterKI, CannonConstants.leftShooterKD)
+    val leftShooterPID =
+        PIDController(CannonConstants.leftShooterKP, CannonConstants.leftShooterKI, CannonConstants.leftShooterKD)
+    val rightShooterPID =
+        PIDController(CannonConstants.leftShooterKP, CannonConstants.leftShooterKI, CannonConstants.leftShooterKD)
 
 
     private var exitBreakBeamTriggerTime: Double = -1.0; //
@@ -71,7 +76,15 @@ class CannonSystem(private val io: CannonIO) : SubsystemBase() {
 
     fun shooterReady(): Boolean {
         //Shooter up to speed
-        return MiscCalculations.appxEqual(RobotContainer.stateMachine.shooterState.leftVel, io.getLeftShooterVel(), CannonConstants.SHOOTER_VELOCITY_DEADZONE) && MiscCalculations.appxEqual(RobotContainer.stateMachine.shooterState.rightVel, io.getRightShooterVel(), CannonConstants.SHOOTER_VELOCITY_DEADZONE)
+        return MiscCalculations.appxEqual(
+            RobotContainer.stateMachine.shooterState.leftVel,
+            io.getLeftShooterVel(),
+            CannonConstants.SHOOTER_VELOCITY_DEADZONE
+        ) && MiscCalculations.appxEqual(
+            RobotContainer.stateMachine.shooterState.rightVel,
+            io.getRightShooterVel(),
+            CannonConstants.SHOOTER_VELOCITY_DEADZONE
+        )
     }
 
     override fun periodic() {
@@ -91,15 +104,14 @@ class CannonSystem(private val io: CannonIO) : SubsystemBase() {
         /*else*/ if (io.getLoadedBeamBreak()) {
             RobotContainer.stateMachine.noteState = NoteState.Stored;
         }
-            //Note is not stored
-            else if (!io.getLoadedBeamBreak() && RobotContainer.stateMachine.shooterState != ShooterState.Shooting && !io.getEntryBeamBreak()) {
-                RobotContainer.stateMachine.noteState = NoteState.Empty
+        //Note is not stored
+        else if (!io.getLoadedBeamBreak() && RobotContainer.stateMachine.shooterState != ShooterState.Shooting && !io.getEntryBeamBreak()) {
+            RobotContainer.stateMachine.noteState = NoteState.Empty
         }
         //Note is intaking
         else if (io.getEntryBeamBreak() && !io.getLoadedBeamBreak()) {
             RobotContainer.stateMachine.noteState = NoteState.Intaking;
         }
-
 
 
         //Note is shot delay handling

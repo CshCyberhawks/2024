@@ -18,13 +18,17 @@ class AutoTwistController {
 
     init {
         this.rotationController =
-                ProfiledPIDController(
-                        PathPlannerLibConstants.rotationPID.kP,
-                        PathPlannerLibConstants.rotationPID.kI,
-                        PathPlannerLibConstants.rotationPID.kD,
-                        TrapezoidProfile.Constraints(0.0, 0.0),
-                        .02)
-        rotationController.setIntegratorRange(-PathPlannerLibConstants.rotationPID.iZone, PathPlannerLibConstants.rotationPID.iZone)
+            ProfiledPIDController(
+                PathPlannerLibConstants.rotationPID.kP,
+                PathPlannerLibConstants.rotationPID.kI,
+                PathPlannerLibConstants.rotationPID.kD,
+                TrapezoidProfile.Constraints(0.0, 0.0),
+                .02
+            )
+        rotationController.setIntegratorRange(
+            -PathPlannerLibConstants.rotationPID.iZone,
+            PathPlannerLibConstants.rotationPID.iZone
+        )
         rotationController.enableContinuousInput(-PI, PI)
     }
 
@@ -45,16 +49,18 @@ class AutoTwistController {
         }
 
         val rotationConstraints =
-                TrapezoidProfile.Constraints(
-                        maxAngVel, DriveConstants.MAX_ANGLE_ACCEL)
+            TrapezoidProfile.Constraints(
+                maxAngVel, DriveConstants.MAX_ANGLE_ACCEL
+            )
 
         val rotationFeedback: Double =
-                rotationController.calculate(
-                        RobotContainer.swerveSystem.getSwervePose().rotation.radians,
-                        TrapezoidProfile.State(targetRotation.radians, 0.0),
-                        rotationConstraints)
+            rotationController.calculate(
+                RobotContainer.swerveSystem.getSwervePose().rotation.radians,
+                TrapezoidProfile.State(targetRotation.radians, 0.0),
+                rotationConstraints
+            )
         val rotationFF: Double =
-                rotationController.getSetpoint().velocity
+            rotationController.getSetpoint().velocity
 
         return Rotation2d(rotationFF + rotationFeedback)
     }
@@ -62,7 +68,12 @@ class AutoTwistController {
     public fun isAtDesired(): Boolean {
         val currentRot = RobotContainer.swerveSystem.getSwervePose().rotation.degrees
 
-        if (MiscCalculations.appxEqual(currentRot, desiredRotation.degrees, DriveConstants.TELEOP_TRANSLATION_AUTOTWIST_DEADZONE)) {
+        if (MiscCalculations.appxEqual(
+                currentRot,
+                desiredRotation.degrees,
+                DriveConstants.TELEOP_TRANSLATION_AUTOTWIST_DEADZONE
+            )
+        ) {
             return true;
         }
         return false;

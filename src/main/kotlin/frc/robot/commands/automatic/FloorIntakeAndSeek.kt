@@ -1,6 +1,5 @@
 package frc.robot.commands.automatic
 
-import edu.wpi.first.math.geometry.Translation2d
 import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj2.command.Command
 import frc.robot.DriveState

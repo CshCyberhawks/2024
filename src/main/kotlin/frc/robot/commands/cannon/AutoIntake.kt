@@ -3,9 +3,8 @@ package frc.robot.commands.cannon
 import edu.wpi.first.wpilibj2.command.Command
 import frc.robot.NoteState
 import frc.robot.RobotContainer
-import frc.robot.TrunkState
 
-class AutoIntake: Command() {
+class AutoIntake : Command() {
     override fun initialize() {
         RobotContainer.cannonSystem.intake()
         RobotContainer.cannonSystem.killShooter()

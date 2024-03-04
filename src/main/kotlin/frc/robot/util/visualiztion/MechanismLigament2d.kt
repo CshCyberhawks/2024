@@ -40,57 +40,57 @@ class MechanismLigament2d
  * @param input_length The ligament's length.
  * @param input_angle  The ligament's angle relative to its parent in degrees.
  */ @JvmOverloads constructor(
-        name: String?,
-        /**
-         * Set the ligament's length.
-         *
-         * @param input_length the line length
-         */
-        /**
-         * Get the ligament length.
-         *
-         * @return the line length
-         */
-        @set:Synchronized
-        @get:Synchronized var input_length: Double,
-        /**
-         * Set the ligament's angle relative to its parent.
-         *
-         * @param degrees the angle in degrees
-         */
-        /**
-         * Get the ligament's angle relative to its parent.
-         *
-         * @return the angle in degrees
-         */
-        @set:Synchronized
-        @get:Synchronized var input_angle: Double,
-        /**
-         * Set the line thickness.
-         *
-         * @param weight the line thickness
-         */
-        /**
-         * Get the line thickness.
-         *
-         * @return the line thickness
-         */
-        @set:Synchronized
-        @get:Synchronized var lineWeight: Double = 10.0,
-        /**
-         * Set the ligament color.
-         *
-         * @param color the color of the line
-         */
-        /**
-         * Get the ligament color.
-         *
-         * @return the color of the line
-         */
-        @set:Synchronized
-        @get:Synchronized var color: Color8Bit = Color8Bit(235, 137, 52)
+    name: String?,
+    /**
+     * Set the ligament's length.
+     *
+     * @param input_length the line length
+     */
+    /**
+     * Get the ligament length.
+     *
+     * @return the line length
+     */
+    @set:Synchronized
+    @get:Synchronized var input_length: Double,
+    /**
+     * Set the ligament's angle relative to its parent.
+     *
+     * @param degrees the angle in degrees
+     */
+    /**
+     * Get the ligament's angle relative to its parent.
+     *
+     * @return the angle in degrees
+     */
+    @set:Synchronized
+    @get:Synchronized var input_angle: Double,
+    /**
+     * Set the line thickness.
+     *
+     * @param weight the line thickness
+     */
+    /**
+     * Get the line thickness.
+     *
+     * @return the line thickness
+     */
+    @set:Synchronized
+    @get:Synchronized var lineWeight: Double = 10.0,
+    /**
+     * Set the ligament color.
+     *
+     * @param color the color of the line
+     */
+    /**
+     * Get the ligament color.
+     *
+     * @return the color of the line
+     */
+    @set:Synchronized
+    @get:Synchronized var color: Color8Bit = Color8Bit(235, 137, 52)
 ) :
-        MechanismObject2d(name!!) {
+    MechanismObject2d(name!!) {
     private var m_typePub: StringPublisher? = null
     var angle = input_angle
         set(value) {

@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.Command
 import frc.robot.commands.cannon.AutoShootCommand
 
-class TeleopInputCommand : Command(){
+class TeleopInputCommand : Command() {
 
     val prevShoot: Boolean = false
     val prevIntake: Boolean = false
@@ -31,17 +31,13 @@ class TeleopInputCommand : Command(){
 
         if (currentShoot != prevShoot) {
 
-        }
-        else if (currentIntake != prevIntake) {
+        } else if (currentIntake != prevIntake) {
 
-        }
-        else if (currentSpit != prevSpit) {
+        } else if (currentSpit != prevSpit) {
 
-        }
-        else if (currentAmp != prevAmp) {
+        } else if (currentAmp != prevAmp) {
 
-        }
-        else if (currentStow != prevStow) {
+        } else if (currentStow != prevStow) {
 
         }
     }

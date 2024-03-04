@@ -37,6 +37,12 @@
       },
       "LiveWindow": {
         "open": true
+      },
+      "Pose": {
+        "open": true
+      },
+      "Shuffleboard": {
+        "open": true
       }
     }
   },

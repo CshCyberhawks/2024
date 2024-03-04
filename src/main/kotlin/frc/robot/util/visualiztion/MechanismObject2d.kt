@@ -38,8 +38,8 @@ abstract class MechanismObject2d
  *
  * @param name the node's name, must be unique.
  */ protected constructor(
-        /** Relative to parent.  */
-        val name: String
+    /** Relative to parent.  */
+    val name: String
 ) : AutoCloseable {
     private var m_table: NetworkTable? = null
     private val m_objects: MutableMap<String, MechanismObject2d> = HashMap(1)

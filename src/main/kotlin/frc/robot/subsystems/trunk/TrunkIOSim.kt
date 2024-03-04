@@ -20,17 +20,20 @@ class TrunkIOSim : TrunkIO {
     var desiredElevatorSpeed = 0.0
     var desiredRotationSpeed = 0.0
 
-    override fun getPosition(): Double = traversalPercentage
+    fun getPosition(): Double = traversalPercentage
+    override fun getRawPosition(): Double {
+        return getPosition()
+    }
 
     override fun getRawRotation(): Double {
         return trunkRotation
     }
 
-    override fun getRotation(): Double {
+    fun getRotation(): Double {
         return -trunkRotation - TrunkConstants.ELEVATOR_ANGLE
     }
 
-    override fun setDesiredPosition(position: Double) {
+    fun setDesiredPosition(position: Double) {
         desiredElevatorSpeed = 0.0
         traversalPercentageTimer.reset()
         lastTraversalPercentage = desiredTraversalPercentage
@@ -39,7 +42,7 @@ class TrunkIOSim : TrunkIO {
 
     }
 
-    override fun setDesiredRotation(angle: Double) {
+    fun setDesiredRotation(angle: Double) {
         desiredRotationSpeed = 0.0
         trunkRotationTimer.reset()
         lastTrunkRotation = desiredTrunkRotation
@@ -65,7 +68,7 @@ class TrunkIOSim : TrunkIO {
         return traversalPercentage < -.01
     }
 
-    override fun setPID(on: Boolean) {}
+    fun setPID(on: Boolean) {}
 
     override fun setPositionLimits(on: Boolean) {}
 
@@ -81,6 +84,9 @@ class TrunkIOSim : TrunkIO {
     override fun setBottomPositionLimit(position: Double) {}
     override fun setTopRotationLimit(rotation: Double) {}
     override fun setBottomRotationLimit(rotation: Double) {}
+    override fun setRotationVoltage(volts: Double) {
+        TODO("Not yet implemented")
+    }
 
     override fun periodic() {
         trunkRotation += desiredRotationSpeed
@@ -89,13 +95,15 @@ class TrunkIOSim : TrunkIO {
         SmartDashboard.putNumber("Traversal Setpoint", desiredTraversalPercentage)
 
         if (trunkRotationTimer.get() < 1) {
-            trunkRotation = (desiredTrunkRotation - lastTrunkRotation) * easeInOutCubic(trunkRotationTimer.get()) + lastTrunkRotation
+            trunkRotation =
+                (desiredTrunkRotation - lastTrunkRotation) * easeInOutCubic(trunkRotationTimer.get()) + lastTrunkRotation
         } else {
             trunkRotation = desiredTrunkRotation
         }
 
         if (traversalPercentageTimer.get() < 1) {
-            traversalPercentage = (desiredTraversalPercentage - lastTraversalPercentage) * easeInOutCubic(traversalPercentageTimer.get()) + lastTraversalPercentage
+            traversalPercentage =
+                (desiredTraversalPercentage - lastTraversalPercentage) * easeInOutCubic(traversalPercentageTimer.get()) + lastTraversalPercentage
         } else {
             traversalPercentage = desiredTraversalPercentage
         }

@@ -6,7 +6,7 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest
 import edu.wpi.first.math.controller.PIDController
 import edu.wpi.first.math.geometry.Pose2d
 import edu.wpi.first.math.geometry.Translation2d
-import edu.wpi.first.wpilibj2.command.Command
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import frc.robot.GlobalZones
 import frc.robot.RobotContainer
@@ -17,21 +17,22 @@ import frc.robot.util.AutoTwistController
 class SwerveSystem() : SubsystemBase() {
     val driveTrain: CommandSwerveDrivetrain = TunerConstants.DriveTrain
 
-    var inputRotation: Double = 0.0
+//    var inputRotation: Double = 0.0
 
     private val xPID: PIDController = PIDController(.1, 0.0, 0.01)
     private val yPID: PIDController = PIDController(.1, 0.0, 0.01)
 
     private val PIDDeadzone = .005;
 
-
     public val drive: SwerveRequest.FieldCentric = SwerveRequest.FieldCentric()
-            .withDeadband(DriveConstants.MAX_SPEED * 0.1).withRotationalDeadband(DriveConstants.MAX_ANGLE_SPEED * 0.1) // Add a 10% deadband
-            .withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage); // I want field-centric
+        .withDeadband(DriveConstants.MAX_SPEED * 0.1)
+        .withRotationalDeadband(DriveConstants.MAX_ANGLE_SPEED * 0.1) // Add a 10% deadband
+        .withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage); // I want field-centric
 
     // driving in open loop
     public val brake: SwerveRequest.SwerveDriveBrake = SwerveRequest.SwerveDriveBrake();
-    public val forwardStraight: SwerveRequest.RobotCentric = SwerveRequest.RobotCentric().withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage);
+    public val forwardStraight: SwerveRequest.RobotCentric =
+        SwerveRequest.RobotCentric().withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage);
     public val point: SwerveRequest.PointWheelsAt = SwerveRequest.PointWheelsAt();
 
     /* Path follower */
@@ -42,12 +43,17 @@ class SwerveSystem() : SubsystemBase() {
 
     val autoTwistController: AutoTwistController = AutoTwistController()
 
-
     //Takes in joystick inputs
-    fun calculateJoyTranslation(rightX: Double, rightY: Double, throttle: Double, deadzoneX: Double, deadzoneY: Double): Translation2d {
+    fun calculateJoyTranslation(
+        rightX: Double,
+        rightY: Double,
+        throttle: Double,
+        deadzoneX: Double,
+        deadzoneY: Double
+    ): Translation2d {
         return Translation2d(
-                -MiscCalculations.calculateDeadzone(rightY, deadzoneX) * DriveConstants.MAX_SPEED * throttle,
-                -MiscCalculations.calculateDeadzone(rightX, deadzoneY) * DriveConstants.MAX_SPEED * throttle
+            -MiscCalculations.calculateDeadzone(rightY, deadzoneX) * DriveConstants.MAX_SPEED * throttle,
+            -MiscCalculations.calculateDeadzone(rightX, deadzoneY) * DriveConstants.MAX_SPEED * throttle
         )
     }
 
@@ -72,7 +78,10 @@ class SwerveSystem() : SubsystemBase() {
             return
         }
 
-        val currentRange = MiscCalculations.findMatchingTranslation2dRange(pos, arrayOf(GlobalZones.Wing.range, GlobalZones.NO.range, GlobalZones.Stage.range))
+        val currentRange = MiscCalculations.findMatchingTranslation2dRange(
+            pos,
+            arrayOf(GlobalZones.Wing.range, GlobalZones.NO.range, GlobalZones.Stage.range)
+        )
 
         //Not in any zone
         if (currentRange.first.x == -1.0 && currentRange.second.y == -1.0) {
@@ -96,10 +105,7 @@ class SwerveSystem() : SubsystemBase() {
     }
 
     override fun periodic() {
-
-
 //        updateGlobalZone()
         //TODO: update global (specific) positions in the state machine
     }
-
 }
