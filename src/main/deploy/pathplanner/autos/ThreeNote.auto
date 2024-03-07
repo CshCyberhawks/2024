@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.382399573915957,
-      "y": 5.601499977928731
+      "x": 1.3473171105886368,
+      "y": 5.531335051274091
     },
     "rotation": 180.0
   },
@@ -21,6 +21,30 @@
           "type": "path",
           "data": {
             "pathName": "OneNote"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimAndShoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "TwoNote"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimAndShoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ThreeNote"
           }
         },
         {
