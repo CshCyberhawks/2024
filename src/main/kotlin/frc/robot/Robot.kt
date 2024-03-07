@@ -80,7 +80,7 @@ class Robot : LoggedRobot() {
     override fun disabledExit() {}
 
     override fun autonomousInit() {
-        RobotContainer.getAutonomousCommand()?.schedule()
+        RobotContainer.getAutonomousCommand().schedule()
     }
 
     override fun autonomousPeriodic() {}
@@ -88,7 +88,7 @@ class Robot : LoggedRobot() {
     override fun autonomousExit() {}
 
     override fun teleopInit() {
-        RobotContainer.getAutonomousCommand()?.cancel()
+        RobotContainer.getAutonomousCommand().cancel()
         RobotContainer.teleopSwerveCommand.schedule()
         RobotContainer.trunkSystem.calibrate()
 

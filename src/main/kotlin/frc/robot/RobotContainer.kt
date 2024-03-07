@@ -62,10 +62,10 @@ object RobotContainer {
     init {
         configureBindings()
 
-        for (file in File(Filesystem.getDeployDirectory(), "pathplanner/autos/").walkTopDown()) {
+        for (file in File(Filesystem.getDeployDirectory(), "pathplanner/autos").walkTopDown()) {
             autos.addOption(
-                file.name.substring(0, file.name.lastIndexOf(".auto")),
-                file.name.substring(0, file.name.lastIndexOf(".auto"))
+                file.nameWithoutExtension,
+                file.nameWithoutExtension
             )
         }
         SmartDashboard.putData("Autos", autos)
@@ -127,6 +127,10 @@ object RobotContainer {
     }
 
     //    fun getAutonomousCommand(): Command? = runAuto
-    fun getAutonomousCommand(): Command = PathPlannerAuto(autos.selected)
+    fun getAutonomousCommand(): Command = try {
+        PathPlannerAuto(autos.selected)
+    } catch (e: Exception) {
+        Commands.runOnce({ System.err.println(e) })
+    }
 }
 
