@@ -3,6 +3,7 @@ package frc.robot
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest.PointWheelsAt
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest.SwerveDriveBrake
 import com.pathplanner.lib.commands.PathPlannerAuto
+import edu.wpi.first.wpilibj.Filesystem
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.Command
@@ -16,11 +17,11 @@ import frc.robot.commands.cannon.AutoShootCommand
 import frc.robot.constants.TunerConstants
 import frc.robot.subsystems.cannon.CannonIOReal
 import frc.robot.subsystems.cannon.CannonSystem
-import frc.robot.subsystems.swerve.CommandSwerveDrivetrain
 import frc.robot.subsystems.swerve.SwerveSystem
 import frc.robot.subsystems.swerve.Telemetry
 import frc.robot.subsystems.trunk.TrunkIOReal
 import frc.robot.subsystems.trunk.TrunkSystem
+import java.io.File
 
 object RobotContainer {
     val leftJoystick: CommandJoystick = CommandJoystick(0)
@@ -52,14 +53,22 @@ object RobotContainer {
 
     val robotActionSendable: SendableChooser<RobotAction> = SendableChooser<RobotAction>()
 
+    private val autos: SendableChooser<String> = SendableChooser<String>()
+
     val swerveSystem: SwerveSystem = SwerveSystem()
 
-
-    private var runAuto: Command? = PathPlannerAuto("OneNote")
+//    private var runAuto: Command? = PathPlannerAuto("OneNote")
 
     init {
         configureBindings()
 
+        for (file in File(Filesystem.getDeployDirectory(), "pathplanner/autos/").walkTopDown()) {
+            autos.addOption(
+                file.name.substring(0, file.name.lastIndexOf(".auto")),
+                file.name.substring(0, file.name.lastIndexOf(".auto"))
+            )
+        }
+        SmartDashboard.putData("Autos", autos)
 
         RobotAction.entries.forEach {
             robotActionSendable.addOption(it.name, it)
@@ -117,6 +126,7 @@ object RobotContainer {
         }))
     }
 
-    fun getAutonomousCommand(): Command? = runAuto
+    //    fun getAutonomousCommand(): Command? = runAuto
+    fun getAutonomousCommand(): Command = PathPlannerAuto(autos.selected)
 }
 
