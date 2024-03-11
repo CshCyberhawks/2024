@@ -20,10 +20,6 @@ import kotlin.math.abs
 
 
 class TrunkSystem(val io: TrunkIO) : SubsystemBase() {
-//
-//    private val positionLimits = false
-//    private val rotationLimits = false
-
     private val positionPID: PIDController =
             PIDController(TrunkConstants.positionKP, TrunkConstants.positionKI, TrunkConstants.positionKD)
     private val positionFF: ElevatorFeedforward = ElevatorFeedforward(0.0001, 0.27, 3.07, 0.09)
@@ -106,7 +102,6 @@ class TrunkSystem(val io: TrunkIO) : SubsystemBase() {
         setPID(false)
         currentState = TrunkState.MANUAL
         brakeMotors()
-        io.setPositionLimits(true)
     }
 
     fun calibrate() {
@@ -115,14 +110,11 @@ class TrunkSystem(val io: TrunkIO) : SubsystemBase() {
         setPID(false)
         currentState = TrunkState.CALIBRATING
 //        io.setElevatorSpeed(0.2)
-        io.setPositionLimits(false)
     }
 
     fun rotate(speed: Double) {
-        if (currentState == TrunkState.MANUAL) {
+        if (currentState == TrunkState.MANUAL)
             io.setRotationSpeed(speed)
-//            SmartDashboard.putNumber("rotation percent output", speed)
-        }
     }
 
     fun elevate(speed: Double) {
@@ -135,9 +127,6 @@ class TrunkSystem(val io: TrunkIO) : SubsystemBase() {
         io.setElevatorSpeed(0.0)
         setPID(true)
         currentState = TrunkState.CUSTOM
-//        io.setPositionLimits(true)
-//        isMoving = false
-//        isAnglePID = true
     }
 
     fun getRotation(): Double {
@@ -183,7 +172,6 @@ class TrunkSystem(val io: TrunkIO) : SubsystemBase() {
         currentState = TrunkState.STOP
         io.setElevatorSpeed(0.0)
         io.setRotationSpeed(0.0)
-        io.setPositionLimits(true)
     }
 
     fun goToAim() {
@@ -198,7 +186,7 @@ class TrunkSystem(val io: TrunkIO) : SubsystemBase() {
             io.setZeroPosition(top = true)
         }
 
-        Telemetry.putString("Angle Idle Mode", io.getAngleIdleMode().name, RobotContainer.telemetry.trunkTelemetry)
+        Telemetry.putBoolean("Angle Brake", io.rotationBrake, RobotContainer.telemetry.trunkTelemetry)
 
         Telemetry.putBoolean("Is at angle?", isAtAngle, RobotContainer.telemetry.trunkTelemetry)
         Telemetry.putBoolean("is moving", isMoving, RobotContainer.telemetry.trunkTelemetry)
@@ -261,12 +249,10 @@ class TrunkSystem(val io: TrunkIO) : SubsystemBase() {
                     prevTargetPose = RobotContainer.stateMachine.targetTrunkPose
                     hasElevatorMoved = false
                     isMoving = false
-                    io.setAngleIdleMode(CANSparkBase.IdleMode.kBrake)
+                    io.rotationBrake = true
                 }
-
-                if (RobotContainer.stateMachine.targetTrunkPose != TrunkPosition.INTAKE) {
-                    io.setAngleIdleMode(CANSparkBase.IdleMode.kBrake)
-                }
+                if (RobotContainer.stateMachine.targetTrunkPose != TrunkPosition.INTAKE)
+                    io.rotationBrake = true
             }
             //Is rotation safe?
             if (getRotation() > TrunkConstants.SAFE_TRAVEL_ANGLE || MiscCalculations.appxEqual(
@@ -284,7 +270,7 @@ class TrunkSystem(val io: TrunkIO) : SubsystemBase() {
             //Handling for the garbage intake logic bc the build team poorly designed the intake and didn't tell us
             if (RobotContainer.stateMachine.targetTrunkPose == TrunkPosition.INTAKE && getPosition() < TrunkConstants.SAFE_TO_DROP_INTAKE_POSITION && isRotationSafe) {
                 isAnglePID = false
-                io.setAngleIdleMode(CANSparkBase.IdleMode.kCoast)
+                io.rotationBrake = false
                 io.setRotationVoltage(0.0)
             } else {
                 isAnglePID = true
@@ -312,7 +298,7 @@ class TrunkSystem(val io: TrunkIO) : SubsystemBase() {
         Telemetry.putBoolean("Is PIDing", isPIDing, RobotContainer.telemetry.trunkTelemetry)
         if (isPIDing) {
 
-//            io.setElevatorSpeed(posFF + positionPIDOut)
+            io.setElevatorSpeed(posFF + positionPIDOut)
 
             if (isAnglePID) {
                 var pidVal: Double = rotationPID.calculate(Math.toRadians(getRotation()))
@@ -353,14 +339,14 @@ class TrunkSystem(val io: TrunkIO) : SubsystemBase() {
 
 
     fun freeMotors() {
-        io.setAngleIdleMode(CANSparkBase.IdleMode.kCoast)
-        io.setPositionIdleMode(CANSparkBase.IdleMode.kCoast)
+        io.rotationBrake = false
+        io.positionBrake = false
         io.setRotationSpeed(0.0)
     }
 
     fun brakeMotors() {
-        io.setPositionIdleMode(CANSparkBase.IdleMode.kBrake)
-        io.setAngleIdleMode(CANSparkBase.IdleMode.kBrake)
+        io.rotationBrake = true
+        io.positionBrake = true
     }
 
     private fun calibratePeriodic() {

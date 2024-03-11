@@ -16,15 +16,23 @@ class TrunkIOReal : TrunkIO {
     private val followerRotationMotor = CANSparkMax(21, CANSparkLowLevel.MotorType.kBrushless)
 
     private val rotationEncoder = DutyCycleEncoder(TrunkConstants.rotationEncoderID)
-    private var angleIdleMode = CANSparkBase.IdleMode.kBrake
 
     private val topLimit = DigitalInput(0)
-    private val bottomLimit = DigitalInput(1)
 
-    private var bottomPositionLimit = TrunkConstants.BOTTOM_BREAK_BEAM_POSITION
-    private var topPositionLimit = TrunkConstants.TOP_BREAK_BEAM_POSITION
-    private var bottomRotationLimit = TrunkConstants.SAFE_TRAVEL_ANGLE
-    private var topRotationLimit = TrunkConstants.MAX_ANGLE
+    override var positionBrake = true
+        set(enabled) {
+            if (positionBrake != enabled)
+                elevatorMotor.setIdleMode(if (enabled) CANSparkBase.IdleMode.kBrake else CANSparkBase.IdleMode.kCoast)
+            field = enabled
+        }
+    override var rotationBrake = true
+        set(enabled) {
+            if (positionBrake != enabled) {
+                mainRotationMotor.setIdleMode(if (enabled) CANSparkBase.IdleMode.kBrake else CANSparkBase.IdleMode.kCoast)
+                followerRotationMotor.setIdleMode(if (enabled) CANSparkBase.IdleMode.kBrake else CANSparkBase.IdleMode.kCoast)
+            }
+            field = enabled
+        }
 
     init {
         elevatorMotor.restoreFactoryDefaults()
@@ -34,23 +42,12 @@ class TrunkIOReal : TrunkIO {
         elevatorMotor.inverted = false // elevator likes to not be inverted idk why
         mainRotationMotor.inverted = false
 
-        elevatorMotor.enableSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, false)
-        elevatorMotor.enableSoftLimit(CANSparkBase.SoftLimitDirection.kForward, false)
+        elevatorMotor.setIdleMode(CANSparkBase.IdleMode.kBrake)
+        mainRotationMotor.setIdleMode(CANSparkBase.IdleMode.kBrake)
+        followerRotationMotor.setIdleMode(CANSparkBase.IdleMode.kBrake)
 
         followerRotationMotor.follow(mainRotationMotor, true)
     }
-
-    override fun setPositionIdleMode(mode: CANSparkBase.IdleMode) {
-        elevatorMotor.setIdleMode(mode)
-    }
-
-    override fun setAngleIdleMode(mode: CANSparkBase.IdleMode) {
-        mainRotationMotor.setIdleMode(mode)
-        followerRotationMotor.setIdleMode(mode)
-        angleIdleMode = mode
-    }
-
-    override fun getAngleIdleMode(): CANSparkBase.IdleMode = angleIdleMode
 
     override fun setZeroPosition(top: Boolean) {
         positionEncoder.setPosition(
@@ -60,62 +57,13 @@ class TrunkIOReal : TrunkIO {
                 TrunkConstants.BOTTOM_BREAK_BEAM_POSITION * TrunkConstants.M2ELEVATOR
             }
         )
-//        if (!top)
-//            elevatorMotor.inverted = !elevatorMotor.inverted
-//        setTopPositionLimit(TrunkConstants.TOP_BREAK_BEAM_POSITION)
-//        setBottomPositionLimit(TrunkConstants.BOTTOM_BREAK_BEAM_POSITION)
     }
 
     override fun atTopLimit(): Boolean = topLimit.get()
 
-    override fun atBottomLimit(): Boolean = bottomLimit.get()
-
-    override fun setPositionLimits(on: Boolean) {
-//        elevatorMotor.enableSoftLimit(CANSparkBase.SoftLimitDirection.kForward, on)
-//        elevatorMotor.enableSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, on)
-    }
-
     override fun getRawPosition(): Double = positionEncoder.position
 
     override fun getRawRotation(): Double = rotationEncoder.absolutePosition
-
-    override fun setTopPositionLimit(position: Double) {
-//        if (topPositionLimit != position) {
-//            topPositionLimit = position
-//            elevatorMotor.setSoftLimit(
-//                CANSparkBase.SoftLimitDirection.kForward,
-//                (position * TrunkConstants.M2ELEVATOR).toFloat()
-//            )
-//            elevatorMotor.enableSoftLimit(CANSparkBase.SoftLimitDirection.kForward, true)
-//        }
-    }
-
-    override fun setBottomPositionLimit(position: Double) {
-//        if (bottomPositionLimit != position) {
-//            bottomPositionLimit = position
-//            elevatorMotor.setSoftLimit(
-//                CANSparkBase.SoftLimitDirection.kReverse,
-//                (position * TrunkConstants.M2ELEVATOR).toFloat()
-//            )
-//            elevatorMotor.enableSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, true)
-//        }
-    }
-
-    override fun setTopRotationLimit(angle: Double) {
-//        if (topRotationLimit != angle) {
-//            topRotationLimit = angle
-//            mainRotationMotor.setSoftLimit(CANSparkBase.SoftLimitDirection.kForward, angle.toFloat())
-//            mainRotationMotor.enableSoftLimit(CANSparkBase.SoftLimitDirection.kForward, true)
-//        }
-    }
-
-    override fun setBottomRotationLimit(angle: Double) {
-//        if (bottomRotationLimit != angle) {
-//            bottomRotationLimit = angle
-//            mainRotationMotor.setSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, angle.toFloat())
-//            mainRotationMotor.enableSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, true)
-//        }
-    }
 
     override fun setElevatorSpeed(speed: Double) {
         elevatorMotor.set(-speed)
