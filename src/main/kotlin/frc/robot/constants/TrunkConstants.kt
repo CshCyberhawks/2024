@@ -1,6 +1,5 @@
 package frc.robot.constants
 
-import edu.wpi.first.math.trajectory.TrapezoidProfile
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
@@ -24,7 +23,7 @@ object TrunkConstants {
     val d2y = sin(ELEVATOR_ANGLE * PI / 180.0)
     val d2x = cos(ELEVATOR_ANGLE * PI / 180.0)
 
-    var SAFE_TRAVEL_ANGLE: Double = 63.0
+    var TRAVEL_ANGLE: Double = 63.0
 
     var MAX_ANGLE: Double = 190.0
     var MAX_SHOOT_ANGLE = 90.0
@@ -81,7 +80,8 @@ object TrunkConstants {
     var rotationMaxVelo = 30.0
     var rotationMaxError = 5.0
 
-    val ANGLE_DEADZONE = 2.5
+    const val ANGLE_DEADZONE = 2.5
+    const val POSITION_DEADZONE = .01
 
     val SAFE_TO_DROP_INTAKE_POSITION = 0.23
 

@@ -1,22 +1,17 @@
 package frc.robot.subsystems.trunk
 
 import MiscCalculations
-import com.revrobotics.CANSparkBase
 import edu.wpi.first.math.MathUtil
 import edu.wpi.first.math.controller.ArmFeedforward
 import edu.wpi.first.math.controller.ElevatorFeedforward
 import edu.wpi.first.math.controller.PIDController
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
-import edu.wpi.first.wpilibj.util.Color8Bit
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import frc.robot.RobotContainer
 import frc.robot.TrunkPosition
 import frc.robot.TrunkState
 import frc.robot.constants.TrunkConstants
 import frc.robot.util.Telemetry
-import frc.robot.util.visualization.Mechanism2d
-import frc.robot.util.visualization.MechanismLigament2d
-import kotlin.math.abs
 
 
 class TrunkSystem(val io: TrunkIO) : SubsystemBase() {
@@ -54,46 +49,45 @@ class TrunkSystem(val io: TrunkIO) : SubsystemBase() {
 
     var prevTargetPose = TrunkPosition.SPEAKER
 
-    var currentPosition: Double = 0.0
-    var currentRotation: Double = getRotation()
+    private var currentPosition: Double = 0.0
+    private var currentRotation: Double = getRotation()
 
-    var isRotationSafe = false
-    var hasElevatorMoved = false
+    private var isRotationSafe = false
+    private var hasElevatorMoved = false
 
     var isMoving = false
 
-    var isAnglePID = false
+    private var isAnglePID = false
 
-    val superstructureMechanism = Mechanism2d(
-            TrunkConstants.TOP_BREAK_BEAM_POSITION * TrunkConstants.d2x + 1.0,
-            TrunkConstants.TOP_BREAK_BEAM_POSITION * TrunkConstants.d2y + 1.0
-    )
-    val elevatorMechanismRoot = superstructureMechanism.getRoot("Elevator Root", 0.25, 0.25)
-    val trunkMechanismRoot = superstructureMechanism.getRoot(
-            "Trunk Root",
-            currentPosition * TrunkConstants.d2x + .25,
-            currentPosition * TrunkConstants.d2y + .25
-    )
-    val trunkMechanism =
-            trunkMechanismRoot.append(MechanismLigament2d("Trunk", -.25, currentRotation, color = Color8Bit(0, 0, 255)))
-    val crossbarRoot = superstructureMechanism.getRoot(
-            "Crossbar Root",
-            (TrunkConstants.CROSSBAR_BOTTOM + .02) * TrunkConstants.d2x + .25,
-            (TrunkConstants.CROSSBAR_BOTTOM - .02) * TrunkConstants.d2y + 0.25
-    )
-
+//    private val superstructureMechanism = Mechanism2d(
+//            TrunkConstants.TOP_BREAK_BEAM_POSITION * TrunkConstants.d2x + 1.0,
+//            TrunkConstants.TOP_BREAK_BEAM_POSITION * TrunkConstants.d2y + 1.0
+//    )
+//    val elevatorMechanismRoot = superstructureMechanism.getRoot("Elevator Root", 0.25, 0.25)
+//    val trunkMechanismRoot = superstructureMechanism.getRoot(
+//            "Trunk Root",
+//            currentPosition * TrunkConstants.d2x + .25,
+//            currentPosition * TrunkConstants.d2y + .25
+//    )
+//    val trunkMechanism =
+//            trunkMechanismRoot.append(MechanismLigament2d("Trunk", -.25, currentRotation, color = Color8Bit(0, 0, 255)))
+//    val crossbarRoot = superstructureMechanism.getRoot(
+//            "Crossbar Root",
+//            (TrunkConstants.CROSSBAR_BOTTOM + .02) * TrunkConstants.d2x + .25,
+//            (TrunkConstants.CROSSBAR_BOTTOM - .02) * TrunkConstants.d2y + 0.25
+//    )
 
     init {
-        elevatorMechanismRoot.append(MechanismLigament2d("Elevator", .8, TrunkConstants.ELEVATOR_ANGLE))
-        crossbarRoot.append(
-                MechanismLigament2d(
-                        "Crossbar",
-                        TrunkConstants.CROSSBAR_TOP - TrunkConstants.CROSSBAR_BOTTOM - .25,
-                        TrunkConstants.ELEVATOR_ANGLE,
-                        color = Color8Bit(0, 255, 0)
-                )
-        )
-        setDesiredRotation(TrunkConstants.SAFE_TRAVEL_ANGLE)
+//        elevatorMechanismRoot.append(MechanismLigament2d("Elevator", .8, TrunkConstants.ELEVATOR_ANGLE))
+//        crossbarRoot.append(
+//                MechanismLigament2d(
+//                        "Crossbar",
+//                        TrunkConstants.CROSSBAR_TOP - TrunkConstants.CROSSBAR_BOTTOM - .25,
+//                        TrunkConstants.ELEVATOR_ANGLE,
+//                        color = Color8Bit(0, 255, 0)
+//                )
+//        )
+        setDesiredRotation(TrunkConstants.TRAVEL_ANGLE)
     }
 
     fun goManual() {
@@ -129,14 +123,9 @@ class TrunkSystem(val io: TrunkIO) : SubsystemBase() {
         currentState = TrunkState.CUSTOM
     }
 
-    fun getRotation(): Double {
-        return frc.robot.util.Math.wrapAroundAngles((-io.getRawRotation() * 360.0) - rotationOffset)
-//        return rotationEncoder.position
-    }
+    private fun getRotation() = frc.robot.util.Math.wrapAroundAngles((-io.getRawRotation() * 360.0) - rotationOffset)
 
-    fun getPosition(): Double {
-        return io.getRawPosition() * TrunkConstants.ELEVATOR2M
-    }
+    private fun getPosition() = io.getRawPosition() * TrunkConstants.ELEVATOR2M
 
     private fun setDesiredPosition(position: Double) {
         positionPID.setpoint = position
@@ -166,7 +155,6 @@ class TrunkSystem(val io: TrunkIO) : SubsystemBase() {
         isPIDing = on
     }
 
-
     fun STOP() {
         setPID(false)
         currentState = TrunkState.STOP
@@ -181,11 +169,6 @@ class TrunkSystem(val io: TrunkIO) : SubsystemBase() {
     override fun periodic() {
         RobotContainer.telemetry.trunkTelemetry = SmartDashboard.getBoolean("Trunk Telemetry", RobotContainer.telemetry.trunkTelemetry)
         SmartDashboard.putBoolean("Trunk Telemetry", RobotContainer.telemetry.trunkTelemetry)
-
-        if (io.atTopLimit()) {
-            io.setZeroPosition(top = true)
-        }
-
         Telemetry.putBoolean("Angle Brake", io.rotationBrake, RobotContainer.telemetry.trunkTelemetry)
 
         Telemetry.putBoolean("Is at angle?", isAtAngle, RobotContainer.telemetry.trunkTelemetry)
@@ -202,6 +185,12 @@ class TrunkSystem(val io: TrunkIO) : SubsystemBase() {
         Telemetry.putString("targetPosition name", RobotContainer.stateMachine.targetTrunkPose.name, RobotContainer.telemetry.trunkTelemetry)
         Telemetry.putBoolean("is angle PID?", isAnglePID, RobotContainer.telemetry.trunkTelemetry)
 
+        if (io.atTopLimit())
+            io.setZeroPosition()
+
+        currentPosition = getPosition()
+        currentRotation = getRotation()
+
         if (currentState == TrunkState.CUSTOM) {
             //Changed position
             if (RobotContainer.stateMachine.targetTrunkPose != prevTargetPose) {
@@ -210,19 +199,19 @@ class TrunkSystem(val io: TrunkIO) : SubsystemBase() {
                 if (!isRotationSafe && !hasElevatorMoved) {
                     isMoving = true
                     setDesiredPosition(prevTargetPose.position)
-                    setDesiredRotation(TrunkConstants.SAFE_TRAVEL_ANGLE)
+                    setDesiredRotation(TrunkConstants.TRAVEL_ANGLE)
                 }
                 //Safe rotation but still need to start
                 else if (isRotationSafe && !hasElevatorMoved) {
                     isMoving = true
-                    setDesiredRotation(TrunkConstants.SAFE_TRAVEL_ANGLE)
+                    setDesiredRotation(TrunkConstants.TRAVEL_ANGLE)
                     setDesiredPosition(RobotContainer.stateMachine.targetTrunkPose.position)
                 }
 
                 if (MiscCalculations.appxEqual(
-                                getPosition(),
+                                currentPosition,
                                 RobotContainer.stateMachine.targetTrunkPose.position,
-                                .03
+                                TrunkConstants.POSITION_DEADZONE
                         )
                 ) {
                     hasElevatorMoved = true
@@ -255,9 +244,9 @@ class TrunkSystem(val io: TrunkIO) : SubsystemBase() {
                     io.rotationBrake = true
             }
             //Is rotation safe?
-            if (getRotation() > TrunkConstants.SAFE_TRAVEL_ANGLE || MiscCalculations.appxEqual(
+            if (getRotation() > TrunkConstants.TRAVEL_ANGLE || MiscCalculations.appxEqual(
                             getRotation(),
-                            TrunkConstants.SAFE_TRAVEL_ANGLE,
+                            TrunkConstants.TRAVEL_ANGLE,
                             TrunkConstants.ANGLE_DEADZONE
                     )
             ) {
@@ -354,7 +343,7 @@ class TrunkSystem(val io: TrunkIO) : SubsystemBase() {
         val topLimit = io.atTopLimit()
         if (topLimit) {
             io.setElevatorSpeed(0.0)
-            io.setZeroPosition(true)
+            io.setZeroPosition()
             RobotContainer.stateMachine.targetTrunkPose = TrunkPosition.STOW
             prevTargetPose = TrunkPosition.SPEAKER
             goToCustom()

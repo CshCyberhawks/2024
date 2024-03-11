@@ -49,14 +49,8 @@ class TrunkIOReal : TrunkIO {
         followerRotationMotor.follow(mainRotationMotor, true)
     }
 
-    override fun setZeroPosition(top: Boolean) {
-        positionEncoder.setPosition(
-            if (top) {
-                TrunkConstants.TOP_BREAK_BEAM_POSITION * TrunkConstants.M2ELEVATOR
-            } else {
-                TrunkConstants.BOTTOM_BREAK_BEAM_POSITION * TrunkConstants.M2ELEVATOR
-            }
-        )
+    override fun setZeroPosition() {
+        positionEncoder.setPosition(TrunkConstants.TOP_BREAK_BEAM_POSITION * TrunkConstants.M2ELEVATOR)
     }
 
     override fun atTopLimit(): Boolean = topLimit.get()

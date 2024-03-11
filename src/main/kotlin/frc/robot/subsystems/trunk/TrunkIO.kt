@@ -10,7 +10,7 @@ interface TrunkIO {
     fun getRawRotation(): Double
     fun setElevatorSpeed(speed: Double)
     fun setRotationSpeed(speed: Double)
-    fun setZeroPosition(top: Boolean)
+    fun setZeroPosition()
     fun setRotationVoltage(volts: Double)
     fun atTopLimit(): Boolean
     fun periodic()
