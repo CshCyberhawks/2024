@@ -1,18 +1,13 @@
 package frc.robot
 
-import edu.wpi.first.math.VecBuilder
-import edu.wpi.first.math.util.Units
 import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.CommandScheduler
 import frc.robot.commands.automatic.AutoClimbCommand
 import frc.robot.commands.autonomous.DriveBackAuto
-import frc.robot.util.Telemetry
-import frc.robot.constants.LimelightConstants
 import frc.robot.constants.TargetingConstants
-import frc.robot.constants.TrunkConstants
-import frc.robot.util.TargetingSystem
+import frc.robot.util.Telemetry
 import org.littletonrobotics.junction.LoggedRobot
 
 
@@ -49,15 +44,20 @@ class Robot : LoggedRobot() {
 
         SmartDashboard.putBoolean("Is trunk ready?", RobotContainer.stateMachine.trunkReady)
 
-        TargetingConstants.stupidConstant = SmartDashboard.getNumber("shooter fudging constant", TargetingConstants.stupidConstant)
+        TargetingConstants.stupidConstant =
+            SmartDashboard.getNumber("shooter fudging constant", TargetingConstants.stupidConstant)
         TargetingConstants.endpointX = SmartDashboard.getNumber("shooter endpoint x", TargetingConstants.endpointX)
         TargetingConstants.endpointZ = SmartDashboard.getNumber("shooter endpoint z", TargetingConstants.endpointZ)
         TargetingConstants.shooterZ = SmartDashboard.getNumber("shooter height", TargetingConstants.shooterZ)
-        TargetingConstants.constantStupidConstant = SmartDashboard.getNumber("constant shooter fudging constant", TargetingConstants.constantStupidConstant)
-        TargetingConstants.velocityMultiplier = SmartDashboard.getNumber("shooter velocity transfer multiplier", TargetingConstants.velocityMultiplier)
+        TargetingConstants.constantStupidConstant =
+            SmartDashboard.getNumber("constant shooter fudging constant", TargetingConstants.constantStupidConstant)
+        TargetingConstants.velocityMultiplier =
+            SmartDashboard.getNumber("shooter velocity transfer multiplier", TargetingConstants.velocityMultiplier)
 
         CommandScheduler.getInstance().run()
         RobotContainer.stateMachine.logStates()
+
+
 
         if (RobotContainer.stateMachine.trunkState == TrunkState.MANUAL) {
             RobotContainer.trunkSystem.elevate(-RobotContainer.xboxController.leftY)
@@ -91,14 +91,38 @@ class Robot : LoggedRobot() {
         SmartDashboard.putNumber("Mathed robot angle", shotSetup.robotAngle)
         SmartDashboard.putNumber("Current robot angle", RobotContainer.swerveSystem.getSwervePose().rotation.degrees)
 
-        Telemetry.putBoolean("shooter ready", RobotContainer.cannonSystem.shooterReady(), RobotContainer.telemetry.cannonTelemetry)
-        Telemetry.putString("note state", RobotContainer.stateMachine.noteState.name, RobotContainer.telemetry.cannonTelemetry)
-        Telemetry.putString("intake state", RobotContainer.stateMachine.intakeState.name, RobotContainer.telemetry.cannonTelemetry)
+        Telemetry.putBoolean(
+            "shooter ready",
+            RobotContainer.cannonSystem.shooterReady(),
+            RobotContainer.telemetry.cannonTelemetry
+        )
+        Telemetry.putString(
+            "note state",
+            RobotContainer.stateMachine.noteState.name,
+            RobotContainer.telemetry.cannonTelemetry
+        )
+        Telemetry.putString(
+            "intake state",
+            RobotContainer.stateMachine.intakeState.name,
+            RobotContainer.telemetry.cannonTelemetry
+        )
 
-        SmartDashboard.putNumber("Swerve 0 Current", RobotContainer.swerveSystem.driveTrain.getModule(0).driveMotor.supplyCurrent.value)
-        SmartDashboard.putNumber("Swerve 1 Current", RobotContainer.swerveSystem.driveTrain.getModule(1).driveMotor.supplyCurrent.value)
-        SmartDashboard.putNumber("Swerve 2 Current", RobotContainer.swerveSystem.driveTrain.getModule(2).driveMotor.supplyCurrent.value)
-        SmartDashboard.putNumber("Swerve 3 Current", RobotContainer.swerveSystem.driveTrain.getModule(3).driveMotor.supplyCurrent.value)
+        SmartDashboard.putNumber(
+            "Swerve 0 Current",
+            RobotContainer.swerveSystem.driveTrain.getModule(0).driveMotor.supplyCurrent.value
+        )
+        SmartDashboard.putNumber(
+            "Swerve 1 Current",
+            RobotContainer.swerveSystem.driveTrain.getModule(1).driveMotor.supplyCurrent.value
+        )
+        SmartDashboard.putNumber(
+            "Swerve 2 Current",
+            RobotContainer.swerveSystem.driveTrain.getModule(2).driveMotor.supplyCurrent.value
+        )
+        SmartDashboard.putNumber(
+            "Swerve 3 Current",
+            RobotContainer.swerveSystem.driveTrain.getModule(3).driveMotor.supplyCurrent.value
+        )
 
         SmartDashboard.putBoolean("Limelight has target?", LimelightHelpers.getTV(RobotContainer.intakeLimelight))
     }

@@ -125,7 +125,8 @@ class RobotStateMachine {
             RobotAction.Chill
         }
     val shootPosition: ShootPosition = ShootPosition.StageFront
-//        get() = RobotContainer.shootPositionSendable.selected
+
+    //        get() = RobotContainer.shootPositionSendable.selected
 //    val trunkPosition: TrunkPosition
 //        get() = RobotContainer.trunkPositionSendable.selected
     var driveState: DriveState = DriveState.Teleop
@@ -133,7 +134,8 @@ class RobotStateMachine {
     var autoStateManagement: AutoStateManagement = AutoStateManagement.Disabled
 
     fun logStates() {
-        RobotContainer.telemetry.stateMachineTelemetry = SmartDashboard.getBoolean("State Machine Telemetry", RobotContainer.telemetry.stateMachineTelemetry)
+        RobotContainer.telemetry.stateMachineTelemetry =
+            SmartDashboard.getBoolean("State Machine Telemetry", RobotContainer.telemetry.stateMachineTelemetry)
         SmartDashboard.putBoolean("State Machine Telemetry", RobotContainer.telemetry.stateMachineTelemetry)
 
         Telemetry.putString("Note State", noteState.name, RobotContainer.telemetry.stateMachineTelemetry)
@@ -144,8 +146,7 @@ class RobotStateMachine {
     val trunkReady: Boolean
         get() = if (trunkState == TrunkState.AIMING) {
             RobotContainer.trunkSystem.isMoving == false && RobotContainer.trunkSystem.isAtAngle == true
-        }
-        else {
+        } else {
             targetTrunkPose == RobotContainer.trunkSystem.prevTargetPose
         }
 //get() = targetTrunkPose == RobotContainer.trunkSystem.prevTargetPose

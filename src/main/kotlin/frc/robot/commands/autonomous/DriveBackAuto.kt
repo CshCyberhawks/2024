@@ -4,10 +4,10 @@ import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj2.command.Command
 import frc.robot.RobotContainer
 
-class DriveBackAuto: Command() {
+class DriveBackAuto : Command() {
     var startTime: Double = -1.0
     override fun initialize() {
-       startTime = Timer.getFPGATimestamp()
+        startTime = Timer.getFPGATimestamp()
     }
 
     override fun execute() {

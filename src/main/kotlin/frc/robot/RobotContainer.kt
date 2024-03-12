@@ -9,17 +9,15 @@ import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.Commands
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
-import frc.robot.commands.ArmPIDCalibrationAngleCommand
 import frc.robot.commands.TeleopSwerveDriveCommand
 import frc.robot.commands.UnBreakTheIK
-import frc.robot.commands.automatic.AutoAimAndShoot
-import frc.robot.commands.automatic.AutoAimAndShootFromPosition
+import frc.robot.commands.automatic.AutoAimFromPosition
+import frc.robot.commands.automatic.AutoAimShooter
 import frc.robot.commands.automatic.FloorIntakeAndSeek
 import frc.robot.commands.cannon.AutoAmp
 import frc.robot.commands.cannon.AutoIntake
 import frc.robot.commands.cannon.AutoShootCommand
 import frc.robot.commands.cannon.AutoSpit
-import frc.robot.constants.TunerConstants
 import frc.robot.subsystems.VisionSystem
 import frc.robot.subsystems.cannon.CannonIOReal
 import frc.robot.subsystems.cannon.CannonSystem
@@ -30,12 +28,11 @@ import frc.robot.util.TargetingSystem
 import frc.robot.util.TelemetryToggles
 
 object RobotContainer {
-    val leftJoystick: CommandJoystick = CommandJoystick(0)
-    val rightJoystick: CommandJoystick = CommandJoystick(1)
-    val xboxController: CommandXboxController = CommandXboxController(2)
+    private val leftJoystick: CommandJoystick = CommandJoystick(0)
+    private val rightJoystick: CommandJoystick = CommandJoystick(1)
+    private val xboxController: CommandXboxController = CommandXboxController(2)
 
     val telemetry = TelemetryToggles()
-
 
     val trunkSystem = TrunkSystem(TrunkIOReal())
 
@@ -47,6 +44,11 @@ object RobotContainer {
 
     var teleopSwerveCommand: Command = TeleopSwerveDriveCommand()
 
+    val autoAimShooter: Command = AutoAimShooter()
+
+    val autoAimFromPosition: Command = AutoAimFromPosition(stateMachine.shootPosition.position)
+
+    val autoAimFromPresetPosition: Command = AutoAimFromPosition(Pose2d(Translation2d(2.89, 5.54), Rotation2d()))
 
     val targetingSystem: TargetingSystem = TargetingSystem()
 
@@ -103,13 +105,14 @@ object RobotContainer {
             when (stateMachine.robotAction) {
                 RobotAction.Speaker -> {
                     if (stateMachine.shootPosition == ShootPosition.AutoAim) {
-                        AutoAimAndShoot()
+                        autoAimShooter
                     } else {
-                        AutoAimAndShootFromPosition(stateMachine.shootPosition.position)
+                        autoAimFromPosition
                     }
-                };
-                RobotAction.Amp -> AutoAmp();
-                RobotAction.SourceIntake -> TODO("Not yet implemented");
+                }
+
+                RobotAction.Amp -> AutoAmp()
+                RobotAction.SourceIntake -> TODO("Not yet implemented")
                 RobotAction.FloorIntake -> AutoIntake()
                 RobotAction.Trap -> TODO("Not yet implemented")
                 //Does literally nothing
@@ -118,7 +121,7 @@ object RobotContainer {
         }))
 
         rightJoystick.button(4).toggleOnTrue(FloorIntakeAndSeek())
-
+        rightJoystick.button(2).onTrue(Commands.runOnce({ swerveSystem.zeroGyro() }))
 
         xboxController.x().onTrue(Commands.runOnce({
             stateMachine.targetTrunkPose = TrunkPosition.STOW
@@ -128,11 +131,23 @@ object RobotContainer {
         }))
         xboxController.y().onTrue(UnBreakTheIK())
         xboxController.b().toggleOnTrue(AutoIntake())
-        xboxController.leftBumper().onTrue(AutoAimAndShootFromPosition(Pose2d(Translation2d(2.89, 5.54), Rotation2d())))
-        xboxController.a().onTrue(AutoAimAndShoot())
+        xboxController.leftBumper().onTrue(autoAimFromPresetPosition)
+        xboxController.a().onTrue(AutoAimShooter())
         xboxController.rightBumper().toggleOnTrue(AutoSpit())
+        xboxController.leftTrigger().onTrue(AutoShootCommand().onlyIf {
+            autoAimShooter.isScheduled ||
+                    autoAimFromPosition.isScheduled
+        })
 
-        leftJoystick.button(2).whileTrue(FloorIntakeAndSeek())
+        // axis 0 = x, axis 1 = y
+        val twoJoysticks = true
+        if (twoJoysticks) {
+
+        } else {
+
+        }
+
+        leftJoystick.button(2).onTrue(FloorIntakeAndSeek())
     }
 
 //    val autoChooser: SendableChooser<Command> = AutoBuilder.buildAutoChooser()

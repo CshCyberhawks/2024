@@ -30,35 +30,37 @@ class VisionSystem {
 //            }
 
             if (llMeasure.pose.x != 0.0 && llMeasure.pose.y != 0.0) {
-                val poseDifference = llMeasure.pose.translation.getDistance(RobotContainer.swerveSystem.getSwervePose().translation)
+                val poseDifference =
+                    llMeasure.pose.translation.getDistance(RobotContainer.swerveSystem.getSwervePose().translation)
 
-                    val distanceToTag = llMeasure.avgTagDist
+                val distanceToTag = llMeasure.avgTagDist
 
-                    if (distanceToTag < LimelightConstants.MAX_TAG_DISTANCE_METERS) {
-                        var xyStds: Double
-                        var degStds: Double
+                if (distanceToTag < LimelightConstants.MAX_TAG_DISTANCE_METERS) {
+                    var xyStds: Double
+                    var degStds: Double
 
-                        if (llMeasure.tagCount >= 2) {
-                            xyStds = 0.1
-                            degStds = 6.0
-                        } else if (llMeasure.avgTagArea > 0.8 && poseDifference < 0.5) {
-                            xyStds = .3
-                            degStds = 8.0
-                        } else if (llMeasure.avgTagArea > 0.1 && poseDifference < 0.3) {
-                            xyStds = .5
-                            degStds = 13.0
-                        } else {
-                            xyStds = .8
-                            degStds = 25.0
-                        }
+                    if (llMeasure.tagCount >= 2) {
+                        xyStds = 0.1
+                        degStds = 6.0
+                    } else if (llMeasure.avgTagArea > 0.8 && poseDifference < 0.5) {
+                        xyStds = .3
+                        degStds = 8.0
+                    } else if (llMeasure.avgTagArea > 0.1 && poseDifference < 0.3) {
+                        xyStds = .5
+                        degStds = 13.0
+                    } else {
+                        xyStds = .8
+                        degStds = 25.0
+                    }
 
-                        RobotContainer.swerveSystem.driveTrain.setVisionMeasurementStdDevs(
-                            VecBuilder.fill(xyStds, xyStds, Math.toRadians(degStds)))
+                    RobotContainer.swerveSystem.driveTrain.setVisionMeasurementStdDevs(
+                        VecBuilder.fill(xyStds, xyStds, Math.toRadians(degStds))
+                    )
 //                        println("updating odometry with ll")
-                        RobotContainer.swerveSystem.driveTrain.addVisionMeasurement(
-                            llMeasure.pose,
-                            llMeasure.timestampSeconds
-                        )
+                    RobotContainer.swerveSystem.driveTrain.addVisionMeasurement(
+                        llMeasure.pose,
+                        llMeasure.timestampSeconds
+                    )
                 }
             }
         }
@@ -74,7 +76,7 @@ class VisionSystem {
             }
 
 //            if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
-                llMeasure = LimelightHelpers.getBotPoseEstimate_wpiRed(llName)
+            llMeasure = LimelightHelpers.getBotPoseEstimate_wpiRed(llName)
 //            }
 //            else if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
 //                llMeasure = LimelightHelpers.getBotPoseEstimate_wpiRed(llName)
@@ -85,7 +87,8 @@ class VisionSystem {
 //            }
 
             if (llMeasure.tagCount >= tagCount && llMeasure.pose.x != 0.0 && llMeasure.pose.y != 0.0) {
-                val poseDifference = llMeasure.pose.translation.getDistance(RobotContainer.swerveSystem.getSwervePose().translation)
+                val poseDifference =
+                    llMeasure.pose.translation.getDistance(RobotContainer.swerveSystem.getSwervePose().translation)
                 if (poseDifferenceCheck == false || poseDifference < LimelightConstants.MAX_DISTANCE_DIFFERENCE_METERS) {
                     val distanceToTag = llMeasure.avgTagDist
 
@@ -108,11 +111,12 @@ class VisionSystem {
                         }
 
                         RobotContainer.swerveSystem.driveTrain.setVisionMeasurementStdDevs(
-                                VecBuilder.fill(xyStds, xyStds, Math.toRadians(degStds)))
+                            VecBuilder.fill(xyStds, xyStds, Math.toRadians(degStds))
+                        )
 //                        println("updating odometry with ll")
                         RobotContainer.swerveSystem.driveTrain.addVisionMeasurement(
-                                llMeasure.pose,
-                                llMeasure.timestampSeconds
+                            llMeasure.pose,
+                            llMeasure.timestampSeconds
                         )
                     }
                 }

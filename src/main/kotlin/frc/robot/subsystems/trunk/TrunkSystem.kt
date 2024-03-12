@@ -16,7 +16,6 @@ import frc.robot.constants.TrunkConstants
 import frc.robot.util.Telemetry
 import frc.robot.util.visualization.Mechanism2d
 import frc.robot.util.visualization.MechanismLigament2d
-import kotlin.math.abs
 
 
 class TrunkSystem(val io: TrunkIO) : SubsystemBase() {
@@ -25,25 +24,29 @@ class TrunkSystem(val io: TrunkIO) : SubsystemBase() {
 //    private val rotationLimits = false
 
     private val positionPID: PIDController =
-            PIDController(TrunkConstants.positionKP, TrunkConstants.positionKI, TrunkConstants.positionKD)
+        PIDController(TrunkConstants.positionKP, TrunkConstants.positionKI, TrunkConstants.positionKD)
     private val positionFF: ElevatorFeedforward = ElevatorFeedforward(0.0001, 0.27, 3.07, 0.09)
 
     private var rotationOffset = TrunkConstants.rotationOffset
     private val rotationFF = ArmFeedforward(
-            TrunkConstants.rotationFFkS,
-            TrunkConstants.rotationFFkG,
-            TrunkConstants.rotationFFkV,
-            TrunkConstants.rotationFFkA
+        TrunkConstants.rotationFFkS,
+        TrunkConstants.rotationFFkG,
+        TrunkConstants.rotationFFkV,
+        TrunkConstants.rotationFFkA
     )
     private val rotationPID =
-            PIDController(TrunkConstants.rotationKP, TrunkConstants.rotationKI, TrunkConstants.rotationKD)
+        PIDController(TrunkConstants.rotationKP, TrunkConstants.rotationKI, TrunkConstants.rotationKD)
 
 
     private var isPIDing = true
 
     val isAtAngle: Boolean
         get() =
-            MiscCalculations.appxEqual(Math.toDegrees(rotationPID.setpoint), getRotation(), TrunkConstants.ANGLE_DEADZONE)
+            MiscCalculations.appxEqual(
+                Math.toDegrees(rotationPID.setpoint),
+                getRotation(),
+                TrunkConstants.ANGLE_DEADZONE
+            )
 
 
     var currentState = TrunkState.CALIBRATING
@@ -69,33 +72,33 @@ class TrunkSystem(val io: TrunkIO) : SubsystemBase() {
     var isAnglePID = false
 
     val superstructureMechanism = Mechanism2d(
-            TrunkConstants.TOP_BREAK_BEAM_POSITION * TrunkConstants.d2x + 1.0,
-            TrunkConstants.TOP_BREAK_BEAM_POSITION * TrunkConstants.d2y + 1.0
+        TrunkConstants.TOP_BREAK_BEAM_POSITION * TrunkConstants.d2x + 1.0,
+        TrunkConstants.TOP_BREAK_BEAM_POSITION * TrunkConstants.d2y + 1.0
     )
     val elevatorMechanismRoot = superstructureMechanism.getRoot("Elevator Root", 0.25, 0.25)
     val trunkMechanismRoot = superstructureMechanism.getRoot(
-            "Trunk Root",
-            currentPosition * TrunkConstants.d2x + .25,
-            currentPosition * TrunkConstants.d2y + .25
+        "Trunk Root",
+        currentPosition * TrunkConstants.d2x + .25,
+        currentPosition * TrunkConstants.d2y + .25
     )
     val trunkMechanism =
-            trunkMechanismRoot.append(MechanismLigament2d("Trunk", -.25, currentRotation, color = Color8Bit(0, 0, 255)))
+        trunkMechanismRoot.append(MechanismLigament2d("Trunk", -.25, currentRotation, color = Color8Bit(0, 0, 255)))
     val crossbarRoot = superstructureMechanism.getRoot(
-            "Crossbar Root",
-            (TrunkConstants.CROSSBAR_BOTTOM + .02) * TrunkConstants.d2x + .25,
-            (TrunkConstants.CROSSBAR_BOTTOM - .02) * TrunkConstants.d2y + 0.25
+        "Crossbar Root",
+        (TrunkConstants.CROSSBAR_BOTTOM + .02) * TrunkConstants.d2x + .25,
+        (TrunkConstants.CROSSBAR_BOTTOM - .02) * TrunkConstants.d2y + 0.25
     )
 
 
     init {
         elevatorMechanismRoot.append(MechanismLigament2d("Elevator", .8, TrunkConstants.ELEVATOR_ANGLE))
         crossbarRoot.append(
-                MechanismLigament2d(
-                        "Crossbar",
-                        TrunkConstants.CROSSBAR_TOP - TrunkConstants.CROSSBAR_BOTTOM - .25,
-                        TrunkConstants.ELEVATOR_ANGLE,
-                        color = Color8Bit(0, 255, 0)
-                )
+            MechanismLigament2d(
+                "Crossbar",
+                TrunkConstants.CROSSBAR_TOP - TrunkConstants.CROSSBAR_BOTTOM - .25,
+                TrunkConstants.ELEVATOR_ANGLE,
+                color = Color8Bit(0, 255, 0)
+            )
         )
         setDesiredRotation(TrunkConstants.SAFE_TRAVEL_ANGLE)
     }
@@ -191,7 +194,8 @@ class TrunkSystem(val io: TrunkIO) : SubsystemBase() {
     }
 
     override fun periodic() {
-        RobotContainer.telemetry.trunkTelemetry = SmartDashboard.getBoolean("Trunk Telemetry", RobotContainer.telemetry.trunkTelemetry)
+        RobotContainer.telemetry.trunkTelemetry =
+            SmartDashboard.getBoolean("Trunk Telemetry", RobotContainer.telemetry.trunkTelemetry)
         SmartDashboard.putBoolean("Trunk Telemetry", RobotContainer.telemetry.trunkTelemetry)
 
         if (io.atTopLimit()) {
@@ -205,13 +209,33 @@ class TrunkSystem(val io: TrunkIO) : SubsystemBase() {
         Telemetry.putBoolean("is rotation safe?", isRotationSafe, RobotContainer.telemetry.trunkTelemetry)
         Telemetry.putBoolean("has elevator moved?", hasElevatorMoved, RobotContainer.telemetry.trunkTelemetry)
         Telemetry.putNumber("Angle val", getRotation(), RobotContainer.telemetry.trunkTelemetry)
-        Telemetry.putNumber("Angle val no offset", frc.robot.util.Math.wrapAroundAngles((-io.getRawRotation() * 360.0)), RobotContainer.telemetry.trunkTelemetry)
+        Telemetry.putNumber(
+            "Angle val no offset",
+            frc.robot.util.Math.wrapAroundAngles((-io.getRawRotation() * 360.0)),
+            RobotContainer.telemetry.trunkTelemetry
+        )
         Telemetry.putNumber("position val", getPosition(), RobotContainer.telemetry.trunkTelemetry)
-        Telemetry.putNumber("target position", RobotContainer.stateMachine.targetTrunkPose.position, RobotContainer.telemetry.trunkTelemetry)
-        Telemetry.putString("trunk state", RobotContainer.stateMachine.trunkState.name, RobotContainer.telemetry.trunkTelemetry)
-        Telemetry.putNumber("target angle", Math.toDegrees(RobotContainer.trunkSystem.rotationPID.setpoint), RobotContainer.telemetry.trunkTelemetry)
+        Telemetry.putNumber(
+            "target position",
+            RobotContainer.stateMachine.targetTrunkPose.position,
+            RobotContainer.telemetry.trunkTelemetry
+        )
+        Telemetry.putString(
+            "trunk state",
+            RobotContainer.stateMachine.trunkState.name,
+            RobotContainer.telemetry.trunkTelemetry
+        )
+        Telemetry.putNumber(
+            "target angle",
+            Math.toDegrees(RobotContainer.trunkSystem.rotationPID.setpoint),
+            RobotContainer.telemetry.trunkTelemetry
+        )
         Telemetry.putString("prevTargetPosition name", prevTargetPose.name, RobotContainer.telemetry.trunkTelemetry)
-        Telemetry.putString("targetPosition name", RobotContainer.stateMachine.targetTrunkPose.name, RobotContainer.telemetry.trunkTelemetry)
+        Telemetry.putString(
+            "targetPosition name",
+            RobotContainer.stateMachine.targetTrunkPose.name,
+            RobotContainer.telemetry.trunkTelemetry
+        )
         Telemetry.putBoolean("is angle PID?", isAnglePID, RobotContainer.telemetry.trunkTelemetry)
 
         if (currentState == TrunkState.CUSTOM) {
@@ -232,10 +256,10 @@ class TrunkSystem(val io: TrunkIO) : SubsystemBase() {
                 }
 
                 if (MiscCalculations.appxEqual(
-                                getPosition(),
-                                RobotContainer.stateMachine.targetTrunkPose.position,
-                                .03
-                        )
+                        getPosition(),
+                        RobotContainer.stateMachine.targetTrunkPose.position,
+                        .03
+                    )
                 ) {
                     hasElevatorMoved = true
                 }
@@ -247,10 +271,10 @@ class TrunkSystem(val io: TrunkIO) : SubsystemBase() {
 
                 //Elevator has moved and the angle is good (finished)
                 if (hasElevatorMoved && MiscCalculations.appxEqual(
-                                getRotation(),
-                                RobotContainer.stateMachine.targetTrunkPose.angle,
-                                TrunkConstants.ANGLE_DEADZONE
-                        )
+                        getRotation(),
+                        RobotContainer.stateMachine.targetTrunkPose.angle,
+                        TrunkConstants.ANGLE_DEADZONE
+                    )
                 ) {
                     prevTargetPose = RobotContainer.stateMachine.targetTrunkPose
                     hasElevatorMoved = false
@@ -270,14 +294,13 @@ class TrunkSystem(val io: TrunkIO) : SubsystemBase() {
             }
             //Is rotation safe?
             if (getRotation() > TrunkConstants.SAFE_TRAVEL_ANGLE || MiscCalculations.appxEqual(
-                            getRotation(),
-                            TrunkConstants.SAFE_TRAVEL_ANGLE,
-                            TrunkConstants.ANGLE_DEADZONE
-                    )
+                    getRotation(),
+                    TrunkConstants.SAFE_TRAVEL_ANGLE,
+                    TrunkConstants.ANGLE_DEADZONE
+                )
             ) {
                 isRotationSafe = true
-            }
-            else if (RobotContainer.stateMachine.targetTrunkPose != TrunkPosition.INTAKE) {
+            } else if (RobotContainer.stateMachine.targetTrunkPose != TrunkPosition.INTAKE) {
                 isRotationSafe = false
             }
 
@@ -334,8 +357,10 @@ class TrunkSystem(val io: TrunkIO) : SubsystemBase() {
 //                println("rotation mini ff " + rotationMiniFF)
 //                println("rotation target diff" + (Math.toDegrees(rotationPID.setpoint) - getRotation()))
 
-                val twistVolts =  MathUtil.clamp((pidVal
-                        + rotationFF.calculate(rotationPID.setpoint - (Math.PI / 2.0), 0.0)), -.5, 2.0)
+                val twistVolts = MathUtil.clamp(
+                    (pidVal
+                            + rotationFF.calculate(rotationPID.setpoint - (Math.PI / 2.0), 0.0)), -.5, 2.0
+                )
 
                 Telemetry.putNumber(
                     "rotation PID + FF", twistVolts, RobotContainer.telemetry.trunkTelemetry

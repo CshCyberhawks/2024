@@ -1,12 +1,12 @@
 package frc.robot.util;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import frc.robot.RobotContainer
-import frc.robot.constants.CannonConstants
 import frc.robot.constants.FieldConstants
 import frc.robot.constants.TrunkConstants
 import java.lang.Math
-import kotlin.math.*
+import kotlin.math.PI
+import kotlin.math.atan2
+import kotlin.math.sqrt
 
 data class ShotSetupVelocity(var shooterAngle: Double, var velocityRPM: Double)
 private data class TargetingVariablesVelocity(val underStage: Boolean) {
@@ -23,7 +23,7 @@ private data class TargetingVariablesVelocity(val underStage: Boolean) {
         val robotAngle = robotPose.rotation.radians
 
         val shootingOffset =
-                if (underStage) TrunkConstants.UNDER_STAGE_SHOOTING_OFFSET else TrunkConstants.SHOOTING_OFFSET
+            if (underStage) TrunkConstants.UNDER_STAGE_SHOOTING_OFFSET else TrunkConstants.SHOOTING_OFFSET
         val xOffset = FieldConstants.Speaker.centerSpeakerOpening.x
 //        + cos(robotAngle) * shootingOffset
         val yOffset = FieldConstants.Speaker.centerSpeakerOpening.y

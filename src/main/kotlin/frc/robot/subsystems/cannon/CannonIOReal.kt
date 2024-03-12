@@ -4,9 +4,7 @@ package frc.robot.subsystems.cannon
 import com.revrobotics.CANSparkLowLevel
 import com.revrobotics.CANSparkMax
 import edu.wpi.first.wpilibj.DigitalInput
-import frc.robot.RobotContainer
 import frc.robot.constants.CannonConstants
-import frc.robot.util.Telemetry
 
 class CannonIOReal : CannonIO {
 
@@ -57,11 +55,11 @@ class CannonIOReal : CannonIO {
     }
 
     override fun getLeftShooterVel(): Double {
-        return leftShooterEncoder.velocity * (40.0/27.0)
+        return leftShooterEncoder.velocity * (40.0 / 27.0)
     }
 
     override fun getRightShooterVel(): Double {
-        return rightShooterEncoder.velocity * (40.0/27.0)
+        return rightShooterEncoder.velocity * (40.0 / 27.0)
     }
 
     override fun setLeftShooter(percent: Double) {

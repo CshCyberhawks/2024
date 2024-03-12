@@ -1,17 +1,13 @@
 package frc.robot.commands.automatic
 
 
-import edu.wpi.first.math.MathUtil.clamp
 import edu.wpi.first.math.geometry.Pose2d
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.Command
 import frc.robot.*
-import frc.robot.commands.cannon.AutoShootCommand
-import frc.robot.constants.TrunkConstants
 
 
-class AutoAimAndShootFromPosition(val position: Pose2d) : Command() {
-    private val autoShoot: AutoShootCommand = AutoShootCommand()
+class AutoAimFromPosition(val position: Pose2d) : Command() {
 
     override fun initialize() {
         RobotContainer.stateMachine.shooterState = ShooterState.Shooting
@@ -45,7 +41,6 @@ class AutoAimAndShootFromPosition(val position: Pose2d) : Command() {
         // angle = X from amp (1.78, 7.32)
 
 
-
 //        println("shooting angle " + shooterAngle)
         RobotContainer.trunkSystem.setShootingAngle(shooterAngle)
 //                RobotContainer.trunkSystem.setShootingAngle(51.2)
@@ -54,13 +49,17 @@ class AutoAimAndShootFromPosition(val position: Pose2d) : Command() {
 
         SmartDashboard.putBoolean("Is at angle", RobotContainer.trunkSystem.isAtAngle)
 
-        SmartDashboard.putBoolean("Shooter Ready & Aimed", RobotContainer.stateMachine.shooterReady && RobotContainer.trunkSystem.isAtAngle)
+        SmartDashboard.putBoolean(
+            "Shooter Ready & Aimed",
+            RobotContainer.stateMachine.shooterReady && RobotContainer.trunkSystem.isAtAngle
+        )
 
 
         //Can we shoot?
-        if (RobotContainer.xboxController.leftTrigger().asBoolean && !autoShoot.isScheduled) {
-            autoShoot.schedule()
-        }
+//        if (RobotContainer.xboxController.leftTrigger().asBoolean && !autoShoot.isScheduled) {
+//            autoShoot.schedule()
+//        }
+
 //        if (RobotContainer.leftJoystick.button(2).asBoolean) {
 //            autoShoot.schedule()
 //            println("scheduling auto shoot")
@@ -68,7 +67,9 @@ class AutoAimAndShootFromPosition(val position: Pose2d) : Command() {
     }
 
     override fun isFinished(): Boolean {
-        return (autoShoot.isFinished)
+//        return (autoShoot.isFinished)
+        return RobotContainer.stateMachine.noteState == NoteState.Empty
+
     }
 
     override fun end(interrupted: Boolean) {

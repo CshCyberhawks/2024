@@ -30,7 +30,7 @@ class TeleopSwerveDriveCommand : Command() {
         val twoJoysticks = true
 
         val twistInput = if (twoJoysticks) {
-                RobotContainer.leftJoystick.x
+            RobotContainer.leftJoystick.x
         } else {
             RobotContainer.rightJoystick.twist
         }
@@ -44,9 +44,9 @@ class TeleopSwerveDriveCommand : Command() {
         }
 
 
-        if (RobotContainer.rightJoystick.button(2).asBoolean) {
-            RobotContainer.swerveSystem.zeroGyro()
-        }
+//        if (RobotContainer.rightJoystick.button(2).asBoolean) {
+//            RobotContainer.swerveSystem.zeroGyro()
+//        }
 
         if (RobotContainer.stateMachine.driveState != DriveState.Teleop) {
             return
@@ -68,8 +68,7 @@ class TeleopSwerveDriveCommand : Command() {
                 twistInput,
                 DriveConstants.TELEOP_DEADZONE_TWIST_TWO_JOY
             ) * throttle * DriveConstants.MAX_ANGLE_SPEED
-        }
-        else {
+        } else {
             twist = -calculateDeadzone(
                 twistInput,
                 DriveConstants.TELEOP_DEADZONE_TWIST_ONE_JOY

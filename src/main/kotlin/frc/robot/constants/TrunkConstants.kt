@@ -1,6 +1,5 @@
 package frc.robot.constants
 
-import edu.wpi.first.math.trajectory.TrapezoidProfile
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
@@ -67,9 +66,10 @@ object TrunkConstants {
 
     val rotationEncoderID = 9
 
-//    var rotationKP = 7.0
-        var rotationKP = 5.0
-//        var rotationKI = 0.001
+    //    var rotationKP = 7.0
+    var rotationKP = 5.0
+
+    //        var rotationKI = 0.001
     var rotationKI = 0.0
     var rotationKD = .125
 //    var rotationTrapConstraints = TrapezoidProfile.Constraints()
@@ -87,7 +87,8 @@ object TrunkConstants {
 
     val UNDER_STAGE_SHOOTING_OFFSET = 0.0
     val SHOOTING_OFFSET = 0.0
-// TODO: actually tune
+
+    // TODO: actually tune
     val UNDER_STAGE_SHOOTING_HEIGHT = 0.3
     val SHOOTING_HEIGHT = 0.3
 

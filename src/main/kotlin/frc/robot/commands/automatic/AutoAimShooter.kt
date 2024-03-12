@@ -1,20 +1,17 @@
 package frc.robot.commands.automatic
 
 
-import MiscCalculations
 import edu.wpi.first.math.MathUtil.clamp
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.Command
-import frc.robot.*
-import frc.robot.commands.cannon.AutoShootCommand
-import frc.robot.constants.DriveConstants
-import frc.robot.constants.TargetingConstants
+import frc.robot.NoteState
+import frc.robot.RobotContainer
+import frc.robot.ShooterState
+import frc.robot.TrunkPosition
 import frc.robot.constants.TrunkConstants
 
 
-class AutoAimAndShoot : Command() {
-    val autoShoot: AutoShootCommand = AutoShootCommand()
-
+class AutoAimShooter : Command() {
     val waitForTwist: Boolean = true
     var shooterAngle = 0.0
 
@@ -41,13 +38,14 @@ class AutoAimAndShoot : Command() {
         SmartDashboard.putNumber("shooter angle", shooterAngle)
         RobotContainer.trunkSystem.setShootingAngle(shooterAngle)
 
-        if (RobotContainer.xboxController.leftTrigger().asBoolean && !autoShoot.isScheduled) {
-            autoShoot.schedule()
-        }
+//        if (RobotContainer.xboxController.leftTrigger().asBoolean && !autoShoot.isScheduled) {
+//        RobotContainer.autoShootCommand.schedule()
+//        }
     }
 
     override fun isFinished(): Boolean {
-        return (autoShoot.isFinished) || RobotContainer.stateMachine.noteState == NoteState.Empty
+//        return (RobotContainer.autoShootCommand.isFinished) || RobotContainer.stateMachine.noteState == NoteState.Empty
+        return RobotContainer.stateMachine.noteState == NoteState.Empty
     }
 
     override fun end(interrupted: Boolean) {
