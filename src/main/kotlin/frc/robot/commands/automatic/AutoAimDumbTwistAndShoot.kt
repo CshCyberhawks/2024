@@ -9,14 +9,14 @@ import frc.robot.commands.cannon.AutoShootCommand
 import frc.robot.constants.DriveConstants
 import frc.robot.constants.TrunkConstants
 
-class DumbAutoAimTwistAndShoot : Command() {
-    val autoShoot: AutoShootCommand = AutoShootCommand()
+class AutoAimDumbTwistAndShoot : Command() {
+//    val autoShoot: AutoShootCommand = AutoShootCommand()
 
-    val twistPIDController: PIDController = PIDController(0.1, 0.0, 0.0)
+    val twistPIDController: PIDController = PIDController(10.0, 0.0, 0.1)
 
     override fun initialize() {
-        RobotContainer.stateMachine.shooterState = ShooterState.Shooting
-        RobotContainer.stateMachine.driveState = DriveState.TranslationTeleop
+//        RobotContainer.stateMachine.shooterState = ShooterState.Shooting
+        RobotContainer.stateMachine.driveState = DriveState.Auto
 
         if (RobotContainer.stateMachine.targetTrunkPose != TrunkPosition.SPEAKER && RobotContainer.stateMachine.targetTrunkPose != TrunkPosition.SPEAKER_FROM_STAGE) {
             if (RobotContainer.stateMachine.currentRobotZone == GlobalZones.Stage) {
@@ -27,8 +27,6 @@ class DumbAutoAimTwistAndShoot : Command() {
         }
 
         twistPIDController.enableContinuousInput(0.0, 360.0);
-
-
     }
 
     override fun execute() {
@@ -42,36 +40,41 @@ class DumbAutoAimTwistAndShoot : Command() {
 
         //Handle the twisting component
         val driveTwist = twistPIDController.calculate(
-            RobotContainer.swerveSystem.getSwervePose().rotation.degrees,
-            shotSetup.robotAngle
+                RobotContainer.swerveSystem.getSwervePose().rotation.degrees,
+                shotSetup.robotAngle
         )
+        SmartDashboard.putNumber("Shot angle", shotSetup.robotAngle)
+        SmartDashboard.putNumber("Shot Drive twist", driveTwist)
+
 
         val driveTranslation = RobotContainer.swerveSystem.calculateJoyTranslation(
-            RobotContainer.rightJoystick.x, RobotContainer.rightJoystick.y,
-            RobotContainer.swerveSystem.calculateJoyThrottle(RobotContainer.leftJoystick.throttle),
-            DriveConstants.TELEOP_DEADZONE_X,
-            DriveConstants.TELEOP_DEADZONE_Y
+                RobotContainer.rightJoystick.x, RobotContainer.rightJoystick.y,
+                RobotContainer.swerveSystem.calculateJoyThrottle(RobotContainer.leftJoystick.throttle),
+                DriveConstants.TELEOP_DEADZONE_X,
+                DriveConstants.TELEOP_DEADZONE_Y
         )
 
         RobotContainer.swerveSystem.driveTrain.applyRequest {
             RobotContainer.swerveSystem.drive.withVelocityX(driveTranslation.x).withVelocityY(driveTranslation.y)
-                .withRotationalRate(driveTwist)
-        }
+                    .withRotationalRate(Math.toRadians(driveTwist))
+        }.execute()
 
 
         //Can we shoot?
         if (RobotContainer.stateMachine.trunkReady && MiscCalculations.appxEqual(
-                twistPIDController.setpoint,
-                shotSetup.robotAngle,
-                1.0
-            ) && !autoShoot.isScheduled
+                        twistPIDController.setpoint,
+                        shotSetup.robotAngle,
+                        1.0
+                ) //&& !autoShoot.isScheduled
         ) {
-            autoShoot.schedule()
+//            autoShoot.schedule()
         }
     }
 
     override fun isFinished(): Boolean {
-        return (autoShoot.isFinished) || RobotContainer.stateMachine.noteState == NoteState.Empty
+//        return (autoShoot.isFinished) || RobotContainer.stateMachine.noteState == NoteState.Empty
+//        return RobotContainer.stateMachine.noteState == NoteState.Empty
+        return false
     }
 
     override fun end(interrupted: Boolean) {

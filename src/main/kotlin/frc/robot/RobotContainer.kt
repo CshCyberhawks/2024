@@ -15,6 +15,7 @@ import frc.robot.commands.TeleopSwerveDriveCommand
 import frc.robot.commands.UnBreakTheIK
 import frc.robot.commands.automatic.AutoAimAndShoot
 import frc.robot.commands.automatic.AutoAimAndShootFromPosition
+import frc.robot.commands.automatic.AutoAimDumbTwistAndShoot
 import frc.robot.commands.automatic.FloorIntakeAndSeek
 import frc.robot.commands.cannon.AutoAmp
 import frc.robot.commands.cannon.AutoIntake
@@ -119,7 +120,7 @@ object RobotContainer {
             }
         }))
 
-        rightJoystick.button(4).toggleOnTrue(FloorIntakeAndSeek())
+        rightJoystick.button(4).toggleOnTrue(AutoAimDumbTwistAndShoot())
 
 
         xboxController.x().onTrue(Commands.runOnce({
