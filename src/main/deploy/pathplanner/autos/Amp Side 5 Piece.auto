@@ -1,0 +1,49 @@
+{
+  "version": 1.0,
+  "startingPose": null,
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Amp Start to Top Note"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Top To Center Note"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Center Note to Centerline Top"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Centerline Top To Wing"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Wing to Centerline 2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Centerline 2 to Wing"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}

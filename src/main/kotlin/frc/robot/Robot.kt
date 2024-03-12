@@ -116,7 +116,7 @@ class Robot : LoggedRobot() {
 //        RobotContainer.autonomousCommand.schedule()
 //        RobotContainer.swerveSystem.zeroGyro()
 //        DriveBackAuto().schedule()
-        RobotContainer.swerveSystem.driveTrain.getAutoPath("Command Test").schedule()
+        RobotContainer.swerveSystem.driveTrain.getAutoPath("Amp Side 4 Piece").schedule()
     }
 
     override fun autonomousPeriodic() {}

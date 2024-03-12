@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.35,
-        "y": 5.5
+        "x": 2.9026396514331485,
+        "y": 6.981410202136645
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.1000380762109023,
-        "y": 5.495636898390679
+        "x": 2.9026396514331485,
+        "y": 6.481410202136645
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.15,
-        "y": 5.5
+        "x": 2.9026396514331485,
+        "y": 6.232984317820488
       },
       "prevControl": {
-        "x": 2.4,
-        "y": 5.5
+        "x": 2.9026396514331485,
+        "y": 6.732984317820488
       },
       "nextControl": null,
       "isLocked": false,
@@ -32,20 +32,20 @@
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 4.5,
+    "maxAcceleration": 4.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0,
-    "rotateFast": false
+    "rotation": 90.0,
+    "rotateFast": true
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Amp Side 5 Piece",
   "previewStartingState": {
-    "rotation": 0,
+    "rotation": 180.0,
     "velocity": 0
   },
   "useDefaultConstraints": true
