@@ -1,6 +1,5 @@
 package frc.robot.commands.automatic
 
-
 import edu.wpi.first.math.MathUtil.clamp
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.Command
@@ -9,7 +8,6 @@ import frc.robot.RobotContainer
 import frc.robot.ShooterState
 import frc.robot.TrunkPosition
 import frc.robot.constants.TrunkConstants
-
 
 class AutoAimShooter : Command() {
     val waitForTwist: Boolean = true

@@ -20,7 +20,7 @@ class AutoAmp : Command() {
 //        if (RobotContainer.xboxController.start().asBoolean) {
 //            RobotContainer.cannonSystem.ampSpit()
 //        } else {
-            RobotContainer.cannonSystem.killIntake()
+        RobotContainer.cannonSystem.killIntake()
 //        }
     }
 

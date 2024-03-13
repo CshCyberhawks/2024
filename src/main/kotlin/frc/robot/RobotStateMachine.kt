@@ -9,7 +9,6 @@ import frc.robot.constants.FieldPositions
 import frc.robot.constants.TrunkConstants
 import frc.robot.util.Telemetry
 
-
 //This represents the desired shooter state
 enum class ShooterState(val leftVel: Double, val rightVel: Double) {
     Stopped(0.0, 0.0),
@@ -44,7 +43,6 @@ enum class TrunkPosition(val angle: Double, val position: Double) {
     CalibrationAngle(110.0, TrunkConstants.STOW_POSITION);
 }
 
-
 enum class TrunkState() {
     STOP,
     CALIBRATING,
@@ -68,7 +66,6 @@ enum class GlobalSpecificPosition(val pos: Translation2d) {
     Amp(FieldPositions.AMP),
     Speaker(FieldPositions.SPEAKER)
 }
-
 
 //What do we want to do with our current note (or lack of note)?
 enum class RobotAction() {
@@ -109,7 +106,6 @@ class RobotStateMachine {
 
     val trunkState: TrunkState
         get() = RobotContainer.trunkSystem.currentState
-
 
     var intakeState: IntakeState = IntakeState.Stopped
     var shooterState: ShooterState = ShooterState.Stopped
@@ -154,7 +150,6 @@ class RobotStateMachine {
     //Is the shooter at the desired velocity?
     val shooterReady: Boolean
         get() = RobotContainer.cannonSystem.shooterReady()
-
 
     //Should be called in teleop periodic
     fun TeleopAutomaticStateManagement() {

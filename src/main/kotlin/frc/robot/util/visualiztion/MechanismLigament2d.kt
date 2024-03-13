@@ -25,7 +25,6 @@ import edu.wpi.first.networktables.StringPublisher
 import edu.wpi.first.wpilibj.util.Color8Bit
 import org.littletonrobotics.junction.LogTable
 
-
 /**
  * Ligament node on a Mechanism2d. A ligament can have its length changed (like
  * an elevator) or angle changed, like an arm.

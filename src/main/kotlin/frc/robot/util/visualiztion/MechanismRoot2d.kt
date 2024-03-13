@@ -21,7 +21,6 @@ import edu.wpi.first.networktables.DoublePublisher
 import edu.wpi.first.networktables.NetworkTable
 import org.littletonrobotics.junction.LogTable
 
-
 /**
  * Root Mechanism2d node.
  *

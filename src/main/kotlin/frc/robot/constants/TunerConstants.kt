@@ -56,7 +56,6 @@ object TunerConstants {
     private const val kCANbusName = ""
     private const val kPigeonId = 30
 
-
     // These are only used for simulation
     private const val kSteerInertia = 0.00001
     private const val kDriveInertia = 0.001
@@ -86,7 +85,6 @@ object TunerConstants {
         .withFeedbackSource(SteerFeedbackType.FusedCANcoder)
         .withCouplingGearRatio(kCoupleRatio)
         .withSteerMotorInverted(kSteerMotorReversed)
-
 
     // Front Left
     private const val kFrontLeftDriveMotorId = 7
@@ -123,7 +121,6 @@ object TunerConstants {
 
     private const val kBackRightXPosInches = -12.25
     private const val kBackRightYPosInches = -12.25
-
 
     private val FrontLeft: SwerveModuleConstants = ConstantCreator.createModuleConstants(
         kFrontLeftSteerMotorId,

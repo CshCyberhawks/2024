@@ -16,7 +16,6 @@ import frc.robot.constants.TunerConstants
 import frc.robot.util.AutoTwistController
 import java.util.function.DoubleSupplier
 
-
 class SwerveSystem : SubsystemBase() {
     val driveTrain: CommandSwerveDrivetrain = TunerConstants.DriveTrain
 
@@ -26,7 +25,6 @@ class SwerveSystem : SubsystemBase() {
     private val yPID: PIDController = PIDController(.1, 0.0, 0.01)
 
     private val PIDDeadzone = .005
-
 
     val drive: SwerveRequest.FieldCentric = SwerveRequest.FieldCentric()
         .withDeadband(DriveConstants.MAX_SPEED * 0.1)
@@ -43,7 +41,6 @@ class SwerveSystem : SubsystemBase() {
 //    val runAuto: Command = driveTrain.getAutoPath("Tests");
 
     val logger: SwerveTelemetry = SwerveTelemetry(DriveConstants.MAX_SPEED)
-
 
     val autoTwistController: AutoTwistController = AutoTwistController()
 

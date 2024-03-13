@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d
 import edu.wpi.first.wpilibj.util.Color
 import edu.wpi.first.wpilibj.util.Color8Bit
 
-
 class SwerveTelemetry
 /**
  * Construct a telemetry object, with the specified max speed of the robot

@@ -6,7 +6,6 @@ object FieldPositions {
     val STAGE_START: Translation2d = Translation2d(3.2, 3.0)
     val STAGE_END: Translation2d = Translation2d(6.2, 3.0)
 
-
     val WING_START: Translation2d = Translation2d(0.0, 0.0)
     val WING_END: Translation2d = Translation2d(6.0, 8.0)
 

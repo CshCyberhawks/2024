@@ -10,7 +10,6 @@ import frc.robot.constants.DriveConstants
 import frc.robot.constants.PathPlannerLibConstants
 import kotlin.math.PI
 
-
 class AutoTwistController {
     val rotationController: ProfiledPIDController = ProfiledPIDController(
         PathPlannerLibConstants.rotationPID.kP,
@@ -33,7 +32,6 @@ class AutoTwistController {
     fun reset(currentRot: Rotation2d, currentSpeeds: ChassisSpeeds) {
         rotationController.reset(currentRot.radians, currentSpeeds.omegaRadiansPerSecond)
     }
-
 
     fun calculateRotation(targetRotation: Rotation2d): Rotation2d {
         desiredRotation = targetRotation

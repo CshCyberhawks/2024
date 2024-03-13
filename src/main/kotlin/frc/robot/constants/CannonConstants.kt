@@ -35,7 +35,6 @@ object CannonConstants {
     //measure in ms
     val NOTE_EXIT_BEAMBREAK_DELAY: Double = 1.0
 
-
     val LEFT_SHOOTER_MOTOR_ID = 40
     val RIGHT_SHOOTER_MOTOR_ID = 41
     val OUTER_INTAKE_MOTOR_ID = 50
@@ -51,7 +50,6 @@ object CannonConstants {
     var leftShooterFF = 0.0
     var leftShooterMax = -1.0
     var leftShooterMin = 1.0
-
 
     var rightShooterKP = 1.2
     var rightShooterKI = 0.0

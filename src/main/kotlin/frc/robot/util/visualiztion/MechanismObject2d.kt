@@ -20,7 +20,6 @@ package frc.robot.util.visualization
 import edu.wpi.first.networktables.NetworkTable
 import org.littletonrobotics.junction.LogTable
 
-
 /**
  * Common base class for all Mechanism2d node types.
  *

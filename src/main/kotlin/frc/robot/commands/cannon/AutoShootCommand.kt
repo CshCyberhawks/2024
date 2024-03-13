@@ -28,7 +28,6 @@ class AutoShootCommand : Command() {
 
         SmartDashboard.putBoolean("shooter ready", RobotContainer.stateMachine.shooterReady)
 
-
 //        SmartDashboard.putBoolean("shooter ready", false)
     }
 

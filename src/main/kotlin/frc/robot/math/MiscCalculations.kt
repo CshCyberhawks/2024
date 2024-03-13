@@ -15,7 +15,6 @@ object MiscCalculations {
      */
     fun gToMetersPerSecond(g: Double): Double = g * 9.8066
 
-
     /**
      * Deadzones an input so it can not be below a certain value. This is a weighted deadzone.
      *
@@ -49,7 +48,6 @@ object MiscCalculations {
      * @return The current time in milliseconds
      */
     fun getCurrentTime(): Double = WPIUtilJNI.now() * 1.0e-6
-
 
     fun translation2dWithinRange(current: Translation2d, range: Pair<Translation2d, Translation2d>): Boolean {
         val range_start = range.first

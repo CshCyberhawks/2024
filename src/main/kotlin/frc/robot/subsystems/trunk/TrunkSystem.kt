@@ -17,7 +17,6 @@ import frc.robot.util.Telemetry
 import frc.robot.util.visualization.Mechanism2d
 import frc.robot.util.visualization.MechanismLigament2d
 
-
 class TrunkSystem(val io: TrunkIO) : SubsystemBase() {
 //
 //    private val positionLimits = false
@@ -37,7 +36,6 @@ class TrunkSystem(val io: TrunkIO) : SubsystemBase() {
     private val rotationPID =
         PIDController(TrunkConstants.rotationKP, TrunkConstants.rotationKI, TrunkConstants.rotationKD)
 
-
     private var isPIDing = true
 
     val isAtAngle: Boolean
@@ -48,7 +46,6 @@ class TrunkSystem(val io: TrunkIO) : SubsystemBase() {
                 TrunkConstants.ANGLE_DEADZONE
             )
 
-
     var currentState = TrunkState.CALIBRATING
 //    var RobotContainer.stateMachine.targetTrunkPose = TrunkPosition.STOW
 //        set(value) =
@@ -57,7 +54,6 @@ class TrunkSystem(val io: TrunkIO) : SubsystemBase() {
 //            } else {
 //                field = field
 //            }
-
 
     var prevTargetPose = TrunkPosition.SPEAKER
 
@@ -88,7 +84,6 @@ class TrunkSystem(val io: TrunkIO) : SubsystemBase() {
         (TrunkConstants.CROSSBAR_BOTTOM + .02) * TrunkConstants.d2x + .25,
         (TrunkConstants.CROSSBAR_BOTTOM - .02) * TrunkConstants.d2y + 0.25
     )
-
 
     init {
         elevatorMechanismRoot.append(MechanismLigament2d("Elevator", .8, TrunkConstants.ELEVATOR_ANGLE))
@@ -179,7 +174,6 @@ class TrunkSystem(val io: TrunkIO) : SubsystemBase() {
     fun setPID(on: Boolean) {
         isPIDing = on
     }
-
 
     fun STOP() {
         setPID(false)
@@ -320,12 +314,10 @@ class TrunkSystem(val io: TrunkIO) : SubsystemBase() {
             calibratePeriodic()
         }
 
-
         //Do the trunk PIDs
         Telemetry.putNumber("position pid setpoint", positionPID.setpoint, RobotContainer.telemetry.trunkTelemetry)
 
         val positionPIDOut = positionPID.calculate(getPosition())
-
 
         val posFF = TrunkConstants.positionFF
 
@@ -366,7 +358,6 @@ class TrunkSystem(val io: TrunkIO) : SubsystemBase() {
                     "rotation PID + FF", twistVolts, RobotContainer.telemetry.trunkTelemetry
                 )
 
-
                 //TODO: put stuff to the motors
 //                                io.setRotationVoltage(
 //                       twistVolts)
@@ -375,7 +366,6 @@ class TrunkSystem(val io: TrunkIO) : SubsystemBase() {
         }
         io.periodic()
     }
-
 
     fun freeMotors() {
         io.setAngleIdleMode(CANSparkBase.IdleMode.kCoast)

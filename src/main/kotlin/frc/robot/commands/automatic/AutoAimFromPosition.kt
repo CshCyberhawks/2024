@@ -1,11 +1,13 @@
 package frc.robot.commands.automatic
 
-
 import edu.wpi.first.math.geometry.Pose2d
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.Command
-import frc.robot.*
-
+import frc.robot.DriveState
+import frc.robot.NoteState
+import frc.robot.RobotContainer
+import frc.robot.ShooterState
+import frc.robot.TrunkPosition
 
 class AutoAimFromPosition(val position: Pose2d) : Command() {
 
@@ -35,11 +37,9 @@ class AutoAimFromPosition(val position: Pose2d) : Command() {
         //Handle the cannon aiming component
         val shooterAngle = 58.0
 
-
         //70 = angle from back bumper on the wing line (5.37m, 6.37)
         //angle = 58 from the preload line (2.90m, 5.55)
         // angle = X from amp (1.78, 7.32)
-
 
 //        println("shooting angle " + shooterAngle)
         RobotContainer.trunkSystem.setShootingAngle(shooterAngle)
@@ -53,7 +53,6 @@ class AutoAimFromPosition(val position: Pose2d) : Command() {
             "Shooter Ready & Aimed",
             RobotContainer.stateMachine.shooterReady && RobotContainer.trunkSystem.isAtAngle
         )
-
 
         //Can we shoot?
 //        if (RobotContainer.xboxController.leftTrigger().asBoolean && !autoShoot.isScheduled) {

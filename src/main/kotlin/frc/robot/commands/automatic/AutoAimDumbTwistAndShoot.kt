@@ -3,7 +3,12 @@ package frc.robot.commands.automatic
 import MiscCalculations
 import edu.wpi.first.math.controller.PIDController
 import edu.wpi.first.wpilibj2.command.Command
-import frc.robot.*
+import frc.robot.DriveState
+import frc.robot.GlobalZones
+import frc.robot.NoteState
+import frc.robot.RobotContainer
+import frc.robot.ShooterState
+import frc.robot.TrunkPosition
 import frc.robot.commands.cannon.AutoShootCommand
 import frc.robot.constants.DriveConstants
 
@@ -26,7 +31,6 @@ class DumbAutoAimTwistAndShoot : Command() {
 
         twistPIDController.enableContinuousInput(0.0, 360.0);
 
-
     }
 
     override fun execute() {
@@ -36,7 +40,6 @@ class DumbAutoAimTwistAndShoot : Command() {
 //        val shooterAngle = Math.clamp(shotSetup.shooterAngle, TrunkConstants.MIN_SHOOT_ANGLE, TrunkConstants.MAX_SHOOT_ANGLE)
 //        SmartDashboard.putBoolean("shot is possible?", shooterAngle == shotSetup.shooterAngle)
 //        RobotContainer.trunkSystem.setShootingAngle(shooterAngle)
-
 
         //Handle the twisting component
         val driveTwist = twistPIDController.calculate(
@@ -55,7 +58,6 @@ class DumbAutoAimTwistAndShoot : Command() {
             RobotContainer.swerveSystem.drive.withVelocityX(driveTranslation.x).withVelocityY(driveTranslation.y)
                 .withRotationalRate(driveTwist)
         }
-
 
         //Can we shoot?
         if (RobotContainer.stateMachine.trunkReady && MiscCalculations.appxEqual(

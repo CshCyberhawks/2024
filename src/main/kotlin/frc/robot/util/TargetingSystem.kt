@@ -7,7 +7,11 @@ import frc.robot.constants.CannonConstants
 import frc.robot.constants.FieldConstants
 import frc.robot.constants.TargetingConstants
 import frc.robot.constants.TrunkConstants
-import kotlin.math.*
+import kotlin.math.PI
+import kotlin.math.acos
+import kotlin.math.atan
+import kotlin.math.pow
+import kotlin.math.sqrt
 
 data class ShotSetup(var robotAngle: Double, var shooterAngle: Double) {
     init {
@@ -25,7 +29,6 @@ private class TargetingVariables(val robotPose: Pose2d = RobotContainer.swerveSy
     init {
         val robotVelocity = RobotContainer.swerveSystem.driveTrain.currentRobotChassisSpeeds
 //        val robotAngle = robotPose.rotation.angle
-
 
 //        val shootingOffset = TrunkConstants.SHOOTING_OFFSET
 //        val xOffset =

@@ -33,7 +33,6 @@ class FloorIntakeAndSeek : Command() {
             firstTrackTime = Timer.getFPGATimestamp()
         }
 
-
         if (LimelightHelpers.getTV(RobotContainer.intakeLimelight)) {
             val xOffset = LimelightHelpers.getTX(RobotContainer.intakeLimelight) * 5.0
             val fudgedLLOffset = Math.toRadians(if (abs(xOffset) < 1.0) 0.0 else xOffset)

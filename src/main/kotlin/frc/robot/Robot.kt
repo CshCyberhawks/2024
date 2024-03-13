@@ -10,7 +10,6 @@ import frc.robot.constants.TargetingConstants
 import frc.robot.util.Telemetry
 import org.littletonrobotics.junction.LoggedRobot
 
-
 class Robot : LoggedRobot() {
     private lateinit var m_autonomousCommand: Command
 
@@ -35,7 +34,6 @@ class Robot : LoggedRobot() {
 
         RobotContainer
 
-
 //        SmartDashboard.putNumber("shooter angle", 0.0)
     }
 
@@ -56,8 +54,6 @@ class Robot : LoggedRobot() {
 
         CommandScheduler.getInstance().run()
         RobotContainer.stateMachine.logStates()
-
-
 
 //        if (RobotContainer.stateMachine.trunkState == TrunkState.MANUAL) {
 //            RobotContainer.trunkSystem.elevate(-RobotContainer.xboxController.leftY)
@@ -84,7 +80,6 @@ class Robot : LoggedRobot() {
 //            RobotContainer.visionSystem.updateOdometry(1, false)
             RobotContainer.visionSystem.updateOdometryFromDisabled()
         }
-
 
         val shotSetup = RobotContainer.targetingSystem.getShotNoVelocity()
         SmartDashboard.putNumber("Mathed shooter angle", shotSetup.shooterAngle)
@@ -127,7 +122,6 @@ class Robot : LoggedRobot() {
         SmartDashboard.putBoolean("Limelight has target?", LimelightHelpers.getTV(RobotContainer.intakeLimelight))
     }
 
-
     override fun disabledInit() {}
 
     override fun disabledPeriodic() {}
@@ -155,7 +149,6 @@ class Robot : LoggedRobot() {
 
 //        RobotContainer.trunkSystem.STOP()
 
-
         SmartDashboard.putBoolean("Schedule Climb Command?", false)
         SmartDashboard.putBoolean("Pulldown Climb?", false)
     }
@@ -163,14 +156,12 @@ class Robot : LoggedRobot() {
     override fun teleopPeriodic() {
         RobotContainer.stateMachine.TeleopAutomaticStateManagement()
 
-
         val scheduleClimbBool = SmartDashboard.getBoolean("Schedule Climb Command?", false)
         if (scheduleClimbBool && autoClimbCommand.isScheduled() == false) {
             autoClimbCommand.schedule()
         } else if (autoClimbCommand.isScheduled == true && scheduleClimbBool == false) {
             autoClimbCommand.cancel()
         }
-
 
         //        SmartDashboard.putNumber("JoyX", RobotContainer.rightJoystick.x)
         //        SmartDashboard.putNumber("JoyY", RobotContainer.rightJoystick.y)

@@ -21,7 +21,6 @@ import edu.wpi.first.networktables.*
 import edu.wpi.first.wpilibj.util.Color8Bit
 import org.littletonrobotics.junction.LogTable
 
-
 /**
  * Visual 2D representation of arms, elevators, and general mechanisms through a
  * node-based API.

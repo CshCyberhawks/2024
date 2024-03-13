@@ -12,7 +12,6 @@ class AutoAimTwistAndShoot : Command() {
 
     val autoShoot: AutoShootCommand = AutoShootCommand()
 
-
     override fun initialize() {
 //        RobotContainer.stateMachine.shooterState = ShooterState.Shooting
 //        RobotContainer.stateMachine.driveState = DriveState.TranslationTeleop

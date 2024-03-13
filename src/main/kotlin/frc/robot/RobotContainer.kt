@@ -50,6 +50,16 @@ object RobotContainer {
 
     val autoAmp: Command = AutoAmp()
 
+    val autoIntake: Command = AutoIntake()
+
+    val autoSpit: Command = AutoSpit()
+
+    val autoShootCommand: Command = AutoShootCommand()
+
+    val unBreakTheIK: Command = UnBreakTheIK()
+
+    val floorIntakeAndSeek: Command = FloorIntakeAndSeek()
+
     val teleopSwerveCommand: Command = TeleopSwerveDriveCommand()
 
     val targetingSystem: TargetingSystem = TargetingSystem()
@@ -64,7 +74,7 @@ object RobotContainer {
 
     val swerveSystem: SwerveSystem = SwerveSystem()
 
-//    val teleopSwerveCommand: Command = if (DriveConstants.TWO_JOYSTICKS) {
+    //    val teleopSwerveCommand: Command = if (DriveConstants.TWO_JOYSTICKS) {
 //        swerveSystem.driveCommand({
 //            MiscCalculations.calculateDeadzone(
 //                rightJoystick.x, DriveConstants.TELEOP_DEADZONE_X
@@ -114,6 +124,11 @@ object RobotContainer {
         autoAimFromPresetPosition.addRequirements(trunkSystem)
         autoAimShooter.addRequirements(trunkSystem)
         autoAmp.addRequirements(cannonSystem)
+        autoIntake.addRequirements(cannonSystem)
+        autoSpit.addRequirements(cannonSystem)
+        autoShootCommand.addRequirements(cannonSystem)
+        unBreakTheIK.addRequirements(trunkSystem)
+        floorIntakeAndSeek.addRequirements(swerveSystem, )
     }
 
     private fun configureBindings() {
@@ -145,7 +160,7 @@ object RobotContainer {
 
                 RobotAction.Amp -> autoAmp
                 RobotAction.SourceIntake -> TODO("Not yet implemented")
-                RobotAction.FloorIntake -> AutoIntake()
+                RobotAction.FloorIntake -> autoIntake
                 RobotAction.Trap -> TODO("Not yet implemented")
                 //Does literally nothing
                 RobotAction.Chill -> println("*Hits blunt* Yoooooooo sup bra (currently in chill mode)")
@@ -160,13 +175,13 @@ object RobotContainer {
         }))
         xboxController.back().onTrue(Commands.runOnce({
             trunkSystem.STOP()
-        }))
-        xboxController.y().onTrue(UnBreakTheIK())
-        xboxController.b().toggleOnTrue(AutoIntake())
+        }, trunkSystem))
+        xboxController.y().onTrue(unBreakTheIK)
+        xboxController.b().toggleOnTrue(autoIntake)
         xboxController.leftBumper().onTrue(autoAimFromPresetPosition)
-        xboxController.a().onTrue(AutoAimShooter())
-        xboxController.rightBumper().toggleOnTrue(AutoSpit())
-        xboxController.leftTrigger().onTrue(AutoShootCommand().onlyIf {
+        xboxController.a().onTrue(autoAimShooter)
+        xboxController.rightBumper().toggleOnTrue(autoSpit)
+        xboxController.leftTrigger().onTrue(autoShootCommand.onlyIf {
             autoAimShooter.isScheduled || autoAimFromPosition.isScheduled
         })
         xboxController.leftStick().whileTrue(
@@ -179,7 +194,7 @@ object RobotContainer {
                 }
             }, trunkSystem)
         )
-        xboxController.start().onTrue(Commands.runOnce({ cannonSystem.ampSpit()}, cannonSystem))
+        xboxController.start().onTrue(Commands.runOnce({ cannonSystem.ampSpit() }, cannonSystem))
 
         // axis 0 = x, axis 1 = y
 //        val twoJoysticks = true
@@ -188,7 +203,7 @@ object RobotContainer {
 //        } else {
 //
 //        }
-        leftJoystick.button(2).onTrue(FloorIntakeAndSeek())
+        leftJoystick.button(2).onTrue(floorIntakeAndSeek)
     }
 
 //    val autoChooser: SendableChooser<Command> = AutoBuilder.buildAutoChooser()

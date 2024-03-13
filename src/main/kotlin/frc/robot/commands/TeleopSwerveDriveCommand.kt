@@ -34,7 +34,6 @@ class TeleopSwerveDriveCommand : Command() {
             RobotContainer.rightJoystick.twist
         }
 
-
         var throttle = 0.0;
         if (twoJoysticks) {
             throttle = RobotContainer.swerveSystem.calculateJoyThrottle(RobotContainer.leftJoystick.throttle)

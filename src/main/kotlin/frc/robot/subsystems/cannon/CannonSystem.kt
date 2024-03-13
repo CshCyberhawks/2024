@@ -28,14 +28,12 @@ class CannonSystem(private val io: CannonIO) : SubsystemBase() {
     val rightShooterPID =
         PIDController(CannonConstants.leftShooterKP, CannonConstants.leftShooterKI, CannonConstants.leftShooterKD)
 
-
     private var exitBreakBeamTriggerTime: Double = -1.0; //
 
     init {
         SmartDashboard.putBoolean("Cannon Telemetry", RobotContainer.telemetry.cannonTelemetry)
 
     }
-
 
     fun killShooter() {
         io.setLeftShooter(0.0)
@@ -53,11 +51,9 @@ class CannonSystem(private val io: CannonIO) : SubsystemBase() {
 
     }
 
-
     fun ampSpit() {
         RobotContainer.stateMachine.intakeState = IntakeState.AmpSpitting
     }
-
 
     fun intake() {
         RobotContainer.stateMachine.intakeState = IntakeState.Intaking
@@ -168,7 +164,6 @@ class CannonSystem(private val io: CannonIO) : SubsystemBase() {
             RobotContainer.stateMachine.noteState = NoteState.Intaking;
         }
 
-
         //Note is shot delay handling
         if (exitBreakBeamTriggerTime > 0.0) {
             SmartDashboard.putNumber("time since began shot", Timer.getFPGATimestamp() - exitBreakBeamTriggerTime)
@@ -200,7 +195,6 @@ class CannonSystem(private val io: CannonIO) : SubsystemBase() {
 
 //            println("set inner and outer percents")
         }
-
 
         //Actually run the motors with the PIDs and the feed forwards
         val currentLeftVelo = io.getLeftShooterVel()

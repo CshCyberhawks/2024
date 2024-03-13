@@ -6,7 +6,6 @@ import edu.wpi.first.math.geometry.Translation2d
 import edu.wpi.first.math.geometry.Translation3d
 import edu.wpi.first.math.util.Units
 
-
 /**
  * Contains various field dimensions and useful reference points. Dimensions are in meters, and sets
  * of corners start in the lower left moving clockwise. **All units in Meters** <br></br>
