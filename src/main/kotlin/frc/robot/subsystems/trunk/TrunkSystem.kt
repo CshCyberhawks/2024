@@ -95,7 +95,10 @@ class TrunkSystem(private val io: TrunkIO) : SubsystemBase() {
         updatePosition()
         when(state) {
             TrunkState.TRAVELING -> setDesiredPosition(pose.position)
-            TrunkState.INTAKE -> if(pose != TrunkPose.INTAKE) leaveIntake()
+            TrunkState.INTAKE -> if(pose != TrunkPose.INTAKE) {
+                setDesiredPosition(TrunkConstants.SAFE_TO_DROP_INTAKE_POSITION)
+                stateMachine.trunkState = TrunkState.LEAVING_INTAKE
+            }
             else -> {
                 if(state == TrunkState.POSTTRAVEL && isAtPosition)
                     goToFinalAngle()
@@ -123,16 +126,12 @@ class TrunkSystem(private val io: TrunkIO) : SubsystemBase() {
         currentRotation = getRotation()
         currentPosition = getPosition()
     }
+
     private fun goToIntake() {
         enableRotationPID = false
         io.rotationBrake = false
         setDesiredPosition(TrunkConstants.INTAKE_POSITION)
         stateMachine.trunkState = TrunkState.INTAKE
-    }
-
-    private fun leaveIntake() {
-        setDesiredPosition(TrunkConstants.SAFE_TO_DROP_INTAKE_POSITION)
-        stateMachine.trunkState = TrunkState.LEAVING_INTAKE
     }
 
     private fun leaveIntakePeriodic() {
@@ -141,7 +140,6 @@ class TrunkSystem(private val io: TrunkIO) : SubsystemBase() {
             goToPose()
         }
     }
-
     private fun goToFinalAngle() {
         when(stateMachine.targetTrunkPose) {
             TrunkPose.INTAKE -> goToIntake()
