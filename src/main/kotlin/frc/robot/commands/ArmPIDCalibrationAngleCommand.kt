@@ -9,8 +9,6 @@ class ArmPIDCalibrationAngleCommand : Command() {
     override fun initialize() {
         RobotContainer.cannonSystem.killShooter()
         RobotContainer.stateMachine.targetTrunkPose = TrunkPose.CalibrationAngle
-        RobotContainer.trunkSystem.goToCustom()
-
     }
 
     override fun execute() {

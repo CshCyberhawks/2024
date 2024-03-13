@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj2.command.Commands
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
 import frc.robot.commands.TeleopSwerveDriveCommand
-import frc.robot.commands.UnBreakTheIK
 import frc.robot.commands.automatic.AutoAimAndShoot
 import frc.robot.commands.automatic.AutoAimAndShootFromPosition
 import frc.robot.commands.automatic.FloorIntakeAndSeek
@@ -119,9 +118,8 @@ object RobotContainer {
             stateMachine.targetTrunkPose = TrunkPose.STOW
         }))
         xboxController.back().onTrue(Commands.runOnce({
-            trunkSystem.STOP()
+            trunkSystem.kill()
         }))
-        xboxController.y().onTrue(UnBreakTheIK())
         xboxController.b().toggleOnTrue(AutoIntake())
         xboxController.leftBumper().onTrue(AutoAimAndShootFromPosition(Pose2d(Translation2d(2.89, 5.54), Rotation2d())))
         xboxController.a().onTrue(AutoAimAndShoot())

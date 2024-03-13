@@ -49,7 +49,6 @@ enum class TrunkState() {
     STOP,
     CALIBRATING,
     MANUAL,
-    AIMING,
     PRETRAVEL,
     TRAVELING,
     POSTTRAVEL,
@@ -100,12 +99,14 @@ enum class ShootPosition(val position: Pose2d) {
 }
 
 class RobotStateMachine {
-    var targetTrunkPose = TrunkPose.STOW
-        set(value) {
-            if (!RobotContainer.trunkSystem.isMoving)
-                field = value
-            }
     var trunkState = TrunkState.CALIBRATING
+    var targetTrunkPose = TrunkPose.STOW
+        set(pose) {
+            if (trunkState != TrunkState.STOP)
+                RobotContainer.trunkSystem.goToPose(pose)
+        }
+
+
     var intakeState: IntakeState = IntakeState.Stopped
     var shooterState: ShooterState = ShooterState.Stopped
     var noteState: NoteState = NoteState.Stored
@@ -137,13 +138,7 @@ class RobotStateMachine {
 
     //Is the trunk at the desired position?
     val trunkReady: Boolean
-        get() = if (trunkState == TrunkState.AIMING) {
-            !RobotContainer.trunkSystem.isMoving && RobotContainer.trunkSystem.isAtAngle
-        }
-        else {
-            targetTrunkPose == RobotContainer.trunkSystem.prevTargetPose
-        }
-//get() = targetTrunkPose == RobotContainer.trunkSystem.prevTargetPose
+        get() = RobotContainer.trunkSystem.isAtPosition && RobotContainer.trunkSystem.isAtAngle
 
     //Is the shooter at the desired velocity?
     val shooterReady: Boolean
