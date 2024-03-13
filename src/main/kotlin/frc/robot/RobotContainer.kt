@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.Commands
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
-import frc.robot.commands.ArmPIDCalibrationAngleCommand
 import frc.robot.commands.TeleopSwerveDriveCommand
 import frc.robot.commands.UnBreakTheIK
 import frc.robot.commands.automatic.AutoAimAndShoot
@@ -17,9 +16,7 @@ import frc.robot.commands.automatic.AutoAimAndShootFromPosition
 import frc.robot.commands.automatic.FloorIntakeAndSeek
 import frc.robot.commands.cannon.AutoAmp
 import frc.robot.commands.cannon.AutoIntake
-import frc.robot.commands.cannon.AutoShootCommand
 import frc.robot.commands.cannon.AutoSpit
-import frc.robot.constants.TunerConstants
 import frc.robot.subsystems.VisionSystem
 import frc.robot.subsystems.cannon.CannonIOReal
 import frc.robot.subsystems.cannon.CannonSystem
@@ -60,7 +57,7 @@ object RobotContainer {
 
     val robotActionSendable: SendableChooser<RobotAction> = SendableChooser<RobotAction>()
     val shootPositionSendable: SendableChooser<ShootPosition> = SendableChooser<ShootPosition>()
-    val trunkPositionSendable: SendableChooser<TrunkPosition> = SendableChooser<TrunkPosition>()
+    val trunkPoseSendable: SendableChooser<TrunkPose> = SendableChooser<TrunkPose>()
 
     val swerveSystem: SwerveSystem = SwerveSystem()
 
@@ -77,8 +74,8 @@ object RobotContainer {
             shootPositionSendable.addOption(it.name, it)
         }
 
-        TrunkPosition.entries.forEach {
-            trunkPositionSendable.addOption(it.name, it)
+        TrunkPose.entries.forEach {
+            trunkPoseSendable.addOption(it.name, it)
         }
     }
 
@@ -119,7 +116,7 @@ object RobotContainer {
 
 
         xboxController.x().onTrue(Commands.runOnce({
-            stateMachine.targetTrunkPose = TrunkPosition.STOW
+            stateMachine.targetTrunkPose = TrunkPose.STOW
         }))
         xboxController.back().onTrue(Commands.runOnce({
             trunkSystem.STOP()

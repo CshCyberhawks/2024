@@ -2,12 +2,10 @@ package frc.robot.commands.automatic
 
 import MiscCalculations
 import edu.wpi.first.math.controller.PIDController
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.Command
 import frc.robot.*
 import frc.robot.commands.cannon.AutoShootCommand
 import frc.robot.constants.DriveConstants
-import frc.robot.constants.TrunkConstants
 
 class DumbAutoAimTwistAndShoot : Command() {
     val autoShoot: AutoShootCommand = AutoShootCommand()
@@ -18,11 +16,11 @@ class DumbAutoAimTwistAndShoot : Command() {
         RobotContainer.stateMachine.shooterState = ShooterState.Shooting
         RobotContainer.stateMachine.driveState = DriveState.TranslationTeleop
 
-        if (RobotContainer.stateMachine.targetTrunkPose != TrunkPosition.SPEAKER && RobotContainer.stateMachine.targetTrunkPose != TrunkPosition.SPEAKER_FROM_STAGE) {
+        if (RobotContainer.stateMachine.targetTrunkPose != TrunkPose.SPEAKER && RobotContainer.stateMachine.targetTrunkPose != TrunkPose.SPEAKER_FROM_STAGE) {
             if (RobotContainer.stateMachine.currentRobotZone == GlobalZones.Stage) {
-                RobotContainer.stateMachine.targetTrunkPose = TrunkPosition.SPEAKER_FROM_STAGE
+                RobotContainer.stateMachine.targetTrunkPose = TrunkPose.SPEAKER_FROM_STAGE
             } else {
-                RobotContainer.stateMachine.targetTrunkPose = TrunkPosition.SPEAKER
+                RobotContainer.stateMachine.targetTrunkPose = TrunkPose.SPEAKER
             }
         }
 

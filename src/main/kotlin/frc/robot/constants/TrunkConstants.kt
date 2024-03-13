@@ -37,7 +37,6 @@ object TrunkConstants {
 
 
     var INTAKE_POSITION: Double = 0.01
-    var INTAKE_ANGLE: Double = 70.0
 
     var CROSSBAR_BOTTOM: Double = 0.05
     var CROSSBAR_TOP: Double = .5
@@ -51,7 +50,7 @@ object TrunkConstants {
     var TOP_BREAK_BEAM_POSITION: Double = .3810000
     var BOTTOM_BREAK_BEAM_POSITION: Double = 0.0
 
-    var rotationOffset: Double = -35.00
+    const val ROTATION_OFFSET: Double = -35.00
 
     var positionKP = 22.0
     var positionKI = 0.0

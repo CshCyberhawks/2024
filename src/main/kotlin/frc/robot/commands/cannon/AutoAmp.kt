@@ -1,16 +1,15 @@
 package frc.robot.commands.cannon
 
 import edu.wpi.first.wpilibj2.command.Command
-import frc.robot.NoteState
 import frc.robot.RobotContainer
-import frc.robot.TrunkPosition
+import frc.robot.TrunkPose
 
 class AutoAmp : Command() {
 
     override fun initialize() {
 //        RobotContainer.cannonSystem.ampSpit()
         RobotContainer.cannonSystem.killShooter()
-        RobotContainer.stateMachine.targetTrunkPose = TrunkPosition.AMP
+        RobotContainer.stateMachine.targetTrunkPose = TrunkPose.AMP
 //        RobotContainer.trunkSystem.goToCustom()
     }
 
@@ -29,12 +28,12 @@ class AutoAmp : Command() {
     override fun isFinished(): Boolean {
 //        return RobotContainer.stateMachine.noteState == NoteState.Empty
 //        return false
-        return RobotContainer.stateMachine.targetTrunkPose != TrunkPosition.AMP
+        return RobotContainer.stateMachine.targetTrunkPose != TrunkPose.AMP
     }
 
     override fun end(interrupted: Boolean) {
         RobotContainer.cannonSystem.killIntake()
-        RobotContainer.stateMachine.targetTrunkPose = TrunkPosition.STOW
+        RobotContainer.stateMachine.targetTrunkPose = TrunkPose.STOW
 //        println("amp end")
     }
 }

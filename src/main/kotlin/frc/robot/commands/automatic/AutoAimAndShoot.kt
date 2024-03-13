@@ -1,14 +1,11 @@
 package frc.robot.commands.automatic
 
 
-import MiscCalculations
 import edu.wpi.first.math.MathUtil.clamp
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.Command
 import frc.robot.*
 import frc.robot.commands.cannon.AutoShootCommand
-import frc.robot.constants.DriveConstants
-import frc.robot.constants.TargetingConstants
 import frc.robot.constants.TrunkConstants
 
 
@@ -21,7 +18,7 @@ class AutoAimAndShoot : Command() {
     override fun initialize() {
         RobotContainer.stateMachine.shooterState = ShooterState.Shooting
 
-        RobotContainer.stateMachine.targetTrunkPose = TrunkPosition.SPEAKER
+        RobotContainer.stateMachine.targetTrunkPose = TrunkPose.SPEAKER
         RobotContainer.trunkSystem.goToAim()
 //        if (RobotContainer.stateMachine.targetTrunkPose != TrunkPosition.SPEAKER && RobotContainer.stateMachine.targetTrunkPose != TrunkPosition.SPEAKER_FROM_STAGE) {
 //            if (RobotContainer.stateMachine.currentRobotZone == GlobalZones.Stage) {
@@ -54,7 +51,7 @@ class AutoAimAndShoot : Command() {
         println("Shootyboi Done")
 //        RobotContainer.stateMachine.shooterState = ShooterState.Stopped
 //        RobotContainer.stateMachine.driveState = DriveState.Teleop
-        RobotContainer.stateMachine.targetTrunkPose = TrunkPosition.STOW
+        RobotContainer.stateMachine.targetTrunkPose = TrunkPose.STOW
         RobotContainer.trunkSystem.goToCustom()
 
     }

@@ -1,12 +1,9 @@
 package frc.robot.commands.cannon
 
-import edu.wpi.first.wpilibj.Timer
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.Command
 import frc.robot.NoteState
 import frc.robot.RobotContainer
-import frc.robot.TrunkPosition
-import frc.robot.TrunkState
+import frc.robot.TrunkPose
 
 class AutoIntake : Command() {
 
@@ -16,7 +13,7 @@ class AutoIntake : Command() {
 //        RobotContainer.trunkSystem.goToCustom()
         RobotContainer.cannonSystem.intake()
         RobotContainer.cannonSystem.killShooter()
-        RobotContainer.stateMachine.targetTrunkPose = TrunkPosition.INTAKE
+        RobotContainer.stateMachine.targetTrunkPose = TrunkPose.INTAKE
         hasIntake = false
         hasAlmostSpit = false
     }
@@ -49,6 +46,6 @@ class AutoIntake : Command() {
 
     override fun end(interrupted: Boolean) {
         RobotContainer.cannonSystem.killIntake()
-        RobotContainer.stateMachine.targetTrunkPose = TrunkPosition.STOW
+        RobotContainer.stateMachine.targetTrunkPose = TrunkPose.STOW
     }
 }

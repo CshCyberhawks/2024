@@ -5,14 +5,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.Command
 import frc.robot.NoteState
 import frc.robot.RobotContainer
-import frc.robot.TrunkPosition
+import frc.robot.TrunkPose
 
 class AutoShootCommand : Command() {
 
     var shooterReadyTime = -1.0
     override fun initialize() {
         RobotContainer.cannonSystem.shoot()
-        RobotContainer.stateMachine.targetTrunkPose = TrunkPosition.SPEAKER
+        RobotContainer.stateMachine.targetTrunkPose = TrunkPose.SPEAKER
         shooterReadyTime = -1.0
     }
 
@@ -39,6 +39,6 @@ class AutoShootCommand : Command() {
     override fun end(interrupted: Boolean) {
         RobotContainer.cannonSystem.killShooter()
         RobotContainer.cannonSystem.killIntake()
-        RobotContainer.stateMachine.targetTrunkPose = TrunkPosition.STOW
+        RobotContainer.stateMachine.targetTrunkPose = TrunkPose.STOW
     }
 }

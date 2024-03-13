@@ -34,11 +34,11 @@ enum class IntakeState(val innerPercent: Double, val outerPercent: Double) {
 }
 
 //this represents the DESIRED trunk statautoshooe
-enum class TrunkPosition(val angle: Double, val position: Double) {
+enum class TrunkPose(val angle: Double, val position: Double) {
     AMP(TrunkConstants.AMP_ANGLE, TrunkConstants.AMP_POSITION),
     SPEAKER(TrunkConstants.STOW_ANGLE, TrunkConstants.STOW_POSITION),
     SPEAKER_FROM_STAGE(TrunkConstants.SPEAKER_FROM_STAGE_ANGLE, TrunkConstants.SPEAKER_FROM_STAGE_POSITION),
-    INTAKE(TrunkConstants.INTAKE_ANGLE, TrunkConstants.INTAKE_POSITION),
+    INTAKE(TrunkConstants.TRAVEL_ANGLE, TrunkConstants.SAFE_TO_DROP_INTAKE_POSITION),
     STOW(TrunkConstants.STOW_ANGLE, TrunkConstants.STOW_POSITION),
     TRAP(TrunkConstants.TRAP_ANGLE, TrunkConstants.TRAP_POSITION),
     CalibrationAngle(110.0, TrunkConstants.STOW_POSITION);
@@ -49,10 +49,12 @@ enum class TrunkState() {
     STOP,
     CALIBRATING,
     MANUAL,
-    CUSTOM,
     AIMING,
-    SETPOINTSETUP,
+    PRETRAVEL,
     TRAVELING,
+    POSTTRAVEL,
+    INTAKE,
+    LEAVING_INTAKE,
 }
 
 //CURRENT states
@@ -98,19 +100,12 @@ enum class ShootPosition(val position: Pose2d) {
 }
 
 class RobotStateMachine {
-
-    var targetTrunkPose: TrunkPosition = TrunkPosition.STOW
-        set(value) =
-            if (!RobotContainer.trunkSystem.isMoving) {
+    var targetTrunkPose = TrunkPose.STOW
+        set(value) {
+            if (!RobotContainer.trunkSystem.isMoving)
                 field = value
-            } else {
-                field = field
             }
-
-    val trunkState: TrunkState
-        get() = RobotContainer.trunkSystem.currentState
-
-
+    var trunkState = TrunkState.CALIBRATING
     var intakeState: IntakeState = IntakeState.Stopped
     var shooterState: ShooterState = ShooterState.Stopped
     var noteState: NoteState = NoteState.Stored
@@ -143,7 +138,7 @@ class RobotStateMachine {
     //Is the trunk at the desired position?
     val trunkReady: Boolean
         get() = if (trunkState == TrunkState.AIMING) {
-            RobotContainer.trunkSystem.isMoving == false && RobotContainer.trunkSystem.isAtAngle == true
+            !RobotContainer.trunkSystem.isMoving && RobotContainer.trunkSystem.isAtAngle
         }
         else {
             targetTrunkPose == RobotContainer.trunkSystem.prevTargetPose
