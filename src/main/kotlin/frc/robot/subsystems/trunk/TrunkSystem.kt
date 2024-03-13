@@ -75,13 +75,27 @@ class TrunkSystem(private val io: TrunkIO) : SubsystemBase() {
         }
     }
 
-    private fun getRotation() = frc.robot.util.Math.wrapAroundAngles((-io.getRawRotation() * 360.0) - TrunkConstants.ROTATION_OFFSET)
+    private fun getRotation() =
+        frc.robot.util.Math.wrapAroundAngles((-io.getRawRotation() * 360.0) - TrunkConstants.ROTATION_OFFSET)
 
     private fun getPosition() = io.getRawPosition() * TrunkConstants.ELEVATOR2M
+
+    private fun updatePosition() {
+        currentRotation = getRotation()
+        currentPosition = getPosition()
+    }
 
     private fun setDesiredPosition(position: Double) { positionPID.setpoint = position }
 
     private fun setDesiredRotation(angle: Double) { rotationPID.setpoint = Math.toRadians(angle) }
+
+    private fun calibratePeriodic() {
+        if (io.atTopLimit()) {
+            io.setElevatorSpeed(0.0)
+            io.setZeroPosition()
+            stateMachine.targetTrunkPose = TrunkPose.STOW
+        }
+    }
 
     fun kill() {
         setPIDs(false)
@@ -89,6 +103,43 @@ class TrunkSystem(private val io: TrunkIO) : SubsystemBase() {
         io.setElevatorSpeed(0.0)
         io.setRotationSpeed(0.0)
     }
+
+    private fun goToTravelPeriodic() {
+        if(currentRotation >= TrunkConstants.TRAVEL_ANGLE - TrunkConstants.ANGLE_DEADZONE) {
+            stateMachine.trunkState = TrunkState.TRAVELING
+            setDesiredPosition(stateMachine.targetTrunkPose.position)
+        }
+    }
+
+    private fun travelPeriodic() {
+        if(MiscCalculations.appxEqual(currentPosition, stateMachine.targetTrunkPose.position, TrunkConstants.POSITION_DEADZONE)) {
+            stateMachine.trunkState = TrunkState.POSTTRAVEL
+            setDesiredRotation(stateMachine.targetTrunkPose.angle)
+        }
+    }
+
+    private fun goToFinalAngle() {
+        when(stateMachine.targetTrunkPose) {
+            TrunkPose.INTAKE -> goToIntake()
+            TrunkPose.SPEAKER -> setDesiredRotation(shootingAngle)
+            else -> setDesiredRotation(stateMachine.targetTrunkPose.angle)
+        }
+    }
+
+    private fun goToIntake() {
+        enableRotationPID = false
+        io.rotationBrake = false
+        setDesiredPosition(TrunkConstants.INTAKE_POSITION)
+        stateMachine.trunkState = TrunkState.INTAKE
+    }
+
+    private fun leaveIntakePeriodic() {
+        if(isAtPosition) {
+            stateMachine.trunkState = TrunkState.PRETRAVEL
+            goToPose()
+        }
+    }
+
     fun goToPose() {
         val state = stateMachine.trunkState
         val pose = stateMachine.targetTrunkPose
@@ -113,39 +164,6 @@ class TrunkSystem(private val io: TrunkIO) : SubsystemBase() {
         //    val targetPoseIsAboveCrossbar = stateMachine.targetTrunkPose.position >= TrunkConstants.CROSSBAR_TOP
 //    val targetPoseIsBelowCrossbar = stateMachine.targetTrunkPose.position <= TrunkConstants.CROSSBAR_BOTTOM
 //        val isSafe = MiscCalculations.appxEqual(currentPosition, TrunkConstants.STOW_POSITION, TrunkConstants.POSITION_DEADZONE)
-    }
-
-    private fun goToTravelPeriodic() {
-        if(currentRotation >= TrunkConstants.TRAVEL_ANGLE - TrunkConstants.ANGLE_DEADZONE) {
-            stateMachine.trunkState = TrunkState.TRAVELING
-            setDesiredPosition(stateMachine.targetTrunkPose.position)
-        }
-    }
-
-    private fun updatePosition() {
-        currentRotation = getRotation()
-        currentPosition = getPosition()
-    }
-
-    private fun goToIntake() {
-        enableRotationPID = false
-        io.rotationBrake = false
-        setDesiredPosition(TrunkConstants.INTAKE_POSITION)
-        stateMachine.trunkState = TrunkState.INTAKE
-    }
-
-    private fun leaveIntakePeriodic() {
-        if(isAtPosition) {
-            stateMachine.trunkState = TrunkState.PRETRAVEL
-            goToPose()
-        }
-    }
-    private fun goToFinalAngle() {
-        when(stateMachine.targetTrunkPose) {
-            TrunkPose.INTAKE -> goToIntake()
-            TrunkPose.SPEAKER -> setDesiredRotation(shootingAngle)
-            else -> setDesiredRotation(stateMachine.targetTrunkPose.angle)
-        }
     }
 
     override fun periodic() {
@@ -194,20 +212,5 @@ class TrunkSystem(private val io: TrunkIO) : SubsystemBase() {
     fun brakeMotors() {
         io.rotationBrake = true
         io.positionBrake = true
-    }
-
-    private fun calibratePeriodic() {
-        if (io.atTopLimit()) {
-            io.setElevatorSpeed(0.0)
-            io.setZeroPosition()
-            stateMachine.targetTrunkPose = TrunkPose.STOW
-        }
-    }
-
-    private fun travelPeriodic() {
-        if(MiscCalculations.appxEqual(currentPosition, stateMachine.targetTrunkPose.position, TrunkConstants.POSITION_DEADZONE)) {
-            stateMachine.trunkState = TrunkState.POSTTRAVEL
-            setDesiredRotation(stateMachine.targetTrunkPose.angle)
-        }
     }
 }
