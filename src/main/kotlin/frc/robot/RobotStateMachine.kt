@@ -102,8 +102,8 @@ class RobotStateMachine {
     var trunkState = TrunkState.CALIBRATING
     var targetTrunkPose = TrunkPose.STOW
         set(pose) {
-            if (trunkState != TrunkState.STOP)
-                RobotContainer.trunkSystem.goToPose(pose)
+            field = pose
+            RobotContainer.trunkSystem.goToPose()
         }
 
 

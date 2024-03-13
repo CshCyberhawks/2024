@@ -31,7 +31,7 @@ class Robot : LoggedRobot() {
         SmartDashboard.putNumber("shooter height", TargetingConstants.shooterZ)
         SmartDashboard.putNumber("shooter velocity transfer multiplier", TargetingConstants.velocityMultiplier)
         SmartDashboard.putNumber("constant shooter fudging constant", TargetingConstants.constantStupidConstant)
-        RobotContainer.swerveSystem.driveTrain.getDaqThread().setThreadPriority(99);
+        RobotContainer.swerveSystem.driveTrain.daqThread.setThreadPriority(99);
 
         SmartDashboard.putNumber("shooter angle", 58.5)
 
@@ -128,10 +128,7 @@ class Robot : LoggedRobot() {
 
         RobotContainer.autonomousCommand.cancel()
         RobotContainer.teleopSwerveCommand.schedule()
-//        RobotContainer.trunkSystem.calibrate()
-
-//        RobotContainer.trunkSystem.STOP()
-
+        RobotContainer.trunkSystem.calibrate()
 
         SmartDashboard.putBoolean("Schedule Climb Command?", false)
         SmartDashboard.putBoolean("Pulldown Climb?", false)
