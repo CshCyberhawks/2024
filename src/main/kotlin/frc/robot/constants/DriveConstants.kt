@@ -8,6 +8,8 @@ object DriveConstants {
     const val TELEOP_DEADZONE_TWIST_ONE_JOY: Double = .15
     const val TELEOP_DEADZONE_TWIST_TWO_JOY: Double = .3
 
+    const val TWO_JOYSTICKS: Boolean = true
+
 
     const val MAX_SPEED: Double = 4.7
 

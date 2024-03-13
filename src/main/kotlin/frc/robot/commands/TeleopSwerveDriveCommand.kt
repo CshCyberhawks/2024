@@ -24,7 +24,6 @@ class TeleopSwerveDriveCommand : Command() {
         }
     }
 
-
     override fun execute() {
 //        val twoJoysticks = SmartDashboard.getBoolean("Two joysticks?", false)
         val twoJoysticks = true
@@ -44,9 +43,9 @@ class TeleopSwerveDriveCommand : Command() {
         }
 
 
-//        if (RobotContainer.rightJoystick.button(2).asBoolean) {
-//            RobotContainer.swerveSystem.zeroGyro()
-//        }
+        if (RobotContainer.rightJoystick.button(2).asBoolean) {
+            RobotContainer.swerveSystem.zeroGyro()
+        }
 
         if (RobotContainer.stateMachine.driveState != DriveState.Teleop) {
             return
@@ -65,20 +64,17 @@ class TeleopSwerveDriveCommand : Command() {
         var twist = 0.0
         if (twoJoysticks) {
             twist = -calculateDeadzone(
-                twistInput,
-                DriveConstants.TELEOP_DEADZONE_TWIST_TWO_JOY
+                twistInput, DriveConstants.TELEOP_DEADZONE_TWIST_TWO_JOY
             ) * throttle * DriveConstants.MAX_ANGLE_SPEED
         } else {
             twist = -calculateDeadzone(
-                twistInput,
-                DriveConstants.TELEOP_DEADZONE_TWIST_ONE_JOY
+                twistInput, DriveConstants.TELEOP_DEADZONE_TWIST_ONE_JOY
             ) * throttle * DriveConstants.MAX_ANGLE_SPEED
         }
 //        println("driving")
 
         RobotContainer.swerveSystem.driveTrain.applyRequest {
-            RobotContainer.swerveSystem.drive.withVelocityX(translation.x)
-                .withVelocityY(translation.y)
+            RobotContainer.swerveSystem.drive.withVelocityX(translation.x).withVelocityY(translation.y)
                 .withRotationalRate(twist)
         }.execute()
     }

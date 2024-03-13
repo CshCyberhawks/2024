@@ -7,14 +7,17 @@ import edu.wpi.first.math.controller.PIDController
 import edu.wpi.first.math.geometry.Pose2d
 import edu.wpi.first.math.geometry.Translation2d
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
+import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import frc.robot.GlobalZones
 import frc.robot.RobotContainer
 import frc.robot.constants.DriveConstants
 import frc.robot.constants.TunerConstants
 import frc.robot.util.AutoTwistController
+import java.util.function.DoubleSupplier
 
-class SwerveSystem() : SubsystemBase() {
+
+class SwerveSystem : SubsystemBase() {
     val driveTrain: CommandSwerveDrivetrain = TunerConstants.DriveTrain
 
     var inputRotation: Double = 0.0
@@ -22,28 +25,27 @@ class SwerveSystem() : SubsystemBase() {
     private val xPID: PIDController = PIDController(.1, 0.0, 0.01)
     private val yPID: PIDController = PIDController(.1, 0.0, 0.01)
 
-    private val PIDDeadzone = .005;
+    private val PIDDeadzone = .005
 
 
     val drive: SwerveRequest.FieldCentric = SwerveRequest.FieldCentric()
         .withDeadband(DriveConstants.MAX_SPEED * 0.1)
         .withRotationalDeadband(DriveConstants.MAX_ANGLE_SPEED * 0.1) // Add a 10% deadband
-        .withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage); // I want field-centric
+        .withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage) // I want field-centric
 
     // driving in open loop
-    val brake: SwerveRequest.SwerveDriveBrake = SwerveRequest.SwerveDriveBrake();
+    val brake: SwerveRequest.SwerveDriveBrake = SwerveRequest.SwerveDriveBrake()
     val forwardStraight: SwerveRequest.RobotCentric =
-        SwerveRequest.RobotCentric().withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage);
-    val point: SwerveRequest.PointWheelsAt = SwerveRequest.PointWheelsAt();
+        SwerveRequest.RobotCentric().withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage)
+    val point: SwerveRequest.PointWheelsAt = SwerveRequest.PointWheelsAt()
 
     /* Path follower */
 //    val runAuto: Command = driveTrain.getAutoPath("Tests");
 
-    val logger: SwerveTelemetry = SwerveTelemetry(DriveConstants.MAX_SPEED);
+    val logger: SwerveTelemetry = SwerveTelemetry(DriveConstants.MAX_SPEED)
 
 
     val autoTwistController: AutoTwistController = AutoTwistController()
-
 
     //Takes in joystick inputs
     fun calculateJoyTranslation(
@@ -57,6 +59,14 @@ class SwerveSystem() : SubsystemBase() {
             -MiscCalculations.calculateDeadzone(rightY, deadzoneX) * DriveConstants.MAX_SPEED * throttle,
             -MiscCalculations.calculateDeadzone(rightX, deadzoneY) * DriveConstants.MAX_SPEED * throttle
         )
+    }
+
+    fun driveCommand(translationX: DoubleSupplier, translationY: DoubleSupplier, twist: DoubleSupplier): Command {
+        return driveTrain.applyRequest {
+            RobotContainer.swerveSystem.drive.withVelocityX(translationX.asDouble)
+                .withVelocityY(translationY.asDouble)
+                .withRotationalRate(twist.asDouble)
+        }
     }
 
     // Milan: trust me bro this'll work totally definitely please don't question it

@@ -28,8 +28,8 @@ import frc.robot.util.TargetingSystem
 import frc.robot.util.TelemetryToggles
 
 object RobotContainer {
-    private val leftJoystick: CommandJoystick = CommandJoystick(0)
-    private val rightJoystick: CommandJoystick = CommandJoystick(1)
+    val leftJoystick: CommandJoystick = CommandJoystick(0)
+    val rightJoystick: CommandJoystick = CommandJoystick(1)
     private val xboxController: CommandXboxController = CommandXboxController(2)
 
     val telemetry = TelemetryToggles()
@@ -42,23 +42,21 @@ object RobotContainer {
 
     val autonomousCommand: Command = Commands.run({})
 
-    var teleopSwerveCommand: Command = TeleopSwerveDriveCommand()
-
     val autoAimShooter: Command = AutoAimShooter()
 
     val autoAimFromPosition: Command = AutoAimFromPosition(stateMachine.shootPosition.position)
 
     val autoAimFromPresetPosition: Command = AutoAimFromPosition(Pose2d(Translation2d(2.89, 5.54), Rotation2d()))
 
+    val autoAmp: Command = AutoAmp()
+
+    val teleopSwerveCommand: Command = TeleopSwerveDriveCommand()
+
     val targetingSystem: TargetingSystem = TargetingSystem()
 
     val visionSystem: VisionSystem = VisionSystem()
 
-
 //    val autoChooser: SendableChooser<Command> = AutoBuilder.buildAutoChooser()
-
-    val autoStateManagementEnableButton: Boolean
-        get() = SmartDashboard.getBoolean("Enable Automatic State Management", false)
 
     val robotActionSendable: SendableChooser<RobotAction> = SendableChooser<RobotAction>()
     val shootPositionSendable: SendableChooser<ShootPosition> = SendableChooser<ShootPosition>()
@@ -66,7 +64,35 @@ object RobotContainer {
 
     val swerveSystem: SwerveSystem = SwerveSystem()
 
+//    val teleopSwerveCommand: Command = if (DriveConstants.TWO_JOYSTICKS) {
+//        swerveSystem.driveCommand({
+//            MiscCalculations.calculateDeadzone(
+//                rightJoystick.x, DriveConstants.TELEOP_DEADZONE_X
+//            )
+//        }, {
+//            MiscCalculations.calculateDeadzone(
+//                rightJoystick.y, DriveConstants.TELEOP_DEADZONE_Y
+//            )
+//        }, {
+//            MiscCalculations.calculateDeadzone(leftJoystick.x, DriveConstants.TELEOP_DEADZONE_TWIST_TWO_JOY)
+//        })
+//    } else {
+//        swerveSystem.driveCommand({
+//            MiscCalculations.calculateDeadzone(
+//                rightJoystick.x, DriveConstants.TELEOP_DEADZONE_X
+//            )
+//        }, {
+//            MiscCalculations.calculateDeadzone(
+//                rightJoystick.y, DriveConstants.TELEOP_DEADZONE_Y
+//            )
+//        }, {
+//            MiscCalculations.calculateDeadzone(rightJoystick.twist, DriveConstants.TELEOP_DEADZONE_TWIST_ONE_JOY)
+//        })
+//    }
     val intakeLimelight = "limelight-back"
+
+    val autoStateManagementEnableButton: Boolean
+        get() = SmartDashboard.getBoolean("Enable Automatic State Management", false)
 
     init {
         configureBindings()
@@ -82,6 +108,12 @@ object RobotContainer {
         TrunkPosition.entries.forEach {
             trunkPositionSendable.addOption(it.name, it)
         }
+
+        teleopSwerveCommand.addRequirements(swerveSystem)
+        autoAimFromPosition.addRequirements(trunkSystem)
+        autoAimFromPresetPosition.addRequirements(trunkSystem)
+        autoAimShooter.addRequirements(trunkSystem)
+        autoAmp.addRequirements(cannonSystem)
     }
 
     private fun configureBindings() {
@@ -111,7 +143,7 @@ object RobotContainer {
                     }
                 }
 
-                RobotAction.Amp -> AutoAmp()
+                RobotAction.Amp -> autoAmp
                 RobotAction.SourceIntake -> TODO("Not yet implemented")
                 RobotAction.FloorIntake -> AutoIntake()
                 RobotAction.Trap -> TODO("Not yet implemented")
@@ -121,7 +153,7 @@ object RobotContainer {
         }))
 
         rightJoystick.button(4).toggleOnTrue(FloorIntakeAndSeek())
-        rightJoystick.button(2).onTrue(Commands.runOnce({ swerveSystem.zeroGyro() }))
+        rightJoystick.button(2).onTrue(Commands.runOnce({ swerveSystem.zeroGyro() }, swerveSystem))
 
         xboxController.x().onTrue(Commands.runOnce({
             stateMachine.targetTrunkPose = TrunkPosition.STOW
@@ -135,18 +167,27 @@ object RobotContainer {
         xboxController.a().onTrue(AutoAimShooter())
         xboxController.rightBumper().toggleOnTrue(AutoSpit())
         xboxController.leftTrigger().onTrue(AutoShootCommand().onlyIf {
-            autoAimShooter.isScheduled ||
-                    autoAimFromPosition.isScheduled
+            autoAimShooter.isScheduled || autoAimFromPosition.isScheduled
         })
+        xboxController.leftStick().whileTrue(
+            Commands.runOnce({
+                if (stateMachine.trunkState == TrunkState.MANUAL) {
+                    trunkSystem.elevate(
+                        -xboxController.leftY
+                    )
+                    trunkSystem.rotate(-xboxController.rightY * 0.1)
+                }
+            }, trunkSystem)
+        )
+        xboxController.start().onTrue(Commands.runOnce({ cannonSystem.ampSpit()}, cannonSystem))
 
         // axis 0 = x, axis 1 = y
-        val twoJoysticks = true
-        if (twoJoysticks) {
-
-        } else {
-
-        }
-
+//        val twoJoysticks = true
+//        if (twoJoysticks) {
+//            leftJoystick.axisGreaterThan(0, )
+//        } else {
+//
+//        }
         leftJoystick.button(2).onTrue(FloorIntakeAndSeek())
     }
 

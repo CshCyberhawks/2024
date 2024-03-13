@@ -17,11 +17,11 @@ class AutoAmp : Command() {
 //        if (RobotContainer.stateMachine.trunkReady) {
 //            RobotContainer.cannonSystem.ampSpit()
 //        }
-        if (RobotContainer.xboxController.start().asBoolean) {
-            RobotContainer.cannonSystem.ampSpit()
-        } else {
+//        if (RobotContainer.xboxController.start().asBoolean) {
+//            RobotContainer.cannonSystem.ampSpit()
+//        } else {
             RobotContainer.cannonSystem.killIntake()
-        }
+//        }
     }
 
     override fun isFinished(): Boolean {
