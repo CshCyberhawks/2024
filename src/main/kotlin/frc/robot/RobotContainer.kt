@@ -128,7 +128,7 @@ object RobotContainer {
         autoSpit.addRequirements(cannonSystem)
         autoShootCommand.addRequirements(cannonSystem)
         unBreakTheIK.addRequirements(trunkSystem)
-        floorIntakeAndSeek.addRequirements(swerveSystem, )
+        floorIntakeAndSeek.addRequirements(swerveSystem)
     }
 
     private fun configureBindings() {
