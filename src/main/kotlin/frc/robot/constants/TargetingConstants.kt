@@ -5,24 +5,25 @@ import kotlin.math.PI
 
 object TargetingConstants {
     // shooter velocity transfer proportion
-    var velocityMultiplier = 1.0
+    var velocityMultiplier = 1.15
 
     // coords of point we're aiming at relative to center of base of the speaker board (board with the fiducials)
-    var endpointX = .2
+    var endpointX = .15
     var endpointY = 0.0
     var endpointZ = 2.03
 
     // coords of center of speaker backboard
     var speakerX = 0.0
-    var speakerY = Units.inchesToMeters(243.654)
+    var speakerY = 5.5//Units.inchesToMeters(243.654)
 
     // height that we shoot from; technically varies a bit but lets just say it doesnt
     var shooterZ = Units.inchesToMeters(24.0)
 
     var stupidConstant = 0.0
+
     // 5 maybe
     var constantStupidConstant = 0.0
-        // 11.0 maybe
+    // 11.0 maybe
 
 //    var shooterZ = 0.0
 
@@ -31,5 +32,5 @@ object TargetingConstants {
     // rpm to units per sec conversion factor
     // (rpm) * 2pi (rad/r) * r (r units/rad) * 1/60 (min/s)
     fun rpm2ups(r: Double): Double = PI * r / 30.0
-    fun ups2rpm(r: Double): Double = 30.0 / (PI*r)
+    fun ups2rpm(r: Double): Double = 30.0 / (PI * r)
 }

@@ -4,6 +4,9 @@ import edu.wpi.first.math.geometry.Pose2d
 import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.math.geometry.Translation2d
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
+import edu.wpi.first.wpilibj2.command.Command
+import frc.robot.commands.trunk.CalibrateTrunk
+import frc.robot.commands.trunk.HoldPoseTrunk
 import frc.robot.constants.CannonConstants
 import frc.robot.constants.FieldPositions
 import frc.robot.constants.TrunkConstants
@@ -25,7 +28,7 @@ enum class NoteState {
 }
 
 //this represents the DESIRED intake state (functionally current since intake immediately spins up)
-enum class IntakeState(val innerPercent: Double, val outerPercent: Double) {
+enum class IntakeState(var innerPercent: Double, var outerPercent: Double) {
     Stopped(0.0, 0.0),
     Intaking(CannonConstants.INNER_INTAKE_PERCENT, CannonConstants.OUTER_INTAKE_PERCENT),
     Feeding(CannonConstants.INNER_FEED_PERCENT, CannonConstants.OUTER_FEED_PERCENT),
@@ -33,27 +36,20 @@ enum class IntakeState(val innerPercent: Double, val outerPercent: Double) {
     AmpSpitting(CannonConstants.INNER_AMP_PERCENT, CannonConstants.OUTER_AMP_PERCENT),
 }
 
-//this represents the DESIRED trunk statautoshooe
-enum class TrunkPosition(val angle: Double, val position: Double) {
+//this represents the DESIRED trunk state
+enum class TrunkPose(var angle: Double, var position: Double) {
+    AMP_GOING(TrunkConstants.AMP_ANGLE, 0.3),
     AMP(TrunkConstants.AMP_ANGLE, TrunkConstants.AMP_POSITION),
+    AMP_LEAVING(TrunkConstants.AMP_ANGLE - 10.0, TrunkConstants.STOW_POSITION),
     SPEAKER(TrunkConstants.STOW_ANGLE, TrunkConstants.STOW_POSITION),
-    SPEAKER_FROM_STAGE(TrunkConstants.SPEAKER_FROM_STAGE_ANGLE, TrunkConstants.SPEAKER_FROM_STAGE_POSITION),
     INTAKE(TrunkConstants.INTAKE_ANGLE, TrunkConstants.INTAKE_POSITION),
+    INTAKE_PREP(TrunkConstants.SAFE_TRAVEL_ANGLE, TrunkConstants.SAFE_TO_DROP_INTAKE_POSITION),
     STOW(TrunkConstants.STOW_ANGLE, TrunkConstants.STOW_POSITION),
     TRAP(TrunkConstants.TRAP_ANGLE, TrunkConstants.TRAP_POSITION),
-    CalibrationAngle(110.0, TrunkConstants.STOW_POSITION);
+    CalibrationAngle(110.0, TrunkConstants.STOW_POSITION),
+    CLIMB(180.0, TrunkConstants.STOW_POSITION)
 }
 
-
-enum class TrunkState() {
-    STOP,
-    CALIBRATING,
-    MANUAL,
-    CUSTOM,
-    AIMING,
-    SETPOINTSETUP,
-    TRAVELING,
-}
 
 //CURRENT states
 enum class GlobalZones(val range: Pair<Translation2d, Translation2d>) {
@@ -99,21 +95,16 @@ enum class ShootPosition(val position: Pose2d) {
 
 class RobotStateMachine {
 
-    var targetTrunkPose: TrunkPosition = TrunkPosition.STOW
-        set(value) =
-            if (!RobotContainer.trunkSystem.isMoving) {
-                field = value
-            } else {
-                field = field
-            }
-
-    val trunkState: TrunkState
-        get() = RobotContainer.trunkSystem.currentState
-
-
     var intakeState: IntakeState = IntakeState.Stopped
     var shooterState: ShooterState = ShooterState.Stopped
     var noteState: NoteState = NoteState.Stored
+
+    var currentTrunkCommand: Command = CalibrateTrunk()
+        set(value) {
+            field.cancel()
+            field = value
+            field.schedule()
+        }
 
     var currentRobotZone: GlobalZones = GlobalZones.Wing
     var prevRobotZone: GlobalZones = GlobalZones.Wing
@@ -125,10 +116,6 @@ class RobotStateMachine {
             RobotAction.Chill
         }
     val shootPosition: ShootPosition = ShootPosition.StageFront
-
-    //        get() = RobotContainer.shootPositionSendable.selected
-//    val trunkPosition: TrunkPosition
-//        get() = RobotContainer.trunkPositionSendable.selected
     var driveState: DriveState = DriveState.Teleop
 
     var autoStateManagement: AutoStateManagement = AutoStateManagement.Disabled
@@ -143,12 +130,8 @@ class RobotStateMachine {
 
     //Is the trunk at the desired position?
     val trunkReady: Boolean
-        get() = if (trunkState == TrunkState.AIMING) {
-            RobotContainer.trunkSystem.isMoving == false && RobotContainer.trunkSystem.isAtAngle == true
-        } else {
-            targetTrunkPose == RobotContainer.trunkSystem.prevTargetPose
-        }
-//get() = targetTrunkPose == RobotContainer.trunkSystem.prevTargetPose
+        get() = RobotContainer.trunkSystem.isAtPose
+
 
     //Is the shooter at the desired velocity?
     val shooterReady: Boolean

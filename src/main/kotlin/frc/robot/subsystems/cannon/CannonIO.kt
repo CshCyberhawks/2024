@@ -2,16 +2,16 @@ package frc.robot.subsystems.cannon
 
 interface CannonIO {
 
-    public fun setLeftShooter(vel: Double)
-    public fun setRightShooter(vel: Double)
+    fun setLeftShooter(vel: Double)
+    fun setRightShooter(vel: Double)
 
-    public fun getLeftShooterVel(): Double
-    public fun getRightShooterVel(): Double
+    fun getLeftShooterVel(): Double
+    fun getRightShooterVel(): Double
 
-    public fun setInnerIntakePercent(percent: Double)
-    public fun setOuterIntakePercent(percent: Double)
+    fun setInnerIntakePercent(percent: Double)
+    fun setOuterIntakePercent(percent: Double)
 
-    public fun getExitBeamBreak(): Boolean
-    public fun getEntryBeamBreak(): Boolean
-    public fun getLoadedBeamBreak(): Boolean
+    fun getExitBeamBreak(): Boolean
+    fun getEntryBeamBreak(): Boolean
+    fun getLoadedBeamBreak(): Boolean
 }

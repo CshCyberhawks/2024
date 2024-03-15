@@ -26,9 +26,9 @@ class CannonSystem(private val io: CannonIO) : SubsystemBase() {
     var noteEntryTime = -1.0
 
     val leftShooterPID =
-        PIDController(CannonConstants.leftShooterKP, CannonConstants.leftShooterKI, CannonConstants.leftShooterKD)
+            PIDController(CannonConstants.leftShooterKP, CannonConstants.leftShooterKI, CannonConstants.leftShooterKD)
     val rightShooterPID =
-        PIDController(CannonConstants.leftShooterKP, CannonConstants.leftShooterKI, CannonConstants.leftShooterKD)
+            PIDController(CannonConstants.leftShooterKP, CannonConstants.leftShooterKI, CannonConstants.leftShooterKD)
 
 
     private var exitBreakBeamTriggerTime: Double = -1.0; //
@@ -89,7 +89,7 @@ class CannonSystem(private val io: CannonIO) : SubsystemBase() {
 //            CannonConstants.SHOOTER_VELOCITY_DEADZONE
 //        )
         if (MiscCalculations.appxEqual(desiredLeftVel, io.getLeftShooterVel(), CannonConstants.SHOOTER_VELOCITY_DEADZONE)
-            && desiredLeftVel != 0.0 && desiredRightVel != 0.0 && RobotContainer.stateMachine.shooterState == ShooterState.Shooting) {
+                && desiredLeftVel != 0.0 && desiredRightVel != 0.0 && RobotContainer.stateMachine.shooterState == ShooterState.Shooting) {
             println("shooter ready")
             return true
         }
@@ -140,8 +140,7 @@ class CannonSystem(private val io: CannonIO) : SubsystemBase() {
         if (io.getLoadedBeamBreak() && (Timer.getFPGATimestamp() - noteEntryTime) >= CannonConstants.INTAKE_STOW_DELAY) {
             noteEntryTime = -1.0
             RobotContainer.stateMachine.noteState = NoteState.Stored
-        }
-        else if (io.getLoadedBeamBreak() && noteEntryTime <= -1.0) {
+        } else if (io.getLoadedBeamBreak() && noteEntryTime <= -1.0) {
             RobotContainer.stateMachine.noteState = NoteState.Stored
         }
         //Note is not stored
@@ -151,10 +150,9 @@ class CannonSystem(private val io: CannonIO) : SubsystemBase() {
         //Note is intaking
         else if (io.getEntryBeamBreak() && !io.getLoadedBeamBreak() && RobotContainer.stateMachine.intakeState != IntakeState.Spitting && RobotContainer.stateMachine.intakeState != IntakeState.AmpSpitting) {
             RobotContainer.stateMachine.noteState = NoteState.Intaking;
-            println("set note entry time with first stat")
             noteEntryTime = Timer.getFPGATimestamp()
-        }
-        else if (io.getEntryBeamBreak() && !io.getLoadedBeamBreak()) {
+            println("entry beam break broken second if stat")
+        } else if (io.getEntryBeamBreak() && !io.getLoadedBeamBreak()) {
             RobotContainer.stateMachine.noteState = NoteState.Intaking;
         }
 
