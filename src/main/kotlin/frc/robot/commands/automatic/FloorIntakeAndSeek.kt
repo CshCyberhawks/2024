@@ -7,7 +7,7 @@ import frc.robot.DriveState
 import frc.robot.LimelightHelpers
 import frc.robot.NoteState
 import frc.robot.RobotContainer
-import frc.robot.commands.cannon.AutoIntake
+import frc.robot.commands.AutoIntake
 import frc.robot.constants.AutoConstants
 import kotlin.math.abs
 

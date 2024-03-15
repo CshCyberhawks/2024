@@ -1,132 +1,107 @@
 package frc.robot.subsystems.trunk
 
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs
+import com.ctre.phoenix6.configs.TalonFXConfiguration
+import com.ctre.phoenix6.controls.Follower
+import com.ctre.phoenix6.controls.VelocityVoltage
+import com.ctre.phoenix6.hardware.TalonFX
+import com.ctre.phoenix6.signals.NeutralModeValue
 import com.revrobotics.CANSparkBase
 import com.revrobotics.CANSparkLowLevel
 import com.revrobotics.CANSparkMax
+import edu.wpi.first.math.MathUtil
 import edu.wpi.first.wpilibj.DigitalInput
 import edu.wpi.first.wpilibj.DutyCycleEncoder
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import frc.robot.constants.TrunkConstants
 
 class TrunkIOReal : TrunkIO {
 
-    private val elevatorMotor = CANSparkMax(20, CANSparkLowLevel.MotorType.kBrushless)
+    private val elevatorMotor = CANSparkMax(TrunkConstants.ELEVATOR_MOTOR_ID, CANSparkLowLevel.MotorType.kBrushless)
     private val positionEncoder = elevatorMotor.getAlternateEncoder(8192)
 
-    private val mainRotationMotor = CANSparkMax(22, CANSparkLowLevel.MotorType.kBrushless)
-    private val followerRotationMotor = CANSparkMax(21, CANSparkLowLevel.MotorType.kBrushless)
+    private val masterRotationMotor = TalonFX(TrunkConstants.MASTER_PIVOT_MOTOR_ID) // Right Motor
+    private val followerRotationMotor = TalonFX(TrunkConstants.FOLLOWER_PIVOT_MOTOR_ID) // Left Motor
 
-    private val rotationEncoder = DutyCycleEncoder(TrunkConstants.rotationEncoderID)
-    private var angleIdleMode = CANSparkBase.IdleMode.kBrake
+    private val shaftRotationEncoder = DutyCycleEncoder(TrunkConstants.rotationEncoderID)
 
+    private var falconRotationOffset = 0.0
     private val topLimit = DigitalInput(0)
-    private val bottomLimit = DigitalInput(1)
+    private val voltageVelocityController = VelocityVoltage(0.0, 0.0, true, 0.0, 0, false, false, false)
 
-    private var bottomPositionLimit = TrunkConstants.BOTTOM_BREAK_BEAM_POSITION
-    private var topPositionLimit = TrunkConstants.TOP_BREAK_BEAM_POSITION
-    private var bottomRotationLimit = TrunkConstants.SAFE_TRAVEL_ANGLE
-    private var topRotationLimit = TrunkConstants.MAX_ANGLE
+    override var positionBrake = true
+        set(enabled) {
+            if (positionBrake != enabled)
+                elevatorMotor.setIdleMode(if (enabled) CANSparkBase.IdleMode.kBrake else CANSparkBase.IdleMode.kCoast)
+            field = enabled
+        }
+
+    override var rotationBrake = true
+        set(enabled) {
+            if (field != enabled) {
+                masterRotationMotor.setNeutralMode(if (enabled) NeutralModeValue.Brake else NeutralModeValue.Coast)
+                followerRotationMotor.setNeutralMode(if (enabled) NeutralModeValue.Brake else NeutralModeValue.Coast)
+            }
+            field = enabled
+        }
 
     init {
+        // factory reset to make it not be bad
         elevatorMotor.restoreFactoryDefaults()
-        mainRotationMotor.restoreFactoryDefaults()
-        followerRotationMotor.restoreFactoryDefaults()
+        val pivotMotorConfiguration = TalonFXConfiguration().withCurrentLimits(CurrentLimitsConfigs().withSupplyCurrentLimit(40.0))
+
+//        pivotMotorConfiguration.Slot0.kP = TrunkConstants.rotationKP
+//        pivotMotorConfiguration.Slot0.kI = TrunkConstants.rotationKI
+//        pivotMotorConfiguration.Slot0.kD = TrunkConstants.rotationKD
+//        pivotMotorConfiguration.Slot0.kV = 0.12; // Falcon 500 is a 500kV motor, 500rpm per V = 8.333 rps per V, 1/8.33 = 0.12 volts / Rotation per second
+//        pivotMotorConfiguration.Voltage.PeakForwardVoltage = 8.0;
+//        pivotMotorConfiguration.Voltage.PeakReverseVoltage = -8.0;
+
+        masterRotationMotor.configurator.apply(pivotMotorConfiguration)
+        followerRotationMotor.configurator.apply(pivotMotorConfiguration)
 
         elevatorMotor.inverted = false // elevator likes to not be inverted idk why
-        mainRotationMotor.inverted = false
+        masterRotationMotor.inverted = true
 
-        elevatorMotor.enableSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, false)
-        elevatorMotor.enableSoftLimit(CANSparkBase.SoftLimitDirection.kForward, false)
+        // ensure motors are initially braked
+        elevatorMotor.setIdleMode(CANSparkBase.IdleMode.kBrake)
+        masterRotationMotor.setNeutralMode(NeutralModeValue.Brake)
+        followerRotationMotor.setNeutralMode(NeutralModeValue.Brake)
 
-        followerRotationMotor.follow(mainRotationMotor, true)
+        followerRotationMotor.setControl(Follower(22, false))
+
+//        falconRotationOffset = (masterRotationMotor.position.value / 125.0) - shaftRotationEncoder.absolutePosition
     }
 
-    override fun setPositionIdleMode(mode: CANSparkBase.IdleMode) {
-        elevatorMotor.setIdleMode(mode)
+    override fun setFalconThroughBoreOffset() {
+//        falconRotationOffset = (masterRotationMotor.position.value / 125.0) - shaftRotationEncoder.absolutePosition
     }
 
-    override fun setAngleIdleMode(mode: CANSparkBase.IdleMode) {
-        mainRotationMotor.setIdleMode(mode)
-        followerRotationMotor.setIdleMode(mode)
-        angleIdleMode = mode
-    }
-
-    override fun getAngleIdleMode(): CANSparkBase.IdleMode = angleIdleMode
-
-    override fun setZeroPosition(top: Boolean) {
-        positionEncoder.setPosition(
-            if (top) {
-                TrunkConstants.TOP_BREAK_BEAM_POSITION * TrunkConstants.M2ELEVATOR
-            } else {
-                TrunkConstants.BOTTOM_BREAK_BEAM_POSITION * TrunkConstants.M2ELEVATOR
-            }
-        )
-//        if (!top)
-//            elevatorMotor.inverted = !elevatorMotor.inverted
-//        setTopPositionLimit(TrunkConstants.TOP_BREAK_BEAM_POSITION)
-//        setBottomPositionLimit(TrunkConstants.BOTTOM_BREAK_BEAM_POSITION)
+    override fun setZeroPosition() {
+        positionEncoder.setPosition(TrunkConstants.TOP_BREAK_BEAM_POSITION * TrunkConstants.M2ELEVATOR)
     }
 
     override fun atTopLimit(): Boolean = topLimit.get()
 
-    override fun atBottomLimit(): Boolean = bottomLimit.get()
-
-    override fun setPositionLimits(on: Boolean) {
-//        elevatorMotor.enableSoftLimit(CANSparkBase.SoftLimitDirection.kForward, on)
-//        elevatorMotor.enableSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, on)
-    }
-
     override fun getRawPosition(): Double = positionEncoder.position
 
-    override fun getRawRotation(): Double = rotationEncoder.absolutePosition
+    override fun getThroughBoreRawRotation(): Double = shaftRotationEncoder.absolutePosition
 
-    override fun setTopPositionLimit(position: Double) {
-//        if (topPositionLimit != position) {
-//            topPositionLimit = position
-//            elevatorMotor.setSoftLimit(
-//                CANSparkBase.SoftLimitDirection.kForward,
-//                (position * TrunkConstants.M2ELEVATOR).toFloat()
-//            )
-//            elevatorMotor.enableSoftLimit(CANSparkBase.SoftLimitDirection.kForward, true)
-//        }
-    }
-
-    override fun setBottomPositionLimit(position: Double) {
-//        if (bottomPositionLimit != position) {
-//            bottomPositionLimit = position
-//            elevatorMotor.setSoftLimit(
-//                CANSparkBase.SoftLimitDirection.kReverse,
-//                (position * TrunkConstants.M2ELEVATOR).toFloat()
-//            )
-//            elevatorMotor.enableSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, true)
-//        }
-    }
-
-    override fun setTopRotationLimit(angle: Double) {
-//        if (topRotationLimit != angle) {
-//            topRotationLimit = angle
-//            mainRotationMotor.setSoftLimit(CANSparkBase.SoftLimitDirection.kForward, angle.toFloat())
-//            mainRotationMotor.enableSoftLimit(CANSparkBase.SoftLimitDirection.kForward, true)
-//        }
-    }
-
-    override fun setBottomRotationLimit(angle: Double) {
-//        if (bottomRotationLimit != angle) {
-//            bottomRotationLimit = angle
-//            mainRotationMotor.setSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, angle.toFloat())
-//            mainRotationMotor.enableSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, true)
-//        }
-    }
+    override fun getFalconRawRotation(): Double = (masterRotationMotor.position.value / 125.0) - falconRotationOffset
 
     override fun setElevatorSpeed(speed: Double) {
+        SmartDashboard.putNumber("set elevator speed: ", speed)
         elevatorMotor.set(-speed)
     }
 
-    override fun setRotationSpeed(speed: Double) {
-        mainRotationMotor.set(speed)
+    override fun setRotationVoltage(volts: Double) {
+        SmartDashboard.putNumber("set rotation voltage: ", MathUtil.clamp(volts, TrunkConstants.MIN_ROT_VOLTS, TrunkConstants.MAX_ROT_VOLTS))
+        masterRotationMotor.setVoltage(MathUtil.clamp(volts, TrunkConstants.MIN_ROT_VOLTS, TrunkConstants.MAX_ROT_VOLTS));
+//        masterRotationMotor.setControl(voltageVelocityController.withVelocity(volts))
     }
 
-    override fun setRotationVoltage(volts: Double) {
-        mainRotationMotor.setVoltage(volts);
+    override fun setServoAngle(angle: Double) {
+
     }
 
     override fun periodic() {
