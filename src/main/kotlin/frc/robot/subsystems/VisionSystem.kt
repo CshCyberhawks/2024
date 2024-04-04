@@ -30,8 +30,7 @@ class VisionSystem {
 
         if (SmartDashboard.getBoolean("use new limelights", false)) {
             namesToSearch = limelightNames.plus(sideLimelightNames)
-        }
-        else {
+        } else {
             namesToSearch = limelightNames
         }
 
@@ -48,9 +47,9 @@ class VisionSystem {
                 if (DriverStation.getAlliance().isPresent && DriverStation.getAlliance()
                         .get() == DriverStation.Alliance.Blue
                 ) {
-                    LimelightHelpers.getBotPoseEstimate_wpiBlue(llName)
+                    LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(llName)
                 } else {
-                    LimelightHelpers.getBotPoseEstimate_wpiRed(llName)
+                    LimelightHelpers.getBotPoseEstimate_wpiRed_MegaTag2(llName)
                 }
 //            else {
 //                println("DS alliance invalid; skipping vision")
@@ -71,7 +70,8 @@ class VisionSystem {
                     llMeasure.tagCount,
                     llMeasure.tagSpan,
                     llMeasure.avgTagDist,
-                    llMeasure.avgTagArea
+                    llMeasure.avgTagArea,
+                    llMeasure.rawFiducials
                 )
             }
             if (llMeasure.pose.x != 0.0 && llMeasure.pose.y != 0.0) {
@@ -120,8 +120,7 @@ class VisionSystem {
 
         if (SmartDashboard.getBoolean("use new limelights", false)) {
             namesToSearch = limelightNames.plus(sideLimelightNames)
-        }
-        else {
+        } else {
             namesToSearch = limelightNames
         }
 
@@ -133,9 +132,9 @@ class VisionSystem {
 
             var llMeasure: LimelightHelpers.PoseEstimate =
                 if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
-                    LimelightHelpers.getBotPoseEstimate_wpiBlue(llName)
+                    LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(llName)
                 } else {
-                    LimelightHelpers.getBotPoseEstimate_wpiRed(llName)
+                    LimelightHelpers.getBotPoseEstimate_wpiRed_MegaTag2(llName)
                 }
 //            else {
 //                println("DS alliance invalid; skipping vision")
@@ -159,7 +158,8 @@ class VisionSystem {
                     llMeasure.tagCount,
                     llMeasure.tagSpan,
                     llMeasure.avgTagDist,
-                    llMeasure.avgTagArea
+                    llMeasure.avgTagArea,
+                    llMeasure.rawFiducials
                 )
             }
             if (llMeasure.tagCount >= tagCount && llMeasure.pose.x != 0.0 && llMeasure.pose.y != 0.0) {
