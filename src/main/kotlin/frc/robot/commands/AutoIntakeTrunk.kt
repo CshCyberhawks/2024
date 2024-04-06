@@ -17,8 +17,8 @@ class AutoIntakeTrunk : Command() {
     //    var intakePrepCommand = GoToPoseTrunk(TrunkPose.INTAKE_PREP)
 //    val coastOutCommand = CoastAngleMovePosition(TrunkPose.INTAKE).andThen(CoastAngleHoldPosition(TrunkPose.INTAKE))
     var intakeOutCommand = GoToPoseAndCoast(TrunkPose.INTAKE, 0.38)
-    val stowCommand = CoastAngleMovePosition(TrunkPose.STOW).andThen(GoToPoseAndHoldTrunk(TrunkPose.STOW))
-    // val stowCommand = GoToPoseAndHoldTrunk(TrunkPose.STOW)
+    val stowCommand = CoastAngleMovePosition(TrunkPose.STOW).andThen(StowTrunkCommand())
+    // val stowCommand = StowTrunkCommand()
 
     var stowing = false
 

@@ -14,6 +14,7 @@ import frc.robot.commands.cannon.AutoShootCommand
 import frc.robot.commands.trunk.GoToPoseAndHoldTrunk
 import frc.robot.commands.trunk.GoToPoseTrunk
 import frc.robot.commands.trunk.HoldPositionGoToAngleTrunk
+import frc.robot.commands.trunk.StowTrunkCommand
 import frc.robot.constants.DriveConstants
 import frc.robot.constants.TrunkConstants
 import frc.robot.util.ProfiledPID
@@ -92,7 +93,7 @@ class TeleopAimTwistAndShoot : Command() {
     }
 
     override fun end(interrupted: Boolean) {
-        RobotContainer.stateMachine.currentTrunkCommand = GoToPoseAndHoldTrunk(TrunkPose.STOW)
+        RobotContainer.stateMachine.currentTrunkCommand = StowTrunkCommand()
         RobotContainer.actuallyDoShoot = false
         RobotContainer.stateMachine.driveState = DriveState.Teleop
     }

@@ -36,7 +36,7 @@ class AutoSpit : Command() {
     }
 
     override fun end(interrupted: Boolean) {
-//        RobotContainer.stateMachine.currentTrunkCommand = GoToPoseAndHoldTrunk(TrunkPose.STOW)
+//        RobotContainer.stateMachine.currentTrunkCommand = StowTrunkCommand()
         RobotContainer.cannonSystem.killIntake()
     }
 }

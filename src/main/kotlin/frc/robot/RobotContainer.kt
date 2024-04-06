@@ -12,10 +12,7 @@ import frc.robot.commands.*
 import frc.robot.commands.automatic.*
 import frc.robot.commands.cannon.AutoShootCommand
 import frc.robot.commands.cannon.AutoSpit
-import frc.robot.commands.trunk.CalibrateTrunk
-import frc.robot.commands.trunk.GoToPoseAndHoldTrunk
-import frc.robot.commands.trunk.GoToPoseTrunk
-import frc.robot.commands.trunk.HoldPoseTrunk
+import frc.robot.commands.trunk.*
 import frc.robot.constants.TargetingConstants
 import frc.robot.constants.TrunkConstants
 import frc.robot.subsystems.VisionSystem
@@ -65,6 +62,7 @@ object RobotContainer {
         get() = SmartDashboard.getBoolean("Enable Automatic State Management", false)
 
     val robotActionSendable: SendableChooser<RobotAction> = SendableChooser<RobotAction>()
+    val stowTypeSendable: SendableChooser<StowType> = SendableChooser<StowType>()
     val shootPositionSendable: SendableChooser<ShootPosition> = SendableChooser<ShootPosition>()
     val trunkPoseSendable: SendableChooser<TrunkPose> = SendableChooser<TrunkPose>()
 
@@ -84,9 +82,16 @@ object RobotContainer {
             shootPositionSendable.addOption(it.name, it)
         }
 
+        StowType.entries.forEach {
+            stowTypeSendable.addOption(it.name, it)
+        }
+
         TrunkPose.entries.forEach {
             trunkPoseSendable.addOption(it.name, it)
         }
+
+        stowTypeSendable.setDefaultOption("Internal", StowType.Internal)
+        SmartDashboard.putData("Stow Type", stowTypeSendable)
 
         robotActionSendable.setDefaultOption("FloorIntake", RobotAction.FloorIntake)
         SmartDashboard.putData("Robot Action", robotActionSendable)
@@ -111,7 +116,7 @@ object RobotContainer {
                 RobotAction.Speaker -> actuallyDoShoot = true
                 RobotAction.Amp -> actuallyDoAmp = true
                 RobotAction.SourceIntake -> println("Tried to trigger source intake (not yet implemented)")
-                RobotAction.FloorIntake -> print("Tried to trigger floor intake (why?)")
+                RobotAction.FloorIntake -> println("nothin - action floor intake")
                 RobotAction.Trap -> println("Tried to trigger trap score (not yet implemented)")
                 RobotAction.Climb -> actuallyDoClimb = true
                 //Does literally nothing
@@ -144,7 +149,7 @@ object RobotContainer {
         xboxController.povUp().onTrue(Commands.runOnce({ TargetingConstants.endpointZ += .01 }))
         xboxController.povDown().onTrue(Commands.runOnce({ TargetingConstants.endpointZ -= .01 }))
         xboxController.x()
-            .onTrue(Commands.runOnce({ stateMachine.currentTrunkCommand = GoToPoseAndHoldTrunk(TrunkPose.STOW) }))
+            .onTrue(Commands.runOnce({ stateMachine.currentTrunkCommand = StowTrunkCommand() }))
         xboxController.rightBumper().onTrue(AutoSpit())
         xboxController.leftTrigger().betterToggleOnTrue(AutoClimbCommand())
         xboxController.rightTrigger().onTrue(Commands.runOnce({
@@ -160,7 +165,7 @@ object RobotContainer {
         NamedCommands.registerCommand("AutoAimDumbTwistAndShoot", AutoAimDumbTwistAndShoot())
         NamedCommands.registerCommand(
             "Stow",
-            Commands.runOnce({ stateMachine.currentTrunkCommand = GoToPoseAndHoldTrunk(TrunkPose.STOW) })
+            Commands.runOnce({ stateMachine.currentTrunkCommand = StowTrunkCommand() })
         )
         NamedCommands.registerCommand("AutoAimAndShootPrep", AutoAimAndShootPrep())
         NamedCommands.registerCommand("CalibrateTrunk", CalibrateTrunk())
