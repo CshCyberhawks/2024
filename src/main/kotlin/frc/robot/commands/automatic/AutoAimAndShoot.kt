@@ -10,6 +10,7 @@ import frc.robot.TrunkPose
 import frc.robot.commands.cannon.AutoShootCommand
 import frc.robot.commands.trunk.GoToPoseAndHoldTrunk
 import frc.robot.commands.trunk.HoldPositionGoToAngleTrunk
+import frc.robot.commands.trunk.StowTrunkCommand
 import frc.robot.constants.TrunkConstants
 
 class AutoAimAndShoot : Command() {
@@ -42,7 +43,7 @@ class AutoAimAndShoot : Command() {
     }
 
     override fun end(interrupted: Boolean) {
-        RobotContainer.stateMachine.currentTrunkCommand = GoToPoseAndHoldTrunk(TrunkPose.STOW)
+        RobotContainer.stateMachine.currentTrunkCommand = StowTrunkCommand()
         RobotContainer.actuallyDoShoot = false
     }
 }

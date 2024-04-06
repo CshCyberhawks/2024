@@ -6,6 +6,7 @@ import frc.robot.RobotContainer
 import frc.robot.TrunkPose
 import frc.robot.commands.trunk.GoToPoseAndHoldTrunk
 import frc.robot.commands.trunk.GoToPoseTrunk
+import frc.robot.commands.trunk.StowTrunkCommand
 import frc.robot.util.Timer
 
 class AutoAmp : Command() {
@@ -36,7 +37,7 @@ class AutoAmp : Command() {
 
         if (startTimer.hasElapsed(0.3) && !endTimer.isRunning) {
             endTimer.start()
-            RobotContainer.stateMachine.currentTrunkCommand = GoToPoseAndHoldTrunk(TrunkPose.STOW)
+            RobotContainer.stateMachine.currentTrunkCommand = StowTrunkCommand()
         }
     }
 

@@ -1,17 +1,11 @@
-package frc.robot.commands.automatic
+package frc.robot.commands
 
-import edu.wpi.first.math.MathUtil.clamp
-import edu.wpi.first.math.controller.PIDController
-import edu.wpi.first.math.controller.ProfiledPIDController
+import edu.wpi.first.math.MathUtil
 import edu.wpi.first.math.trajectory.TrapezoidProfile
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.Command
-import frc.robot.DriveState
-import frc.robot.NoteState
-import frc.robot.RobotContainer
-import frc.robot.ShooterState
-import frc.robot.TrunkPose
+import frc.robot.*
 import frc.robot.commands.cannon.AutoShootCommand
-import frc.robot.commands.trunk.GoToPoseAndHoldTrunk
 import frc.robot.commands.trunk.GoToPoseTrunk
 import frc.robot.commands.trunk.HoldPositionGoToAngleTrunk
 import frc.robot.commands.trunk.StowTrunkCommand
@@ -19,7 +13,7 @@ import frc.robot.constants.DriveConstants
 import frc.robot.constants.TrunkConstants
 import frc.robot.util.ProfiledPID
 
-class TeleopAimTwistAndShoot : Command() {
+class FerryShot: Command() {
     var autoShoot: AutoShootCommand = AutoShootCommand()
 
     var trunkCommand: HoldPositionGoToAngleTrunk = HoldPositionGoToAngleTrunk(TrunkPose.SPEAKER)
@@ -28,8 +22,12 @@ class TeleopAimTwistAndShoot : Command() {
 
     private var lastRobotAngle = 0.0
 
+    val shooterAngle: Double = 80.0
+    val ferryRobotAngle: Double = 180.0
+
     override fun initialize() {
         trunkCommand = HoldPositionGoToAngleTrunk(TrunkPose.SPEAKER)
+        RobotContainer.stateMachine.shooterState = ShooterState.Shooting
         autoShoot = AutoShootCommand()
 
         RobotContainer.stateMachine.driveState = DriveState.TranslationTeleop
@@ -42,16 +40,10 @@ class TeleopAimTwistAndShoot : Command() {
     }
 
     override fun execute() {
-        val shotSetup = RobotContainer.targetingSystem.getShotVelocityRobotNoVelocityShooter()
-
-        //Handle the cannon aiming component
-        val shooterAngle = clamp(shotSetup.shooterAngle, TrunkConstants.MIN_SHOOT_ANGLE, TrunkConstants.MAX_SHOOT_ANGLE)
-//        SmartDashboard.putBoolean("shot is possible?", shooterAngle == shotSetup.shooterAngle)
-//        RobotContainer.trunkSystem.setShootingAngle(shooterAngle)
         trunkCommand.desiredAngle = shooterAngle
 
-        if (lastRobotAngle != shotSetup.robotAngle) {
-            twistPIDController.goal = shotSetup.robotAngle
+        if (lastRobotAngle != ferryRobotAngle) {
+            twistPIDController.goal = ferryRobotAngle
         }
 
         //Handle the twisting component
@@ -72,20 +64,11 @@ class TeleopAimTwistAndShoot : Command() {
             Math.toRadians(driveTwist)
         ).execute()
 
-        //Can we shoot?
-//        if (RobotContainer.stateMachine.trunkReady && MiscCalculations.appxEqual(
-//                        twistPIDController.setpoint,
-//                        shotSetup.robotAngle,
-//                        1.0
-//                ) && !autoShoot.isScheduled
-//        ) {
-//            autoShoot.schedule()
-//        }
         if (RobotContainer.actuallyDoShoot && !autoShoot.isScheduled) {
             autoShoot.schedule()
         }
 
-        lastRobotAngle = shotSetup.robotAngle
+        lastRobotAngle = ferryRobotAngle
     }
 
     override fun isFinished(): Boolean {
@@ -95,6 +78,5 @@ class TeleopAimTwistAndShoot : Command() {
     override fun end(interrupted: Boolean) {
         RobotContainer.stateMachine.currentTrunkCommand = StowTrunkCommand()
         RobotContainer.actuallyDoShoot = false
-        RobotContainer.stateMachine.driveState = DriveState.Teleop
     }
 }
