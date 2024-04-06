@@ -145,7 +145,7 @@ object RobotContainer {
         }))
         xboxController.a().betterToggleOnTrue(AutoAmp())
 
-        xboxController.y().betterToggleOnTrue(AutoAimAndShoot())
+        xboxController.y().betterToggleOnTrue(TeleopAimTwistAndShoot())
         xboxController.povUp().onTrue(Commands.runOnce({ TargetingConstants.endpointZ += .01 }))
         xboxController.povDown().onTrue(Commands.runOnce({ TargetingConstants.endpointZ -= .01 }))
         xboxController.x()
