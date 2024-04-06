@@ -66,17 +66,18 @@ class TrunkSystem(val io: TrunkIO) : SubsystemBase() {
             TrunkConstants.positionKP,
             TrunkConstants.positionKI,
             TrunkConstants.positionKD,
-            TrapezoidProfile.Constraints(5.0, 15.0)
+            TrapezoidProfile.Constraints(0.5, 2.0)
         )
 
     var trunkDesiredRotation = TrunkConstants.STOW_ANGLE
     var trunkDesiredPosition = TrunkConstants.STOW_POSITION
 
     var falconRotationOffset = 0.0
+
     var falconRotationZeroed = false
 
     init {
-        SmartDashboard.putNumber("Trunk Target Position", TrunkConstants.TOP_BREAK_BEAM_POSITION)
+        SmartDashboard.putNumber("Trunk Target Position", TrunkConstants.STOW_BREAK_BEAM_POSITION)
         SmartDashboard.putData("High Profiled PID", highRotationPIDController)
         SmartDashboard.putData("Low Profiled PID", lowRotationPIDController)
         SmartDashboard.putData("Climb Profiled PID", climbRotationPIDController)
@@ -110,6 +111,17 @@ class TrunkSystem(val io: TrunkIO) : SubsystemBase() {
 
         SmartDashboard.putNumber("Pivot Velocity", velocity)
         SmartDashboard.putNumber("Pivot Acceleration", acceleration)
+
+
+        SmartDashboard.putNumber(
+            "Elevator velocity",
+            io.getElevatorVelocity() * TrunkConstants.ELEVATOR_ROTATIONS_TO_METERS
+        )
+
+        SmartDashboard.putNumber(
+            "Elevator Acceleration",
+            io.getElevatorMotorAccel() * (2.0 / 15.0) * TrunkConstants.ELEVATOR_ROTATIONS_TO_METERS
+        )
 
         lastVelocity = velocity
         clock.restart()
@@ -228,6 +240,7 @@ class TrunkSystem(val io: TrunkIO) : SubsystemBase() {
         SmartDashboard.putNumber("Elevator FF", posFF)
         SmartDashboard.putNumber("Elevator Out", posPIDOut + posFF)
         SmartDashboard.putNumber("Elevator Velocity Error", elevatorPIDController.velocityError)
+
 
         return posPIDOut + posFF
     }

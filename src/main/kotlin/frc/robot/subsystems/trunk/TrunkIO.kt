@@ -9,8 +9,11 @@ interface TrunkIO {
     fun setFalconThroughBoreOffset()
     fun setElevatorSpeed(speed: Double)
     fun getPivotVelocity(): Double
-    fun setZeroPosition()
+    fun setZeroPosition(top: Boolean)
     fun setRotationVoltage(volts: Double)
+    fun getElevatorVelocity(): Double
+    fun getElevatorMotorAccel(): Double
+    fun atStowLimit(): Boolean
     fun atTopLimit(): Boolean
     fun setServoAngle(angle: Double)
     fun getServoAngle(): Double

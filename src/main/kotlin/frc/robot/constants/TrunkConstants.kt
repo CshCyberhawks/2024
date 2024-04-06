@@ -35,14 +35,15 @@ object TrunkConstants {
     var TRAP_POSITION: Double = 0.7
     var TRAP_ANGLE: Double = 160.0
 
-    var TOP_BREAK_BEAM_POSITION: Double = .3810000
+    var STOW_BREAK_BEAM_POSITION: Double = .3810000
+    var TOP_BREAK_BEAM_POSITION: Double = 0.4318
 
     var throughboreRotationOffset: Double = 119.7
     var falconRotationOffset: Double = -64.6
 
-    var positionKP = 10.0
+    var positionKP = 50.0
     var positionKI = 0.0
-    var positionKD = 0.1
+    var positionKD = 0.9
 
     var positionFF = 0.01
 

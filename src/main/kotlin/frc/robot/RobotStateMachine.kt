@@ -44,6 +44,7 @@ enum class TrunkPose(var angle: Double, var position: Double) {
     INTAKE(TrunkConstants.INTAKE_ANGLE, TrunkConstants.INTAKE_POSITION),
     INTAKE_PREP(TrunkConstants.SAFE_TRAVEL_ANGLE, TrunkConstants.SAFE_TO_DROP_INTAKE_POSITION),
     STOW(TrunkConstants.STOW_ANGLE, TrunkConstants.STOW_POSITION),
+    TOP_STOW(TrunkConstants.SAFE_TRAVEL_ANGLE, TrunkConstants.TOP_BREAK_BEAM_POSITION),
     HIGH_STOW(TrunkConstants.HIGH_STOW_ANGLE, TrunkConstants.STOW_POSITION),
     TRAP(TrunkConstants.TRAP_ANGLE, TrunkConstants.TRAP_POSITION),
     CalibrationAngle(90.0, TrunkConstants.STOW_POSITION),

@@ -34,7 +34,8 @@ class TrunkIOReal : TrunkIO {
     private val followerRotationMotor = TalonFX(TrunkConstants.FOLLOWER_PIVOT_MOTOR_ID) // Left Motor
 
     private val shaftRotationEncoder = DutyCycleEncoder(TrunkConstants.rotationEncoderID)
-    private val topLimit = DigitalInput(0)
+    private val stowLimit = DigitalInput(0)
+    private val topLimit = DigitalInput(1)
 
     val climbServo = Servo(0)
 
@@ -110,15 +111,22 @@ class TrunkIOReal : TrunkIO {
         return positionEncoder.position.value * 2.0
     }
 
-    override fun setZeroPosition() {
+    override fun setZeroPosition(top: Boolean) {
 //        positionEncoder.setPosition(TrunkConstants.TOP_BREAK_BEAM_POSITION * TrunkConstants.M2ELEVATOR)
-        positionEncoderOffset =
+        positionEncoderOffset = if (top) {
             getEncoderRawPosition() - (TrunkConstants.TOP_BREAK_BEAM_POSITION * TrunkConstants.METERS_TO_ELEVATOR_ROTATIONS)
+        } else {
+            getEncoderRawPosition() - (TrunkConstants.STOW_BREAK_BEAM_POSITION * TrunkConstants.METERS_TO_ELEVATOR_ROTATIONS)
+
+        }
+
         // val = raw - off
         // off = raw - val
 
 //        positionEncoderOffset = TrunkConstants.TOP_BREAK_BEAM_POSITION * TrunkConstants.M2ELEVATOR - getRawPosition()
     }
+
+    override fun atStowLimit(): Boolean = stowLimit.get()
 
     override fun atTopLimit(): Boolean = topLimit.get()
 
@@ -132,6 +140,14 @@ class TrunkIOReal : TrunkIO {
 
     override fun getPivotVelocity(): Double {
         return masterRotationMotor.velocity.value * 360.0 / 125.0
+    }
+
+    override fun getElevatorMotorAccel(): Double {
+        return masterElevatorMotor.acceleration.value
+    }
+
+    override fun getElevatorVelocity(): Double {
+        return positionEncoder.velocity.value * 2.0
     }
 
     override fun setElevatorSpeed(speed: Double) {
