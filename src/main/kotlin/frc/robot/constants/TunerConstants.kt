@@ -35,17 +35,17 @@ object TunerConstants {
 
     // The stator current at which the wheels start to slip;
     // This needs to be tuned to your individual robot
-    private const val kSlipCurrentA = 300.0
+    private const val kSlipCurrentA = 80.0
 
     // Theoretical free speed (m/s) at 12v applied output;
     // This needs to be tuned to your individual robot
-    const val kSpeedAt12VoltsMps: Double = 5.21
+    const val kSpeedAt12VoltsMps: Double = 4.73
 
     // Every 1 rotation of the azimuth results in kCoupleRatio drive motor turns;
     // This may need to be tuned to your individual robot
     private const val kCoupleRatio = 3.5714285714285716
 
-    private const val kDriveGearRatio = 6.122448979591837
+    private const val kDriveGearRatio = 6.746031746031747
     private const val kSteerGearRatio = 21.428571428571427
     private const val kWheelRadiusInches = 2.0
 
@@ -55,6 +55,7 @@ object TunerConstants {
 
     private const val kCANbusName = ""
     private const val kPigeonId = 30
+
 
     // These are only used for simulation
     private const val kSteerInertia = 0.00001
@@ -86,41 +87,43 @@ object TunerConstants {
         .withCouplingGearRatio(kCoupleRatio)
         .withSteerMotorInverted(kSteerMotorReversed)
 
+
     // Front Left
     private const val kFrontLeftDriveMotorId = 7
     private const val kFrontLeftSteerMotorId = 9
     private const val kFrontLeftEncoderId = 1
-    private const val kFrontLeftEncoderOffset = -0.0703125
+    private const val kFrontLeftEncoderOffset = 0.343017578125
 
-    private const val kFrontLeftXPosInches = 12.25
-    private const val kFrontLeftYPosInches = 12.25
+    private const val kFrontLeftXPosInches = 12.125
+    private const val kFrontLeftYPosInches = 12.125
 
     // Front Right
     private const val kFrontRightDriveMotorId = 6
     private const val kFrontRightSteerMotorId = 10
     private const val kFrontRightEncoderId = 2
-    private const val kFrontRightEncoderOffset = -0.55029296875
+    private const val kFrontRightEncoderOffset = -0.03759765625
 
-    private const val kFrontRightXPosInches = 12.25
-    private const val kFrontRightYPosInches = -12.25
+    private const val kFrontRightXPosInches = 12.125
+    private const val kFrontRightYPosInches = -12.125
 
     // Back Left
     private const val kBackLeftDriveMotorId = 5
     private const val kBackLeftSteerMotorId = 11
     private const val kBackLeftEncoderId = 3
-    private const val kBackLeftEncoderOffset = -0.13818359375
+    private const val kBackLeftEncoderOffset = -0.100341796875
 
-    private const val kBackLeftXPosInches = -12.25
-    private const val kBackLeftYPosInches = 12.25
+    private const val kBackLeftXPosInches = -12.125
+    private const val kBackLeftYPosInches = 12.125
 
     // Back Right
     private const val kBackRightDriveMotorId = 8
     private const val kBackRightSteerMotorId = 12
     private const val kBackRightEncoderId = 4
-    private const val kBackRightEncoderOffset = -0.310791015625
+    private const val kBackRightEncoderOffset = 0.091552734375
 
-    private const val kBackRightXPosInches = -12.25
-    private const val kBackRightYPosInches = -12.25
+    private const val kBackRightXPosInches = -12.125
+    private const val kBackRightYPosInches = -12.125
+
 
     private val FrontLeft: SwerveModuleConstants = ConstantCreator.createModuleConstants(
         kFrontLeftSteerMotorId,

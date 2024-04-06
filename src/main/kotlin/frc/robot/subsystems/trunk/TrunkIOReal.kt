@@ -22,16 +22,16 @@ import frc.robot.util.EmptyMotorController
 
 class TrunkIOReal : TrunkIO {
     private val masterElevatorMotor =
-        EmptyMotorController(TrunkConstants.MASTER_ELEVATOR_MOTOR_ID)
+        TalonFX(TrunkConstants.MASTER_ELEVATOR_MOTOR_ID)
     private val followerElevatorMotor =
-        EmptyMotorController(TrunkConstants.FOLLOWER_ELEVATOR_MOTOR_ID)
+        TalonFX(TrunkConstants.FOLLOWER_ELEVATOR_MOTOR_ID)
 
     //    private val positionEncoder = elevatorMotor.getAlternateEncoder(8192)
 //    private val positionEncoder = Encoder(1, 4)
     private val positionEncoder = CANcoder(TrunkConstants.ELEVATOR_ENCODER_ID)
 
-    private val masterRotationMotor = EmptyMotorController(TrunkConstants.MASTER_PIVOT_MOTOR_ID) // Right Motor
-    private val followerRotationMotor = EmptyMotorController(TrunkConstants.FOLLOWER_PIVOT_MOTOR_ID) // Left Motor
+    private val masterRotationMotor = TalonFX(TrunkConstants.MASTER_PIVOT_MOTOR_ID) // Right Motor
+    private val followerRotationMotor = TalonFX(TrunkConstants.FOLLOWER_PIVOT_MOTOR_ID) // Left Motor
 
     private val shaftRotationEncoder = DutyCycleEncoder(TrunkConstants.rotationEncoderID)
     private val topLimit = DigitalInput(0)
