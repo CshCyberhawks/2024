@@ -1,23 +1,16 @@
 package frc.robot.commands.automatic
 
 import edu.wpi.first.math.MathUtil.clamp
-import edu.wpi.first.math.controller.PIDController
 import edu.wpi.first.wpilibj2.command.Command
-import frc.robot.DriveState
 import frc.robot.NoteState
 import frc.robot.RobotContainer
 import frc.robot.ShooterState
 import frc.robot.TrunkPose
-import frc.robot.commands.cannon.AutoShootCommand
-import frc.robot.commands.trunk.GoToPoseAndHoldTrunk
 import frc.robot.commands.trunk.HoldPositionGoToAngleTrunk
-import frc.robot.constants.DriveConstants
 import frc.robot.constants.TrunkConstants
-import frc.robot.util.Timer
 
 class AutoAimAndShootPrep : Command() {
     val trunkCommand: HoldPositionGoToAngleTrunk = HoldPositionGoToAngleTrunk(TrunkPose.SPEAKER)
-
 
     override fun initialize() {
         RobotContainer.stateMachine.shooterState = ShooterState.Shooting

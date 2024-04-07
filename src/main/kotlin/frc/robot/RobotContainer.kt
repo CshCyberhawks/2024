@@ -1,23 +1,27 @@
 package frc.robot
 
 import com.pathplanner.lib.auto.NamedCommands
-import edu.wpi.first.wpilibj.Servo
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.Commands
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
-import frc.robot.commands.*
-import frc.robot.commands.automatic.*
-import frc.robot.commands.cannon.AutoShootCommand
+import frc.robot.commands.AutoAmp
+import frc.robot.commands.AutoIntake
+import frc.robot.commands.KillTrunk
+import frc.robot.commands.TeleopSwerveDriveCommand
+import frc.robot.commands.automatic.AutoAimAndShoot
+import frc.robot.commands.automatic.AutoAimAndShootPrep
+import frc.robot.commands.automatic.AutoAimDumbTwistAndShoot
+import frc.robot.commands.automatic.AutoClimbCommand
+import frc.robot.commands.automatic.AutoFloorIntakeAndSeek
+import frc.robot.commands.automatic.FloorIntakeAndSeek
+import frc.robot.commands.automatic.TeleopAimTwistAndShoot
 import frc.robot.commands.cannon.AutoSpit
 import frc.robot.commands.trunk.CalibrateTrunk
 import frc.robot.commands.trunk.GoToPoseAndHoldTrunk
-import frc.robot.commands.trunk.GoToPoseTrunk
-import frc.robot.commands.trunk.HoldPoseTrunk
 import frc.robot.constants.TargetingConstants
-import frc.robot.constants.TrunkConstants
 import frc.robot.subsystems.VisionSystem
 import frc.robot.subsystems.cannon.CannonIOReal
 import frc.robot.subsystems.cannon.CannonSystem
@@ -179,7 +183,6 @@ object RobotContainer {
 
 //    val autoChooser: SendableChooser<Command> = AutoBuilder.buildAutoChooser()
 //        SmartDashboard.putData("Auto Chooser", autoChooser)
-
 
 }
 

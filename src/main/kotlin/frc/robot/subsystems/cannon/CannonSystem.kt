@@ -112,15 +112,13 @@ class CannonSystem(val io: CannonIO) : SubsystemBase() {
 //            exitBreakBeamTriggerTime = Timer.getFPGATimestamp()
 //        }
 
-
         //Note is not stored
         if (!io.getLoadedBeamBreak() && RobotContainer.stateMachine.shooterState != ShooterState.Shooting && !io.getEntryBeamBreak())
             RobotContainer.stateMachine.noteState = NoteState.Empty
         //Note is intaking
         else if (io.getEntryBeamBreak() && !io.getLoadedBeamBreak()) {
             RobotContainer.stateMachine.noteState = NoteState.Intaking
-        }
-        else if (io.getLoadedBeamBreak()) {
+        } else if (io.getLoadedBeamBreak()) {
             RobotContainer.stateMachine.noteState = NoteState.Stored
         }
 
@@ -175,7 +173,6 @@ class CannonSystem(val io: CannonIO) : SubsystemBase() {
 //            rightShooterPID.d = CannonConstants.shooterKD
 //
 //            CannonConstants.shooterFFMultiplier = SmartDashboard.getNumber("shooter ff multiplier", CannonConstants.shooterFFMultiplier)
-
 
             SmartDashboard.putNumber("Shooter Velocity Desired", desiredShooterVel)
             SmartDashboard.putNumber("Shooter Velocity Current Right", currentRightVel)

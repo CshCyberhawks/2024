@@ -8,10 +8,12 @@ import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import frc.robot.RobotContainer
 import frc.robot.constants.CannonConstants
-import frc.robot.constants.FieldConstants
 import frc.robot.constants.TargetingConstants
-import frc.robot.constants.TrunkConstants
-import kotlin.math.*
+import kotlin.math.PI
+import kotlin.math.atan
+import kotlin.math.atan2
+import kotlin.math.pow
+import kotlin.math.sqrt
 
 data class ShotSetup(val robotAngle: Double, var shooterAngle: Double) {
     init {

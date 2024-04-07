@@ -10,8 +10,6 @@ import frc.robot.LimelightHelpers
 import frc.robot.RobotContainer
 import frc.robot.constants.FieldConstants
 import frc.robot.constants.LimelightConstants
-import frc.robot.util.AllianceFlip
-import frc.robot.util.visualiztion.Field2d
 
 class VisionSystem {
 //    val limelightNames: Array<String> =
@@ -19,7 +17,6 @@ class VisionSystem {
 
     val limelightNames: Array<String> =
         arrayOf("limelight-left", "limelight-right")
-
 
     val sideLimelightNames: Array<String> = arrayOf("limelight-rightsi", "limelight-leftsi")
 
@@ -30,8 +27,7 @@ class VisionSystem {
 
         if (SmartDashboard.getBoolean("use new limelights", false)) {
             namesToSearch = limelightNames.plus(sideLimelightNames)
-        }
-        else {
+        } else {
             namesToSearch = limelightNames
         }
 
@@ -42,7 +38,6 @@ class VisionSystem {
 //                println("DS alliance is empty; skipping vision")
                 return
             }
-
 
             var llMeasure: LimelightHelpers.PoseEstimate =
                 if (DriverStation.getAlliance().isPresent && DriverStation.getAlliance()
@@ -120,8 +115,7 @@ class VisionSystem {
 
         if (SmartDashboard.getBoolean("use new limelights", false)) {
             namesToSearch = limelightNames.plus(sideLimelightNames)
-        }
-        else {
+        } else {
             namesToSearch = limelightNames
         }
 

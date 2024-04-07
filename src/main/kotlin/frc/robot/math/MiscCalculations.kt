@@ -91,7 +91,6 @@ object MiscCalculations {
 //        return closest
 //    }
 
-
     // rpm to units per sec conversion factor
     // (rpm) * 2pi (rad/r) * r (r units/rad) * 1/60 (min/s)
     fun rpm2ups(r: Double): Double = PI * r / 30.0

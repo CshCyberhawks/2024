@@ -10,9 +10,9 @@ import frc.robot.constants.CannonConstants
 class CannonIOReal : CannonIO {
 
     private val leftShooterMotor: CANSparkMax =
-            CANSparkMax(CannonConstants.LEFT_SHOOTER_MOTOR_ID, CANSparkLowLevel.MotorType.kBrushless)
+        CANSparkMax(CannonConstants.LEFT_SHOOTER_MOTOR_ID, CANSparkLowLevel.MotorType.kBrushless)
     private val rightShooterMotor: CANSparkMax =
-            CANSparkMax(CannonConstants.RIGHT_SHOOTER_MOTOR_ID, CANSparkLowLevel.MotorType.kBrushless)
+        CANSparkMax(CannonConstants.RIGHT_SHOOTER_MOTOR_ID, CANSparkLowLevel.MotorType.kBrushless)
 
 //    val leftShooterMotorEncoder = leftShooterMotor.getEncoder();
 //    val rightShooterMotorEncoder = rightShooterMotor.getEncoder();
@@ -21,9 +21,9 @@ class CannonIOReal : CannonIO {
     private val leftShooterEncoder = Encoder(6, 5)
 
     private val outerIntakeMotor: CANSparkMax =
-            CANSparkMax(CannonConstants.OUTER_INTAKE_MOTOR_ID, CANSparkLowLevel.MotorType.kBrushless)
+        CANSparkMax(CannonConstants.OUTER_INTAKE_MOTOR_ID, CANSparkLowLevel.MotorType.kBrushless)
     private val innerIntakeMotor: CANSparkMax =
-            CANSparkMax(CannonConstants.INNER_INTAKE_MOTOR_ID, CANSparkLowLevel.MotorType.kBrushless)
+        CANSparkMax(CannonConstants.INNER_INTAKE_MOTOR_ID, CANSparkLowLevel.MotorType.kBrushless)
 
     private val entryBeamBreak: DigitalInput = DigitalInput(3)
     private val loadedBeamBreak: DigitalInput = DigitalInput(2)
@@ -66,7 +66,6 @@ class CannonIOReal : CannonIO {
     }
 
     override fun getLeftShooterTBVel() = leftShooterEncoder.rate
-
 
     override fun getRightShooterTBVel() = rightShooterEncoder.rate
 

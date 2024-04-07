@@ -13,7 +13,7 @@ class GoToPoseAndHoldTrunk(val desiredPose: TrunkPose) : Command() {
     }
 
     override fun execute() {
-        
+
     }
 
     override fun isFinished(): Boolean {

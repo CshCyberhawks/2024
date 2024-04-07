@@ -2,7 +2,6 @@ package frc.robot.constants
 
 import edu.wpi.first.math.util.Units
 import frc.robot.util.AllianceFlip
-import kotlin.math.PI
 
 object TargetingConstants {
     // shooter velocity transfer proportion

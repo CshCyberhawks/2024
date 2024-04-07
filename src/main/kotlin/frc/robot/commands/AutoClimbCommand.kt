@@ -3,11 +3,11 @@ package frc.robot.commands.automatic
 import MiscCalculations
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.Command
-import edu.wpi.first.wpilibj2.command.ParallelRaceGroup
-import edu.wpi.first.wpilibj2.command.WaitCommand
 import frc.robot.RobotContainer
 import frc.robot.TrunkPose
-import frc.robot.commands.trunk.*
+import frc.robot.commands.trunk.GoToClimbPoseTrunk
+import frc.robot.commands.trunk.HoldPoseTrunk
+import frc.robot.commands.trunk.LerpToPoseTrunk
 import frc.robot.constants.TrunkConstants
 
 class AutoClimbCommand : Command() {

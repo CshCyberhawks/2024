@@ -1,19 +1,18 @@
 package frc.robot
 
-import edu.wpi.first.math.geometry.Pose2d
-import edu.wpi.first.math.geometry.Rotation2d
-import edu.wpi.first.math.kinematics.ChassisSpeeds
 import edu.wpi.first.wpilibj.DriverStation
+import edu.wpi.first.wpilibj.RobotController
+import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.CommandScheduler
+import frc.robot.Alert.AlertType
 import frc.robot.commands.automatic.AutoClimbCommand
 import frc.robot.commands.trunk.CalibrateTrunk
 import frc.robot.constants.CannonConstants
 import frc.robot.constants.TargetingConstants
 import frc.robot.constants.TrunkConstants
 import frc.robot.util.AllianceFlip
-import frc.robot.util.Math
 import frc.robot.util.Telemetry
 import org.littletonrobotics.junction.LoggedRobot
 
@@ -26,6 +25,15 @@ class Robot : LoggedRobot() {
     private val autoClimbCommand: AutoClimbCommand = AutoClimbCommand()
 
     private var calibrateTrunkAuto: CalibrateTrunk = CalibrateTrunk()
+
+    private val canErrorAlert = Alert("CAN errors detected, robot may not be controllable.", AlertType.ERROR)
+    private val lowBatteryAlert = Alert(
+        "Battery voltage is very low, consider turning off the robot or replacing the battery.",
+        AlertType.WARNING
+    )
+    private val sameBatteryAlert = Alert("The battery has not been changed since the last match.", AlertType.WARNING)
+    private val gcAlert = Alert("Please wait to enable, collecting garbage. 🗑️", AlertType.WARNING)
+
     override fun robotInit() {
 
         SmartDashboard.putNumber("g", 11.0)
@@ -100,6 +108,9 @@ class Robot : LoggedRobot() {
             RobotContainer.telemetry.cannonTelemetry
         )
 
+        canErrorAlert.set(RobotController.getCANStatus().transmitErrorCount > 0 || RobotController.getCANStatus().receiveErrorCount > 0)
+
+        gcAlert.set(Timer.getFPGATimestamp() < 45.0)
 
         SmartDashboard.putNumber("Robot X", RobotContainer.swerveSystem.getSwervePose().x)
         SmartDashboard.putNumber("Robot Y", RobotContainer.swerveSystem.getSwervePose().y)
@@ -246,5 +257,7 @@ class Robot : LoggedRobot() {
 
     override fun testExit() {}
 
-    override fun simulationPeriodic() {}
+    override fun simulationPeriodic() {
+        RobotContainer.swerveSystem.driveTrain.updateSimState(0.020, RobotController.getBatteryVoltage())
+    }
 }

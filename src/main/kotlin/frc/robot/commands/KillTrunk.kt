@@ -3,9 +3,7 @@ package frc.robot.commands
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.Commands
 import frc.robot.RobotContainer
-import frc.robot.TrunkPose
 import frc.robot.commands.trunk.CalibrateTrunk
-import frc.robot.commands.trunk.GoToPoseAndHoldTrunk
 
 class KillTrunk : Command() {
     override fun initialize() {

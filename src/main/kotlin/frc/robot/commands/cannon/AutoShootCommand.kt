@@ -9,7 +9,6 @@ import frc.robot.util.Timer
 class AutoShootCommand : Command() {
     val timer = Timer()
 
-
     override fun initialize() {
         RobotContainer.cannonSystem.shoot()
         timer.reset()

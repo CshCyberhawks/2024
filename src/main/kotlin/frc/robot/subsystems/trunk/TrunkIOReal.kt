@@ -19,7 +19,8 @@ import frc.robot.constants.TrunkConstants
 class TrunkIOReal : TrunkIO {
 
     private val elevatorMotor = CANSparkMax(TrunkConstants.ELEVATOR_MOTOR_ID, CANSparkLowLevel.MotorType.kBrushless)
-//    private val positionEncoder = elevatorMotor.getAlternateEncoder(8192)
+
+    //    private val positionEncoder = elevatorMotor.getAlternateEncoder(8192)
     private val positionEncoder = Encoder(1, 4)
 
     private val masterRotationMotor = TalonFX(TrunkConstants.MASTER_PIVOT_MOTOR_ID) // Right Motor
@@ -87,9 +88,10 @@ class TrunkIOReal : TrunkIO {
 
     override fun setZeroPosition() {
 //        positionEncoder.setPosition(TrunkConstants.TOP_BREAK_BEAM_POSITION * TrunkConstants.M2ELEVATOR)
-        positionEncoderOffset = getEncoderRawPosition() - (TrunkConstants.TOP_BREAK_BEAM_POSITION * TrunkConstants.M2ELEVATOR)
-            // val = raw - off
-            // off = raw - val
+        positionEncoderOffset =
+            getEncoderRawPosition() - (TrunkConstants.TOP_BREAK_BEAM_POSITION * TrunkConstants.M2ELEVATOR)
+        // val = raw - off
+        // off = raw - val
 
 //        positionEncoderOffset = TrunkConstants.TOP_BREAK_BEAM_POSITION * TrunkConstants.M2ELEVATOR - getRawPosition()
     }

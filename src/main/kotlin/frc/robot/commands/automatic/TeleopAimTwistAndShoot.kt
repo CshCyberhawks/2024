@@ -23,8 +23,8 @@ class TeleopAimTwistAndShoot : Command() {
     val twistPIDController: PIDController = PIDController(10.0, 0.0, 0.1)
 
     override fun initialize() {
-       trunkCommand = HoldPositionGoToAngleTrunk(TrunkPose.SPEAKER)
-       autoShoot = AutoShootCommand()
+        trunkCommand = HoldPositionGoToAngleTrunk(TrunkPose.SPEAKER)
+        autoShoot = AutoShootCommand()
 
         RobotContainer.stateMachine.driveState = DriveState.TranslationTeleop
         RobotContainer.stateMachine.shooterState = ShooterState.Shooting
