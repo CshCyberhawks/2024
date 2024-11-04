@@ -15,6 +15,7 @@ import frc.robot.commands.*
 import frc.robot.commands.automatic.*
 import frc.robot.commands.cannon.AutoShootCommand
 import frc.robot.commands.cannon.AutoSpit
+import frc.robot.commands.cannon.ShooterFeedCannon
 import frc.robot.commands.simulation.SimTeleopSwerveDriveCommand
 import frc.robot.commands.trunk.CalibrateTrunk
 import frc.robot.commands.trunk.GoToPoseAndHoldTrunk
@@ -38,7 +39,7 @@ import frc.robot.util.TelemetryToggles
 import frc.robot.util.betterToggleOnTrue
 
 object RobotContainer {
-    val robotType = RobotType.Simulated
+    val robotType = RobotType.Real
 
     val leftJoystick: CommandJoystick = CommandJoystick(0)
     val rightJoystick: CommandJoystick = CommandJoystick(1)
@@ -165,13 +166,15 @@ object RobotContainer {
         // Align to amp
         rightJoystick.button(5).betterToggleOnTrue(AutoDriveToPose(Pose2d(1.82, 7.6, Rotation2d.fromDegrees(-90.0))))
 
-        xboxController.b().betterToggleOnTrue(AutoIntake())
+//        xboxController.b().betterToggleOnTrue(AutoIntake())
+        xboxController.b().betterToggleOnTrue(ShooterFeedCannon())
 //        xboxController.a().onTrue(Commands.runOnce({
 //            stateMachine.currentTrunkCommand = GoToPoseAndHoldTrunk(TrunkPose.CalibrationAngle)
 //        }))
         xboxController.a().betterToggleOnTrue(AutoAmp())
 
-        xboxController.y().betterToggleOnTrue(TeleopAimDumbTwistAndShoot())
+//        xboxController.y().betterToggleOnTrue(TeleopAimDumbTwistAndShoot())
+        xboxController.y().betterToggleOnTrue(AutoShootCommand())
 //        xboxController.y().betterToggleOnTrue(AutoAimDumbTwistAndShoot())
         xboxController.povUp().onTrue(Commands.runOnce({ TargetingConstants.endpointZ += .01 }))
         xboxController.povDown().onTrue(Commands.runOnce({ TargetingConstants.endpointZ -= .01 }))

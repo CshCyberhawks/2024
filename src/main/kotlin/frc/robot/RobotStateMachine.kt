@@ -21,7 +21,8 @@ enum class ShooterState(val rightShooterVel: Double, val leftShooterVel: Double)
     Stopped(0.0, 0.0),
     Prepped(3200.0, 3200.0),
     Shooting(3250.0, 4000.0),
-    Mortaring(2250.0, 2750.0)
+    Mortaring(2250.0, 2750.0),
+    Feeding(-1000.0, -1000.0)
 }
 
 //this represents the CURRENT note state
@@ -38,6 +39,7 @@ enum class IntakeState(var innerPercent: Double, var outerPercent: Double) {
     Feeding(CannonConstants.INNER_FEED_PERCENT, CannonConstants.OUTER_FEED_PERCENT),
     Spitting(CannonConstants.INNER_SPIT_PERCENT, CannonConstants.OUTER_SPIT_PERCENT),
     AmpSpitting(CannonConstants.INNER_AMP_PERCENT, CannonConstants.OUTER_AMP_PERCENT),
+    ShooterFeed(CannonConstants.INNER_SPIT_PERCENT, CannonConstants.OUTER_SPIT_PERCENT),
 }
 
 //this represents the DESIRED trunk state

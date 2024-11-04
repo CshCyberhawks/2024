@@ -61,6 +61,11 @@ class CannonSystem(val io: CannonIO) : SubsystemBase() {
         RobotContainer.stateMachine.intakeState = IntakeState.Intaking
     }
 
+    fun shooterFeed() {
+        RobotContainer.stateMachine.intakeState = IntakeState.ShooterFeed
+        RobotContainer.stateMachine.shooterState = ShooterState.Feeding
+    }
+
     fun spit() {
         RobotContainer.stateMachine.intakeState = IntakeState.Spitting
     }
